@@ -26,5 +26,5 @@ export default defineConfig({
       }
     })
   ],
-  base: process.env.GITHUB_PAGES === 'true' ? '/shooting-logbook/' : '/'
+  base: process.env.GITHUB_PAGES === 'true' ? '/shoot-log/' : '/'
 });
