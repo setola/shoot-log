@@ -22,7 +22,8 @@
     "sync": "Drive Sync",
     "settings": "Settings",
     "sourceCode": "Source code",
-    "sourceCommit": "Source {{commit}}"
+    "sourceCommit": "Source {{commit}}",
+    "analysis": "Analysis"
   },
   "sections": {
     "dashboard": "Dashboard",
@@ -34,7 +35,8 @@
     "paperwork": "Paperwork",
     "reports": "Reports",
     "sync": "Google Drive Sync",
-    "settings": "Settings"
+    "settings": "Settings",
+    "analysis": "Analysis"
   },
   "privacy": {
     "localDevice": "Your data stays on this device."
@@ -172,6 +174,12 @@
       "title": "Clear all data?",
       "description": "This permanently removes firearms, training sessions, matches, ammunition, maintenance and paperwork records from this device. This cannot be undone.",
       "confirm": "Clear data"
+    },
+    "owner": {
+      "title": "Device owner",
+      "identifiersLabel": "PractiScore identifiers / names",
+      "identifiersPlaceholder": "IT027386\nEmanuele Tessore",
+      "description": "One value per line or comma-separated. Analysis will use these aliases or names to preselect your competitor when a PractiScore match is opened."
     }
   },
   "sync": {
@@ -316,6 +324,44 @@
     },
     "placeholders": {
       "name": "Regional Championship"
+    },
+    "practiscore": {
+      "title": "PractiScore import",
+      "createHint": "Enter a PractiScore result ID or URL and import the downloaded CAB file. A local match will be created from the XML data.",
+      "replaceHint": "Importing while editing replaces the local match data and its PractiScore snapshot.",
+      "idOrUrl": "PractiScore ID or URL",
+      "idPlaceholder": "https://practiscore.com/results/html/{...}",
+      "normalizedId": "Normalized ID: {{id}}",
+      "cabFile": "Downloaded CAB file",
+      "importAction": "Import PractiScore data",
+      "importing": "Importing…",
+      "validation": "Enter a PractiScore ID or URL and choose the downloaded CAB file.",
+      "importError": "Unable to import PractiScore data.",
+      "importedSummary": "Imported {{stages}} stages, {{competitors}} competitors and {{scores}} stage scores.",
+      "cardSummary": "PractiScore: {{stages}} stages · {{competitors}} competitors · {{scores}} scores"
+    },
+    "analysis": {
+      "title": "Match analysis",
+      "description": "Select an imported PractiScore match and a competitor to inspect hit distribution.",
+      "match": "Match",
+      "competitor": "Competitor",
+      "competitorPlaceholder": "Search by name, alias or number",
+      "pickCompetitor": "Choose a competitor from the search field to show the chart.",
+      "noCompetitorSelected": "No matching competitor selected.",
+      "totalHits": "{{count}} scored hits / penalties",
+      "labels": {
+        "alpha": "Alpha",
+        "charlie": "Charlie",
+        "delta": "Delta",
+        "miss": "Miss",
+        "noShoot": "No-shoot"
+      },
+      "stagePlacementTitle": "Stage placement trend",
+      "stagePlacementDescription": "Ranking by stage, calculated from stage hit factor. Lower is better.",
+      "stageDetailsTitle": "Stage details",
+      "stageDetailsDescription": "Compact per-stage view of course info, hits, penalties, time and hit factor.",
+      "emptyTitle": "No PractiScore data yet",
+      "emptyDescription": "Import a PractiScore CAB file from Matches before opening analysis."
     }
   },
   "ammunition": {

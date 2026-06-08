@@ -8,6 +8,7 @@ import { db } from '../db/schema';
 import { AmmunitionCrud } from '../domain/ammunition/AmmunitionCrud';
 import { FirearmsCrud } from '../domain/firearms/FirearmsCrud';
 import { MaintenanceCrud } from '../domain/maintenance/MaintenanceCrud';
+import { MatchAnalysis } from '../domain/matches/MatchAnalysis';
 import { MatchesCrud } from '../domain/matches/MatchesCrud';
 import { PaperworkCrud } from '../domain/paperwork/PaperworkCrud';
 import { TrainingCrud } from '../domain/training/TrainingCrud';
@@ -33,7 +34,7 @@ function getInitialTheme(): Theme {
 
 function getInitialSection(): Section {
   const storedSection = window.localStorage.getItem(SECTION_STORAGE_KEY);
-  const sections: Section[] = ['dashboard', 'firearms', 'training', 'matches', 'ammunition', 'maintenance', 'paperwork', 'reports', 'sync', 'settings'];
+  const sections: Section[] = ['dashboard', 'firearms', 'training', 'matches', 'analysis', 'ammunition', 'maintenance', 'paperwork', 'reports', 'sync', 'settings'];
   return sections.includes(storedSection as Section) ? (storedSection as Section) : 'dashboard';
 }
 
@@ -91,20 +92,24 @@ export function App() {
       firearms,
       trainingSessions,
       matchEvents,
+      practiscoreMatchImports,
       ammunitionBatches,
       ammoTransactions,
       maintenanceEvents,
       paperworkCredentials,
-      paperworkAttachments
+      paperworkAttachments,
+      appSettings
     ] = await Promise.all([
       db.firearms.toArray(),
       db.trainingSessions.toArray(),
       db.matchEvents.toArray(),
+      db.practiscoreMatchImports.toArray(),
       db.ammunitionBatches.toArray(),
       db.ammoTransactions.toArray(),
       db.maintenanceEvents.toArray(),
       db.paperworkCredentials.toArray(),
-      db.paperworkAttachments.toArray()
+      db.paperworkAttachments.toArray(),
+      db.appSettings.toArray()
     ]);
 
     const serializedPaperworkAttachments = await Promise.all(
@@ -118,11 +123,13 @@ export function App() {
       firearms,
       trainingSessions,
       matchEvents,
+      practiscoreMatchImports,
       ammunitionBatches,
       ammoTransactions,
       maintenanceEvents,
       paperworkCredentials,
-      paperworkAttachments: serializedPaperworkAttachments
+      paperworkAttachments: serializedPaperworkAttachments,
+      appSettings
     };
   }
 
@@ -172,16 +179,19 @@ export function App() {
         db.firearms,
         db.trainingSessions,
         db.matchEvents,
+        db.practiscoreMatchImports,
         db.ammunitionBatches,
         db.ammoTransactions,
         db.maintenanceEvents,
         db.paperworkCredentials,
-        db.paperworkAttachments
+        db.paperworkAttachments,
+        db.appSettings
       ],
       async () => {
         if (Array.isArray(payload.firearms)) await db.firearms.bulkPut(payload.firearms);
         if (Array.isArray(payload.trainingSessions)) await db.trainingSessions.bulkPut(payload.trainingSessions);
         if (Array.isArray(payload.matchEvents)) await db.matchEvents.bulkPut(payload.matchEvents);
+        if (Array.isArray(payload.practiscoreMatchImports)) await db.practiscoreMatchImports.bulkPut(payload.practiscoreMatchImports);
         if (Array.isArray(payload.ammunitionBatches)) await db.ammunitionBatches.bulkPut(payload.ammunitionBatches);
         if (Array.isArray(payload.ammoTransactions)) await db.ammoTransactions.bulkPut(payload.ammoTransactions);
         if (Array.isArray(payload.maintenanceEvents)) await db.maintenanceEvents.bulkPut(payload.maintenanceEvents);
@@ -189,6 +199,7 @@ export function App() {
         if (Array.isArray(payload.paperworkAttachments)) {
           await db.paperworkAttachments.bulkPut(payload.paperworkAttachments.map(deserializePaperworkAttachment));
         }
+        if (Array.isArray(payload.appSettings)) await db.appSettings.bulkPut(payload.appSettings);
       }
     );
   }
@@ -210,22 +221,26 @@ export function App() {
         db.firearms,
         db.trainingSessions,
         db.matchEvents,
+        db.practiscoreMatchImports,
         db.ammunitionBatches,
         db.ammoTransactions,
         db.maintenanceEvents,
         db.paperworkCredentials,
-        db.paperworkAttachments
+        db.paperworkAttachments,
+        db.appSettings
       ],
       async () => {
         await Promise.all([
           db.firearms.clear(),
           db.trainingSessions.clear(),
           db.matchEvents.clear(),
+          db.practiscoreMatchImports.clear(),
           db.ammunitionBatches.clear(),
           db.ammoTransactions.clear(),
           db.maintenanceEvents.clear(),
           db.paperworkCredentials.clear(),
-          db.paperworkAttachments.clear()
+          db.paperworkAttachments.clear(),
+          db.appSettings.clear()
         ]);
       }
     );
@@ -241,6 +256,8 @@ export function App() {
         return <TrainingCrud />;
       case 'matches':
         return <MatchesCrud />;
+      case 'analysis':
+        return <MatchAnalysis />;
       case 'ammunition':
         return <AmmunitionCrud />;
       case 'maintenance':

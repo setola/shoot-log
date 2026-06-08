@@ -171,10 +171,12 @@ Implemented local-first modules:
 7. Ammunition batches and stock movement basics.
 8. Paperwork/credentials CRUD.
 9. Paperwork attachments stored locally as IndexedDB `Blob`s.
-10. Settings panel with theme/language/data actions.
-11. JSON export/import, including base64 serialization of paperwork attachments.
+10. Settings panel with theme/language/data actions and local device-owner PractiScore identifiers.
+11. JSON export/import, including base64 serialization of paperwork attachments, PractiScore snapshots, and app settings.
 12. Google Drive connection and manual backup/restore to the user's `appDataFolder`.
 13. Source commit link in the sidebar footer.
+14. PractiScore CAB import for matches, storing a single local snapshot per match.
+15. Dedicated Analysis section for imported PractiScore matches, including competitor autocomplete/default owner matching, hit distribution pie chart, stage placement trend, and compact stage details.
 
 Important limitations / follow-up work:
 
@@ -182,8 +184,9 @@ Important limitations / follow-up work:
 2. Import validation is basic and should be hardened before treating imports as fully trusted.
 3. Conflict detection/merge strategy is not implemented.
 4. Dashboard summaries are present but should be expanded with more live computed data.
-5. Reports, CSV/PDF export, and reminders are still pending.
-6. Attachment encryption and incremental sync are still pending.
+5. PractiScore CAB parsing currently supports the uncompressed CAB export format observed in `design/WinMSS.cab`; compressed CAB support is still pending.
+6. Reports, CSV/PDF export, and reminders are still pending.
+7. Attachment encryption and incremental sync are still pending.
 
 ## Data handling rules
 
@@ -243,6 +246,7 @@ Prefer practical labels:
 - Ammunition
 - Maintenance
 - Paperwork
+- Analysis
 - Reports
 - Settings
 

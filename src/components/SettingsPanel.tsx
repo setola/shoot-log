@@ -1,6 +1,9 @@
 import { Download, Info, Moon, Shield, Sun, Trash2, Upload } from 'lucide-react';
 import { useState } from 'react';
+import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
+import { db } from '../db/schema';
+import { DEFAULT_SETTINGS_ID, updateOwnerPractiscoreIdentifiers } from '../domain/settings/settingsRepository';
 
 interface SettingsPanelProps {
   theme: 'light' | 'dark';
@@ -25,11 +28,16 @@ export function SettingsPanel({
   onClearData
 }: SettingsPanelProps) {
   const { t } = useTranslation();
+  const appSettings = useLiveQuery(() => db.appSettings.get(DEFAULT_SETTINGS_ID), []);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
 
   async function handleClearData() {
     await onClearData();
     setConfirmClearOpen(false);
+  }
+
+  async function handleOwnerIdentifiersBlur(value: string) {
+    await updateOwnerPractiscoreIdentifiers(value.split(/[\n,]+/));
   }
 
   return (
@@ -87,6 +95,17 @@ export function SettingsPanel({
         <div className="settings-group settings-group-compact">
           <PrivacyNotice>{t('settingsPage.privacy.localOnly')}</PrivacyNotice>
           <PrivacyNotice>{t('settingsPage.privacy.sensitive')}</PrivacyNotice>
+        </div>
+      </article>
+
+      <article className="settings-card">
+        <h3>{t('settingsPage.owner.title')}</h3>
+        <div className="settings-group settings-group-compact">
+          <label>
+            <span className="settings-label">{t('settingsPage.owner.identifiersLabel')}</span>
+            <textarea key={appSettings?.updatedAt ?? 'empty-owner-identifiers'} rows={4} defaultValue={appSettings?.ownerPractiscoreIdentifiers.join('\n') ?? ''} onBlur={(event) => void handleOwnerIdentifiersBlur(event.target.value)} placeholder={t('settingsPage.owner.identifiersPlaceholder')} />
+          </label>
+          <p className="muted">{t('settingsPage.owner.description')}</p>
         </div>
       </article>
 

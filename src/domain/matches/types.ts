@@ -10,6 +10,8 @@ export interface MatchEvent {
   score?: string;
   placement?: string;
   registrationReference?: string;
+  practiscoreMatchId?: string;
+  practiscoreInternalMatchId?: string;
   notes?: string;
   createdAt: string;
   updatedAt: string;

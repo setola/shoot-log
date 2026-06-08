@@ -22,7 +22,7 @@ Build a web/PWA logbook for sport shooters to manage:
 
 - Firearms and round counts
 - Training sessions
-- Match participation and results
+- Match participation, results, and PractiScore-based stage analysis
 - Ammunition inventory and usage
 - Maintenance history
 - Paperwork, credentials, memberships, and reminders
@@ -76,6 +76,9 @@ The repository is already initialized as a static PWA skeleton:
 - Translation files in `src/i18n/locales/en/translation.json` and `src/i18n/locales/it/translation.json`
 - Light/dark theme selector using CSS variables and `localStorage`
 - Firearms CRUD implemented in `src/domain/firearms/FirearmsCrud.tsx`
+- Matches CRUD and PractiScore CAB import implemented in `src/domain/matches/MatchesCrud.tsx`
+- Dedicated PractiScore analysis screen implemented in `src/domain/matches/MatchAnalysis.tsx`
+- App settings for device-owner PractiScore identifiers persisted in IndexedDB
 - Firearm persistence helpers in `src/domain/firearms/firearmRepository.ts`
 - Minimal icon component in `src/components/Icon.tsx`
 - GitHub Pages deployment workflow in `.github/workflows/deploy.yml`
@@ -230,11 +233,12 @@ Implement:
 2. IndexedDB schema — initial version done
 3. Firearms CRUD — done
 4. Training sessions CRUD
-5. Matches CRUD
-6. Maintenance CRUD
-7. Basic ammunition tracking
-8. Dashboard summaries — static shell done; live summaries still needed
-9. Manual JSON export/import
+5. Matches CRUD — done
+6. PractiScore CAB import and Analysis section — initial implementation done
+7. Maintenance CRUD
+8. Basic ammunition tracking
+9. Dashboard summaries — static shell done; live summaries still needed
+10. Manual JSON export/import
 
 Goal: a useful offline logbook without Google Drive.
 
@@ -287,6 +291,26 @@ Implement:
 3. Separate encrypted Drive files for large attachments
 4. Incremental sync
 5. Better conflict resolution
+
+## PractiScore and match analysis guidance
+
+PractiScore support is local-first and import-based:
+
+- Do not fetch PractiScore from an app-owned backend.
+- Accept a PractiScore result ID or URL and normalize it to the UUID-style match id.
+- Import user-downloaded PractiScore CAB files locally in the browser.
+- Store one PractiScore snapshot per local `MatchEvent` in IndexedDB.
+- If importing while editing an existing match, replace that match's local data and snapshot with the XML-derived data.
+- Current parser support targets the uncompressed CAB XML export observed in `design/WinMSS.cab`.
+- Keep parser and analysis logic in small testable modules (`practiscoreParser.ts`, `practiscoreAnalysis.ts`).
+
+Analysis section expectations:
+
+- Use the imported PractiScore snapshot only; no network access required.
+- Allow selecting an imported match and a competitor with autocomplete.
+- Preselect the device owner using Settings identifiers such as `IcsAlias` or full name.
+- Compute stage placement within the competitor's division, sorted by descending hit factor.
+- Display hit distribution, stage placement trend, and compact per-stage details.
 
 ## Code organization guidance
 

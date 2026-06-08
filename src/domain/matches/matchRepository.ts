@@ -24,7 +24,10 @@ export async function updateMatchEvent(id: string, values: MatchFormValues): Pro
 }
 
 export async function deleteMatchEvent(id: string): Promise<void> {
-  await db.matchEvents.delete(id);
+  await db.transaction('rw', [db.matchEvents, db.practiscoreMatchImports], async () => {
+    await db.matchEvents.delete(id);
+    await db.practiscoreMatchImports.where('matchEventId').equals(id).delete();
+  });
 }
 
 function normalize(values: MatchFormValues): Omit<MatchEvent, 'id' | 'createdAt' | 'updatedAt'> {

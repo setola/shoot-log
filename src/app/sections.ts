@@ -3,6 +3,7 @@ export type Section =
   | 'firearms'
   | 'training'
   | 'matches'
+  | 'analysis'
   | 'ammunition'
   | 'maintenance'
   | 'paperwork'
