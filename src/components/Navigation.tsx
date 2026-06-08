@@ -1,4 +1,5 @@
 import {
+  Activity,
   BarChart2,
   Cloud,
   Code2,
@@ -40,6 +41,7 @@ const navItems = [
   { id: 'firearms', icon: Target },
   { id: 'training', icon: Timer },
   { id: 'matches', icon: Trophy },
+  { id: 'analysis', icon: Activity },
   { id: 'ammunition', icon: Package },
   { id: 'maintenance', icon: Wrench },
   { id: 'paperwork', icon: FileText },

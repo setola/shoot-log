@@ -22,7 +22,8 @@
     "sync": "Drive Sync",
     "settings": "Impostazioni",
     "sourceCode": "Codice sorgente",
-    "sourceCommit": "Sorgente {{commit}}"
+    "sourceCommit": "Sorgente {{commit}}",
+    "analysis": "Analisi"
   },
   "sections": {
     "dashboard": "Cruscotto",
@@ -34,7 +35,8 @@
     "paperwork": "Documenti",
     "reports": "Report",
     "sync": "Sincronizzazione Google Drive",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "analysis": "Analisi"
   },
   "privacy": {
     "localDevice": "I tuoi dati restano su questo dispositivo."
@@ -172,6 +174,12 @@
       "title": "Cancellare tutti i dati?",
       "description": "Rimuove definitivamente da questo dispositivo armi, allenamenti, gare, munizioni, manutenzioni e documenti. Questa azione non può essere annullata.",
       "confirm": "Cancella dati"
+    },
+    "owner": {
+      "title": "Proprietario dispositivo",
+      "identifiersLabel": "Identificativi PractiScore / nomi",
+      "identifiersPlaceholder": "IT027386\nEmanuele Tessore",
+      "description": "Un valore per riga o separato da virgole. L’analisi userà alias o nomi per preselezionare il tuo tiratore quando apri una gara PractiScore."
     }
   },
   "sync": {
@@ -316,6 +324,44 @@
     },
     "placeholders": {
       "name": "Campionato regionale"
+    },
+    "practiscore": {
+      "title": "Import PractiScore",
+      "createHint": "Inserisci un ID o URL PractiScore e importa il file CAB scaricato. Verrà creata una gara locale dai dati XML.",
+      "replaceHint": "Importando durante la modifica, i dati locali della gara e lo snapshot PractiScore vengono sostituiti.",
+      "idOrUrl": "ID o URL PractiScore",
+      "idPlaceholder": "https://practiscore.com/results/html/{...}",
+      "normalizedId": "ID normalizzato: {{id}}",
+      "cabFile": "File CAB scaricato",
+      "importAction": "Importa dati PractiScore",
+      "importing": "Importazione…",
+      "validation": "Inserisci un ID o URL PractiScore e scegli il file CAB scaricato.",
+      "importError": "Impossibile importare i dati PractiScore.",
+      "importedSummary": "Importati {{stages}} stage, {{competitors}} tiratori e {{scores}} punteggi stage.",
+      "cardSummary": "PractiScore: {{stages}} stage · {{competitors}} tiratori · {{scores}} punteggi"
+    },
+    "analysis": {
+      "title": "Analisi gara",
+      "description": "Seleziona una gara PractiScore importata e un tiratore per analizzare la distribuzione dei colpi.",
+      "match": "Gara",
+      "competitor": "Tiratore",
+      "competitorPlaceholder": "Cerca per nome, alias o numero",
+      "pickCompetitor": "Scegli un tiratore dal campo di ricerca per mostrare il grafico.",
+      "noCompetitorSelected": "Nessun tiratore corrispondente selezionato.",
+      "totalHits": "{{count}} colpi / penalità conteggiati",
+      "labels": {
+        "alpha": "Alpha",
+        "charlie": "Charlie",
+        "delta": "Delta",
+        "miss": "Miss",
+        "noShoot": "No-shoot"
+      },
+      "stagePlacementTitle": "Andamento piazzamento per stage",
+      "stagePlacementDescription": "Classifica per stage calcolata dall’hit factor dello stage. Più basso è meglio.",
+      "stageDetailsTitle": "Dettaglio stage",
+      "stageDetailsDescription": "Vista compatta per stage con informazioni esercizio, colpi, penalità, tempo e hit factor.",
+      "emptyTitle": "Nessun dato PractiScore",
+      "emptyDescription": "Importa un file CAB PractiScore dalla sezione Gare prima di aprire l’analisi."
     }
   },
   "ammunition": {

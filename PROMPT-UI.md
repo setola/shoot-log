@@ -43,6 +43,7 @@ Primary sections:
 - Firearms
 - Training
 - Matches
+- Analysis
 - Ammunition
 - Maintenance
 - Paperwork
@@ -149,6 +150,41 @@ CRUD screen with:
 - Registration reference
 - Notes
 
+Also include a PractiScore import panel:
+- PractiScore ID or URL field
+- Downloaded CAB file upload
+- Import action
+- Clear success/error state
+- PractiScore badge on imported match cards
+
+### Analysis concept
+
+Dedicated section for imported PractiScore match analysis.
+
+Layout:
+- Section heading: “Analysis”
+- Main panel using same card/form visual language as other sections
+- Top controls: match selector and competitor autocomplete search
+- Empty state if no PractiScore data exists yet
+
+Charts and summaries:
+- Pie chart for selected competitor's hit distribution: Alpha, Charlie, Delta, Miss, No-shoot
+- Legend with counts and percentages
+- Line chart for placement by stage, where lower ranking is visually better and placement is computed within division
+- Compact stage detail cards showing:
+  - stage name
+  - minimum rounds
+  - maximum points
+  - time
+  - hit factor
+  - Alpha / Charlie / Delta / Miss / No-shoot / Procedure counts
+
+Visual style:
+- Clean analytical dashboard, not dense or tactical
+- Use small badges/chips and compact cards
+- Charts should use the existing accent blue plus calm semantic colors
+- Preserve light/dark theme compatibility
+
 ### Google Drive sync/settings
 
 Privacy-first sync panel with states:
@@ -169,6 +205,7 @@ Use “Connect Google Drive”, not “Login”.
 Settings include:
 - Language selector
 - Theme selector: Light / Dark
+- Device-owner PractiScore identifiers / names, entered as multiline text
 - Export data
 - Import data
 - Future encryption/passphrase settings
@@ -201,6 +238,7 @@ Suggested icons:
 - Ammunition: stacked dots/inventory box
 - Maintenance: wrench
 - Paperwork: document
+- Analysis: activity/chart line
 - Reports: chart
 - Sync: cloud upload
 - Privacy/encryption: shield/lock
