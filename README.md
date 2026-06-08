@@ -42,6 +42,7 @@ Google Drive sync is browser-only and uses the user's own Drive `appDataFolder`.
 2. Use application type **Web application**.
 3. Add authorized JavaScript origins, for example:
    - `http://localhost:5173`
+   - `https://shootlog.emanueletessore.com`
    - your GitHub Pages origin
 4. Copy `.env.example` to `.env.local` and set:
 
