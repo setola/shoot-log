@@ -1,0 +1,390 @@
+{
+  "app": {
+    "title": "Diario di Tiro Sportivo",
+    "shortTitle": "ShootLog",
+    "privateLogbook": "Registro privato",
+    "tagline": "Registro privacy-first per il tiro sportivo",
+    "description": "Tieni traccia di allenamenti, gare, armi, munizioni, manutenzione e documenti in locale, con backup opzionale su Google Drive."
+  },
+  "navigation": {
+    "primary": "Navigazione principale",
+    "mobile": "Navigazione mobile",
+    "openMenu": "Apri menu",
+    "closeMenu": "Chiudi menu",
+    "dashboard": "Cruscotto",
+    "firearms": "Armi",
+    "training": "Allenamenti",
+    "matches": "Gare",
+    "ammunition": "Munizioni",
+    "maintenance": "Manutenzione",
+    "paperwork": "Documenti",
+    "reports": "Report",
+    "sync": "Drive Sync",
+    "settings": "Impostazioni"
+  },
+  "sections": {
+    "dashboard": "Cruscotto",
+    "firearms": "Registro armi",
+    "training": "Sessioni di allenamento",
+    "matches": "Gare",
+    "ammunition": "Munizioni",
+    "maintenance": "Manutenzione",
+    "paperwork": "Documenti",
+    "reports": "Report",
+    "sync": "Sincronizzazione Google Drive",
+    "settings": "Impostazioni"
+  },
+  "privacy": {
+    "localDevice": "I tuoi dati restano su questo dispositivo."
+  },
+  "dashboard": {
+    "title": "Panoramica cruscotto",
+    "overview": "Panoramica",
+    "welcomeTitle": "Benvenuto in ShootLog",
+    "welcomeDescription": "I tuoi dati restano su questo dispositivo. Potrai salvarli su Google Drive quando la sincronizzazione sarà abilitata.",
+    "firearmsSummary": "Crea profili delle armi e traccia il conteggio totale dei colpi.",
+    "trainingSummary": "Registra sessioni di allenamento, esercizi, punteggi e note.",
+    "matchesSummary": "Conserva partecipazioni e risultati di gara per i report.",
+    "syncSummary": "Esegui il backup dei dati nella cartella app del Google Drive dell'utente.",
+    "stats": {
+      "firearms": "Armi registrate",
+      "activeFirearms": "{{count}} attive",
+      "sessionsThisMonth": "Sessioni questo mese",
+      "roundsFired": "{{count}} colpi sparati",
+      "matches": "Gare totali",
+      "allTime": "Da sempre",
+      "ammo": "Movimenti munizioni",
+      "inventory": "Traccia le scorte",
+      "maintenance": "Manutenzione",
+      "reminders": "Nessun promemoria attivo",
+      "drive": "Backup Drive",
+      "notConnected": "Non connesso",
+      "connectBackup": "Connetti per il backup"
+    }
+  },
+  "firearms": {
+    "title": "Registro armi",
+    "description": "Gestisci i profili delle armi, il conteggio iniziale dei colpi e riferimenti sensibili opzionali.",
+    "new": "Nuova arma",
+    "createTitle": "Aggiungi arma",
+    "editTitle": "Modifica arma",
+    "listTitle": "Armi salvate",
+    "emptyTitle": "Nessuna arma presente",
+    "empty": "Aggiungi il primo profilo per iniziare a tracciare l'utilizzo.",
+    "archived": "Archiviata",
+    "deleteTitle": "Eliminare l'arma?",
+    "deleteConfirm": "Eliminare {{name}}? Questa azione non può essere annullata.",
+    "roundCount": "Conteggio iniziale: {{count}} colpi",
+    "sensitiveTitle": "Dettagli sensibili",
+    "sensitiveHelp": "Questi campi restano in locale e in futuro potranno essere salvati sul Google Drive dell'utente.",
+    "fields": {
+      "nickname": "Nome breve",
+      "type": "Tipo",
+      "caliber": "Calibro",
+      "manufacturer": "Produttore",
+      "model": "Modello",
+      "serialNumber": "Numero di matricola",
+      "acquisitionReference": "Riferimento acquisizione",
+      "acquisitionDate": "Data acquisizione",
+      "initialRoundCount": "Conteggio colpi iniziale",
+      "notes": "Note",
+      "archived": "Archivia questa arma"
+    },
+    "placeholders": {
+      "nickname": "Pistola gara, carabina .22...",
+      "caliber": "9x19, .22 LR"
+    },
+    "types": {
+      "pistol": "Pistola",
+      "revolver": "Revolver",
+      "rifle": "Carabina/Fucile",
+      "shotgun": "Fucile a canna liscia",
+      "airgun": "Aria compressa",
+      "other": "Altro"
+    }
+  },
+  "actions": {
+    "create": "Crea",
+    "save": "Salva modifiche",
+    "cancel": "Annulla",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "close": "Chiudi"
+  },
+  "common": {
+    "loading": "Caricamento...",
+    "comingSoon": "Questa sezione arriverà presto.",
+    "none": "Nessuno"
+  },
+  "settings": {
+    "language": "Lingua",
+    "languages": {
+      "en": "EN",
+      "it": "IT"
+    },
+    "theme": "Tema",
+    "themeLight": "Chiaro",
+    "themeDark": "Scuro",
+    "switchTo": {
+      "light": "Passa al tema chiaro",
+      "dark": "Passa al tema scuro"
+    },
+    "themeValues": {
+      "light": "Chiaro",
+      "dark": "Scuro"
+    },
+    "languageNames": {
+      "en": "English",
+      "it": "Italiano"
+    }
+  },
+  "settingsPage": {
+    "title": "Impostazioni",
+    "description": "Preferenze e gestione dei dati.",
+    "appearance": {
+      "title": "Aspetto"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "localOnly": "I tuoi dati restano su questo dispositivo. L’app non invia nulla a server propri.",
+      "sensitive": "I dettagli sensibili sono salvati in locale e lasciano il dispositivo solo se esegui il backup su Google Drive."
+    },
+    "data": {
+      "title": "Gestione dati",
+      "exportTitle": "Esporta tutti i dati",
+      "exportDescription": "Scarica un file JSON con tutti i dati del registro.",
+      "exportButton": "Esporta dati",
+      "importTitle": "Importa dati",
+      "importDescription": "Ripristina da un file JSON esportato in precedenza. I record esistenti con lo stesso ID saranno aggiornati.",
+      "importButton": "Importa dati",
+      "clearTitle": "Cancella tutti i dati",
+      "clearDescription": "Elimina definitivamente tutti i dati del registro da questo dispositivo.",
+      "clearButton": "Cancella tutto"
+    },
+    "about": {
+      "title": "Informazioni su ShootLog",
+      "description": "ShootLog è un registro privacy-first per tiratori sportivi. Tutti i dati sono salvati localmente nel browser usando IndexedDB. Non è richiesto un database dell’app.",
+      "version": "Versione 0.1.0 · Open source"
+    },
+    "clearDialog": {
+      "title": "Cancellare tutti i dati?",
+      "description": "Rimuove definitivamente da questo dispositivo armi, allenamenti, gare, munizioni, manutenzioni e documenti. Questa azione non può essere annullata.",
+      "confirm": "Cancella dati"
+    }
+  },
+  "sync": {
+    "title": "Sincronizzazione Google Drive",
+    "description": "Connetti Google Drive per salvare e ripristinare questo registro locale dalla cartella dati app del tuo Drive.",
+    "connectedTitle": "Google Drive connesso",
+    "connectedDescription": "Questo browser ha un token temporaneo per backup e ripristino su Drive.",
+    "disconnectedTitle": "Google Drive non connesso",
+    "disconnectedDescription": "Connetti Google Drive per abilitare backup e ripristino.",
+    "lastSyncedAt": "Ultima sincronizzazione: {{date}}",
+    "neverSynced": "Mai sincronizzato su questo dispositivo",
+    "configurationMissingTitle": "Google OAuth non è configurato",
+    "configurationMissingDescription": "Imposta VITE_GOOGLE_CLIENT_ID nell’ambiente prima di usare la sincronizzazione Google Drive.",
+    "actionsTitle": "Azioni di sincronizzazione",
+    "connectTitle": "Connetti Google Drive",
+    "connectDescription": "Autorizza l’accesso solo alla cartella dati nascosta di questa app su Drive.",
+    "connectButton": "Connetti Google Drive",
+    "connectedButton": "Connesso",
+    "backupTitle": "Backup ora",
+    "backupDescription": "Carica il backup locale IndexedDB nella cartella dati app del tuo Google Drive.",
+    "backupButton": "Backup ora",
+    "backingUpButton": "Backup in corso...",
+    "restoreTitle": "Ripristina da Drive",
+    "restoreDescription": "Scarica il backup da Google Drive e importalo su questo dispositivo.",
+    "restoreButton": "Ripristina da Drive",
+    "restoringButton": "Ripristino...",
+    "restoreConfirm": "Ripristinare i dati da Google Drive? I record esistenti con lo stesso ID saranno aggiornati.",
+    "noBackupFound": "Nessun backup Google Drive trovato per questa app.",
+    "disconnectTitle": "Disconnetti",
+    "disconnectDescription": "Revoca il token di accesso corrente del browser. Il backup su Drive non viene eliminato.",
+    "disconnectButton": "Disconnetti",
+    "privacyTitle": "Privacy",
+    "privacyDescription": "L’app richiede solo lo scope drive.appdata. Può accedere ai file creati da questa app nella cartella dati nascosta di Google Drive, non a tutto il tuo Drive.",
+    "errorTitle": "Errore sincronizzazione Google Drive"
+  },
+  "paperwork": {
+    "title": "Documenti",
+    "description": "Traccia licenze, permessi, tessere e credenziali con promemoria di scadenza.",
+    "new": "Aggiungi documento",
+    "createTitle": "Aggiungi documento",
+    "editTitle": "Modifica record",
+    "createAction": "Aggiungi documento",
+    "emptyTitle": "Nessun documento presente",
+    "empty": "Aggiungi licenze, permessi e credenziali per tracciarne la scadenza.",
+    "deleteTitle": "Eliminare il documento?",
+    "deleteConfirm": "Eliminare {{name}}? Questo record sarà rimosso definitivamente.",
+    "privacyNote": "I dettagli sensibili dei documenti sono salvati in locale e possono essere inclusi nel backup su Google Drive.",
+    "expires": "Scade: {{date}}",
+    "reference": "Rif: {{reference}}",
+    "fields": {
+      "title": "Titolo",
+      "type": "Tipo",
+      "issuingAuthority": "Autorità emittente",
+      "validFrom": "Valido da",
+      "validUntil": "Valido fino",
+      "reminderDate": "Data promemoria",
+      "referenceNumber": "Numero riferimento",
+      "notes": "Note"
+    },
+    "placeholders": {
+      "title": "Licenza, tessera club...",
+      "issuingAuthority": "Club, federazione, autorità...",
+      "referenceNumber": "Numero documento o permesso"
+    },
+    "types": {
+      "license": "Licenza",
+      "permit": "Permesso",
+      "clubMembership": "Tessera club",
+      "medicalCertificate": "Certificato medico",
+      "matchDocument": "Documento gara",
+      "other": "Altro"
+    },
+    "status": {
+      "expired": "Scaduto",
+      "expiresDays": "Scade tra {{count}}g",
+      "expiresMonths": "Scade tra {{count}}m",
+      "valid": "Valido"
+    },
+    "attachments": {
+      "label": "Documenti allegati",
+      "add": "Allega documento",
+      "addAnother": "Allega un altro",
+      "download": "Scarica allegato",
+      "delete": "Elimina allegato",
+      "editHint": "Dopo il salvataggio, scansioni o PDF allegati si gestiscono dalla scheda del documento."
+    }
+  },
+  "training": {
+    "title": "Allenamenti",
+    "description": "Registra le sessioni di pratica e monitora i progressi.",
+    "new": "Registra sessione",
+    "createTitle": "Aggiungi sessione",
+    "editTitle": "Modifica sessione",
+    "createAction": "Aggiungi sessione",
+    "emptyTitle": "Nessuna sessione",
+    "empty": "Registra il primo allenamento per iniziare a monitorare i progressi.",
+    "deleteTitle": "Eliminare la sessione?",
+    "deleteConfirm": "La sessione di allenamento sarà rimossa definitivamente.",
+    "roundsCount": "{{count}} colpi",
+    "score": "Risultato: {{score}}",
+    "fields": {
+      "date": "Data",
+      "location": "Luogo",
+      "discipline": "Disciplina",
+      "firearm": "Arma",
+      "rounds": "Colpi sparati",
+      "distance": "Distanza",
+      "ammo": "Descrizione munizioni",
+      "score": "Punteggio / risultato",
+      "drills": "Esercizi",
+      "notes": "Note"
+    },
+    "placeholders": {
+      "location": "Poligono",
+      "distance": "25m"
+    }
+  },
+  "matches": {
+    "title": "Gare",
+    "description": "Traccia risultati e piazzamenti delle competizioni.",
+    "new": "Aggiungi gara",
+    "createTitle": "Aggiungi gara",
+    "editTitle": "Modifica gara",
+    "createAction": "Aggiungi gara",
+    "emptyTitle": "Nessuna gara",
+    "empty": "Registra il primo risultato di gara.",
+    "deleteTitle": "Eliminare la gara?",
+    "deleteConfirm": "Questa gara sarà rimossa definitivamente.",
+    "score": "Punteggio: {{score}}",
+    "fields": {
+      "name": "Nome gara",
+      "date": "Data",
+      "club": "Club / poligono",
+      "discipline": "Disciplina",
+      "division": "Divisione / categoria",
+      "firearm": "Arma",
+      "rounds": "Colpi sparati",
+      "score": "Punteggio",
+      "placement": "Piazzamento",
+      "registration": "Riferimento iscrizione",
+      "notes": "Note"
+    },
+    "placeholders": {
+      "name": "Campionato regionale"
+    }
+  },
+  "ammunition": {
+    "title": "Munizioni",
+    "description": "Traccia lo stock di munizioni.",
+    "summary": "{{entries}} voci · {{rounds}} colpi totali",
+    "new": "Aggiungi munizioni",
+    "createTitle": "Aggiungi munizioni",
+    "editTitle": "Modifica lotto",
+    "createAction": "Aggiungi munizioni",
+    "emptyTitle": "Nessuna munizione",
+    "empty": "Traccia stock, acquisti e colpi rimanenti.",
+    "deleteTitle": "Eliminare voce?",
+    "deleteConfirm": "Questa voce munizioni sarà rimossa definitivamente.",
+    "transactionTitle": "Movimento rapido stock",
+    "addTransaction": "Aggiungi movimento",
+    "rounds": "{{count}} colpi",
+    "lot": "Lotto: {{lot}}",
+    "fields": {
+      "caliber": "Calibro",
+      "brand": "Marca",
+      "bulletWeight": "Peso palla",
+      "lot": "Numero lotto",
+      "quantity": "Quantità",
+      "notes": "Note",
+      "type": "Tipo",
+      "date": "Data",
+      "batch": "Lotto"
+    },
+    "placeholders": {
+      "caliber": "9×19mm"
+    },
+    "types": {
+      "added": "Aggiunti",
+      "used": "Usati",
+      "adjusted": "Rettifica"
+    }
+  },
+  "maintenance": {
+    "title": "Manutenzione",
+    "description": "Traccia pulizie, interventi e sostituzioni parti.",
+    "new": "Aggiungi record",
+    "createTitle": "Aggiungi record",
+    "editTitle": "Modifica record",
+    "createAction": "Aggiungi record",
+    "emptyTitle": "Nessuna manutenzione",
+    "empty": "Registra pulizie, interventi e sostituzioni parti.",
+    "deleteTitle": "Eliminare manutenzione?",
+    "deleteConfirm": "Questa voce di manutenzione sarà rimossa definitivamente.",
+    "atRounds": "a {{count}} colpi",
+    "parts": "Parti: {{parts}}",
+    "nextDate": "Prossimo promemoria: {{date}}",
+    "fields": {
+      "date": "Data",
+      "type": "Tipo",
+      "firearm": "Arma",
+      "roundsAt": "Colpi al servizio",
+      "nextDate": "Prossima data",
+      "nextRounds": "Prossimi colpi",
+      "parts": "Parti sostituite",
+      "cost": "Costo",
+      "notes": "Note"
+    },
+    "types": {
+      "cleaning": "Pulizia",
+      "lubrication": "Lubrificazione",
+      "inspection": "Ispezione",
+      "repair": "Riparazione",
+      "partReplacement": "Sostituzione parti",
+      "gunsmith": "Armaiolo",
+      "other": "Altro"
+    }
+  }
+}

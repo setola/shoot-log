@@ -1,0 +1,390 @@
+{
+  "app": {
+    "title": "Shooting Logbook",
+    "shortTitle": "ShootLog",
+    "privateLogbook": "Private logbook",
+    "tagline": "Privacy-first sport shooting records",
+    "description": "Track training, matches, firearms, ammunition, maintenance and paperwork locally, with optional Google Drive backup."
+  },
+  "navigation": {
+    "primary": "Primary navigation",
+    "mobile": "Mobile navigation",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "dashboard": "Dashboard",
+    "firearms": "Firearms",
+    "training": "Training",
+    "matches": "Matches",
+    "ammunition": "Ammunition",
+    "maintenance": "Maintenance",
+    "paperwork": "Paperwork",
+    "reports": "Reports",
+    "sync": "Drive Sync",
+    "settings": "Settings"
+  },
+  "sections": {
+    "dashboard": "Dashboard",
+    "firearms": "Firearm Registry",
+    "training": "Training Sessions",
+    "matches": "Matches",
+    "ammunition": "Ammunition",
+    "maintenance": "Maintenance",
+    "paperwork": "Paperwork",
+    "reports": "Reports",
+    "sync": "Google Drive Sync",
+    "settings": "Settings"
+  },
+  "privacy": {
+    "localDevice": "Your data stays on this device."
+  },
+  "dashboard": {
+    "title": "Dashboard overview",
+    "overview": "Overview",
+    "welcomeTitle": "Welcome to ShootLog",
+    "welcomeDescription": "Your data stays on this device. Back up to Google Drive when sync is enabled.",
+    "firearmsSummary": "Create firearm profiles and track total round counts.",
+    "trainingSummary": "Record training sessions, drills, scores and notes.",
+    "matchesSummary": "Keep match participation and results ready for reporting.",
+    "syncSummary": "Back up data to the user's own Google Drive app data folder.",
+    "stats": {
+      "firearms": "Registered firearms",
+      "activeFirearms": "{{count}} active",
+      "sessionsThisMonth": "Sessions this month",
+      "roundsFired": "{{count}} rounds fired",
+      "matches": "Total matches",
+      "allTime": "All time",
+      "ammo": "Ammo records",
+      "inventory": "Track your stock",
+      "maintenance": "Maintenance",
+      "reminders": "No pending reminders",
+      "drive": "Drive backup",
+      "notConnected": "Not connected",
+      "connectBackup": "Connect to back up"
+    }
+  },
+  "firearms": {
+    "title": "Firearm registry",
+    "description": "Manage firearm profiles, round count starting values and optional sensitive references.",
+    "new": "New firearm",
+    "createTitle": "Add firearm",
+    "editTitle": "Edit firearm",
+    "listTitle": "Saved firearms",
+    "emptyTitle": "No firearms yet",
+    "empty": "Add the first profile to start tracking usage.",
+    "archived": "Archived",
+    "deleteTitle": "Delete firearm?",
+    "deleteConfirm": "Delete {{name}}? This action cannot be undone.",
+    "roundCount": "Initial count: {{count}} rounds",
+    "sensitiveTitle": "Sensitive details",
+    "sensitiveHelp": "These fields stay local and can later be backed up to the user's Google Drive.",
+    "fields": {
+      "nickname": "Nickname",
+      "type": "Type",
+      "caliber": "Caliber",
+      "manufacturer": "Manufacturer",
+      "model": "Model",
+      "serialNumber": "Serial number",
+      "acquisitionReference": "Acquisition reference",
+      "acquisitionDate": "Acquisition date",
+      "initialRoundCount": "Initial round count",
+      "notes": "Notes",
+      "archived": "Archive this firearm"
+    },
+    "placeholders": {
+      "nickname": "Range pistol, .22 rifle...",
+      "caliber": "9x19, .22 LR"
+    },
+    "types": {
+      "pistol": "Pistol",
+      "revolver": "Revolver",
+      "rifle": "Rifle",
+      "shotgun": "Shotgun",
+      "airgun": "Airgun",
+      "other": "Other"
+    }
+  },
+  "actions": {
+    "create": "Create",
+    "save": "Save changes",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close"
+  },
+  "common": {
+    "loading": "Loading...",
+    "comingSoon": "This section is coming soon.",
+    "none": "None"
+  },
+  "settings": {
+    "language": "Language",
+    "languages": {
+      "en": "EN",
+      "it": "IT"
+    },
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "switchTo": {
+      "light": "Switch to light theme",
+      "dark": "Switch to dark theme"
+    },
+    "themeValues": {
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "languageNames": {
+      "en": "English",
+      "it": "Italiano"
+    }
+  },
+  "settingsPage": {
+    "title": "Settings",
+    "description": "Preferences and data management.",
+    "appearance": {
+      "title": "Appearance"
+    },
+    "privacy": {
+      "title": "Privacy",
+      "localOnly": "Your data stays on this device. Nothing is sent to any server by this app.",
+      "sensitive": "Sensitive details are stored locally and only leave your device if you back up to your Google Drive."
+    },
+    "data": {
+      "title": "Data management",
+      "exportTitle": "Export all data",
+      "exportDescription": "Download a JSON file with all your logbook data.",
+      "exportButton": "Export data",
+      "importTitle": "Import data",
+      "importDescription": "Restore from a previously exported JSON file. Existing records with the same IDs will be updated.",
+      "importButton": "Import data",
+      "clearTitle": "Clear all data",
+      "clearDescription": "This will permanently delete all logbook data from this device.",
+      "clearButton": "Clear all data"
+    },
+    "about": {
+      "title": "About ShootLog",
+      "description": "ShootLog is a privacy-first logbook for sport shooters. All data is stored locally in your browser using IndexedDB. No app-owned database is required.",
+      "version": "Version 0.1.0 · Open source"
+    },
+    "clearDialog": {
+      "title": "Clear all data?",
+      "description": "This permanently removes firearms, training sessions, matches, ammunition, maintenance and paperwork records from this device. This cannot be undone.",
+      "confirm": "Clear data"
+    }
+  },
+  "sync": {
+    "title": "Google Drive Sync",
+    "description": "Connect your Google Drive to back up and restore this local logbook from your own Drive app data folder.",
+    "connectedTitle": "Google Drive connected",
+    "connectedDescription": "This browser has a temporary Drive access token for backup and restore.",
+    "disconnectedTitle": "Google Drive not connected",
+    "disconnectedDescription": "Connect Google Drive to enable backup and restore.",
+    "lastSyncedAt": "Last synced: {{date}}",
+    "neverSynced": "Never synced on this device",
+    "configurationMissingTitle": "Google OAuth is not configured",
+    "configurationMissingDescription": "Set VITE_GOOGLE_CLIENT_ID in the environment before using Google Drive sync.",
+    "actionsTitle": "Sync actions",
+    "connectTitle": "Connect Google Drive",
+    "connectDescription": "Authorize access only to this app’s hidden Drive data folder.",
+    "connectButton": "Connect Google Drive",
+    "connectedButton": "Connected",
+    "backupTitle": "Backup now",
+    "backupDescription": "Upload the current local IndexedDB backup to your Google Drive app data folder.",
+    "backupButton": "Backup now",
+    "backingUpButton": "Backing up...",
+    "restoreTitle": "Restore from Drive",
+    "restoreDescription": "Download the backup from Google Drive and import it into this device.",
+    "restoreButton": "Restore from Drive",
+    "restoringButton": "Restoring...",
+    "restoreConfirm": "Restore data from Google Drive? Existing records with the same IDs will be updated.",
+    "noBackupFound": "No Google Drive backup was found for this app.",
+    "disconnectTitle": "Disconnect",
+    "disconnectDescription": "Revoke the current browser access token. Your Drive backup is not deleted.",
+    "disconnectButton": "Disconnect",
+    "privacyTitle": "Privacy",
+    "privacyDescription": "The app requests only the drive.appdata scope. It can access files created by this app in the hidden Google Drive app data folder, not your full Drive.",
+    "errorTitle": "Google Drive sync error"
+  },
+  "paperwork": {
+    "title": "Paperwork",
+    "description": "Track licences, permits, memberships and credentials with expiry reminders.",
+    "new": "Add document",
+    "createTitle": "Add document",
+    "editTitle": "Edit record",
+    "createAction": "Add document",
+    "emptyTitle": "No documents yet",
+    "empty": "Add licences, permits and credentials to track their expiry.",
+    "deleteTitle": "Delete document?",
+    "deleteConfirm": "Delete {{name}}? This document record will be permanently removed.",
+    "privacyNote": "Sensitive paperwork details are stored locally and can be backed up to your Google Drive.",
+    "expires": "Expires: {{date}}",
+    "reference": "Ref: {{reference}}",
+    "fields": {
+      "title": "Title",
+      "type": "Type",
+      "issuingAuthority": "Issuing authority",
+      "validFrom": "Valid from",
+      "validUntil": "Valid until",
+      "reminderDate": "Reminder date",
+      "referenceNumber": "Reference number",
+      "notes": "Notes"
+    },
+    "placeholders": {
+      "title": "Firearms licence, club membership...",
+      "issuingAuthority": "Club, federation, authority...",
+      "referenceNumber": "Document or permit number"
+    },
+    "types": {
+      "license": "Licence",
+      "permit": "Permit",
+      "clubMembership": "Club membership",
+      "medicalCertificate": "Medical certificate",
+      "matchDocument": "Match document",
+      "other": "Other"
+    },
+    "status": {
+      "expired": "Expired",
+      "expiresDays": "Expires in {{count}}d",
+      "expiresMonths": "Expires in {{count}}mo",
+      "valid": "Valid"
+    },
+    "attachments": {
+      "label": "Attached documents",
+      "add": "Attach document",
+      "addAnother": "Attach another",
+      "download": "Download attachment",
+      "delete": "Delete attachment",
+      "editHint": "After saving, attached scans or PDFs can be managed from the document card."
+    }
+  },
+  "training": {
+    "title": "Training sessions",
+    "description": "Log practice sessions and track progress.",
+    "new": "Log session",
+    "createTitle": "Add session",
+    "editTitle": "Edit session",
+    "createAction": "Add session",
+    "emptyTitle": "No sessions yet",
+    "empty": "Log your first training session to start tracking progress.",
+    "deleteTitle": "Delete session?",
+    "deleteConfirm": "This will permanently remove this training session.",
+    "roundsCount": "{{count}} rounds",
+    "score": "Score: {{score}}",
+    "fields": {
+      "date": "Date",
+      "location": "Location",
+      "discipline": "Discipline",
+      "firearm": "Firearm",
+      "rounds": "Rounds fired",
+      "distance": "Distance",
+      "ammo": "Ammo description",
+      "score": "Score / result",
+      "drills": "Drills",
+      "notes": "Notes"
+    },
+    "placeholders": {
+      "location": "City range",
+      "distance": "25m"
+    }
+  },
+  "matches": {
+    "title": "Matches",
+    "description": "Track competition results and placements.",
+    "new": "Add match",
+    "createTitle": "Add match",
+    "editTitle": "Edit match",
+    "createAction": "Add match",
+    "emptyTitle": "No matches yet",
+    "empty": "Log your first competition result.",
+    "deleteTitle": "Delete match?",
+    "deleteConfirm": "This will permanently remove this match.",
+    "score": "Score: {{score}}",
+    "fields": {
+      "name": "Match name",
+      "date": "Date",
+      "club": "Club / range",
+      "discipline": "Discipline",
+      "division": "Division / category",
+      "firearm": "Firearm",
+      "rounds": "Rounds fired",
+      "score": "Score",
+      "placement": "Placement",
+      "registration": "Registration reference",
+      "notes": "Notes"
+    },
+    "placeholders": {
+      "name": "Regional Championship"
+    }
+  },
+  "ammunition": {
+    "title": "Ammunition",
+    "description": "Track your ammunition stock.",
+    "summary": "{{entries}} entries · {{rounds}} rounds total",
+    "new": "Add ammo",
+    "createTitle": "Add ammo",
+    "editTitle": "Edit batch",
+    "createAction": "Add ammo",
+    "emptyTitle": "No ammunition entries",
+    "empty": "Track your stock, purchases and remaining rounds.",
+    "deleteTitle": "Delete entry?",
+    "deleteConfirm": "This will permanently remove this ammunition entry.",
+    "transactionTitle": "Quick stock movement",
+    "addTransaction": "Add movement",
+    "rounds": "{{count}} rounds",
+    "lot": "Lot: {{lot}}",
+    "fields": {
+      "caliber": "Caliber",
+      "brand": "Brand",
+      "bulletWeight": "Bullet weight",
+      "lot": "Lot number",
+      "quantity": "Quantity",
+      "notes": "Notes",
+      "type": "Type",
+      "date": "Date",
+      "batch": "Batch"
+    },
+    "placeholders": {
+      "caliber": "9×19mm"
+    },
+    "types": {
+      "added": "Added",
+      "used": "Used",
+      "adjusted": "Adjusted"
+    }
+  },
+  "maintenance": {
+    "title": "Maintenance",
+    "description": "Track cleaning, servicing and parts replacements.",
+    "new": "Add record",
+    "createTitle": "Add record",
+    "editTitle": "Edit record",
+    "createAction": "Add record",
+    "emptyTitle": "No maintenance records",
+    "empty": "Log cleanings, services and parts replacements.",
+    "deleteTitle": "Delete maintenance record?",
+    "deleteConfirm": "This will permanently remove this maintenance entry.",
+    "atRounds": "at {{count}} rounds",
+    "parts": "Parts: {{parts}}",
+    "nextDate": "Next reminder: {{date}}",
+    "fields": {
+      "date": "Date",
+      "type": "Type",
+      "firearm": "Firearm",
+      "roundsAt": "Rounds at service",
+      "nextDate": "Next date",
+      "nextRounds": "Next rounds",
+      "parts": "Parts replaced",
+      "cost": "Cost",
+      "notes": "Notes"
+    },
+    "types": {
+      "cleaning": "Cleaning",
+      "lubrication": "Lubrication",
+      "inspection": "Inspection",
+      "repair": "Repair",
+      "partReplacement": "Parts replacement",
+      "gunsmith": "Gunsmith",
+      "other": "Other"
+    }
+  }
+}
