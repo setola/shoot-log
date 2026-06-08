@@ -109,8 +109,13 @@ Current implementation notes:
 - Current locales: English (`en`) and Italian (`it`).
 - Styling: plain CSS in `src/styles/global.css` using CSS variables.
 - Theme support: light/dark theme selector with `localStorage` persistence.
-- Deployment: GitHub Actions to GitHub Pages via `.github/workflows/deploy.yml`.
+- Deployment: GitHub Actions to GitHub Pages via `.github/workflows/deploy.yml` using Node 24 actions.
+- Production/custom domain: `https://shootlog.emanueletessore.com/` with `public/CNAME`.
+- Vite `base` is relative (`./`) so the app works on localhost, GitHub Pages project URLs, and the custom root domain.
 - Local development: Docker Compose using the official `node:22-alpine` image and bind-mounted `./node_modules`.
+- Build-time env:
+  - `VITE_GOOGLE_CLIENT_ID` is injected from the GitHub `github-pages` environment secret.
+  - `VITE_GIT_COMMIT_SHA` is injected from `${{ github.sha }}` and shown as a sidebar source link.
 
 ## Recommended stack
 
@@ -153,45 +158,32 @@ Expected model areas:
 - AppSettings
 - SyncMetadata
 
-## Suggested MVP scope
+## Current feature status
 
-Phase 1 should focus on a complete local logbook:
+Implemented local-first modules:
 
-1. App shell / PWA-friendly frontend — implemented as Vite/React skeleton
-2. IndexedDB schema — initial Dexie schema implemented
-3. Firearms CRUD — implemented with create/read/update/delete, sensitive details section, and archive flag
-4. Training sessions CRUD
-5. Matches CRUD
-6. Maintenance CRUD
-7. Ammunition inventory/usage basics
-8. Dashboard summaries — initial static summary cards implemented
-9. JSON export/import
+1. App shell / PWA-friendly frontend.
+2. IndexedDB schema with Dexie migrations.
+3. Firearms CRUD with sensitive details and archive flag.
+4. Training sessions CRUD.
+5. Matches CRUD.
+6. Maintenance CRUD.
+7. Ammunition batches and stock movement basics.
+8. Paperwork/credentials CRUD.
+9. Paperwork attachments stored locally as IndexedDB `Blob`s.
+10. Settings panel with theme/language/data actions.
+11. JSON export/import, including base64 serialization of paperwork attachments.
+12. Google Drive connection and manual backup/restore to the user's `appDataFolder`.
+13. Source commit link in the sidebar footer.
 
-Phase 2:
+Important limitations / follow-up work:
 
-1. Sensitive/legal fields
-2. Paperwork and credential records
-3. Reminders
-4. CSV/PDF reports
-
-Phase 3:
-
-1. Google OAuth
-2. Google Drive `appDataFolder` persistence
-3. Manual backup/restore
-4. Sync status UI
-
-Phase 4:
-
-1. Client-side encrypted backups
-2. Passphrase setup/change flow
-3. Conflict detection and merge strategy
-
-Phase 5:
-
-1. Attachments
-2. Encrypted attachment blobs
-3. Incremental sync
+1. Drive backups are currently plaintext JSON; client-side encryption is still pending.
+2. Import validation is basic and should be hardened before treating imports as fully trusted.
+3. Conflict detection/merge strategy is not implemented.
+4. Dashboard summaries are present but should be expanded with more live computed data.
+5. Reports, CSV/PDF export, and reminders are still pending.
+6. Attachment encryption and incremental sync are still pending.
 
 ## Data handling rules
 
@@ -207,9 +199,12 @@ When implementing features:
 
 ## Sync strategy guidance
 
-Initial implementation can use a single backup file:
+Current implementation uses a single plaintext backup file:
 
-- `shooting-logbook-backup.json` for plaintext development/export
+- `shooting-logbook-backup.json` for JSON export/import and Google Drive backup/restore
+
+Planned encrypted backup file:
+
 - `shooting-logbook-backup.enc.json` for encrypted Drive backup
 
 Backup envelope should include:
