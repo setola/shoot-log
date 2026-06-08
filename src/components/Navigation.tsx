@@ -1,6 +1,7 @@
 import {
   BarChart2,
   Cloud,
+  Code2,
   FileText,
   Grid2X2,
   Menu,
@@ -48,6 +49,10 @@ const navItems = [
 ] as const satisfies ReadonlyArray<{ id: Section; icon: typeof Target }>;
 
 const bottomItems = navItems.slice(0, 5);
+const repositoryUrl = 'https://github.com/setola/shoot-log';
+const commitSha = import.meta.env.VITE_GIT_COMMIT_SHA as string | undefined;
+const sourceUrl = commitSha ? `${repositoryUrl}/tree/${commitSha}` : repositoryUrl;
+const shortCommitSha = commitSha?.slice(0, 7);
 
 export function Sidebar({ active, mobileOpen, onNavigate, onMobileClose }: NavigationProps) {
   const { t } = useTranslation();
@@ -89,9 +94,15 @@ export function Sidebar({ active, mobileOpen, onNavigate, onMobileClose }: Navig
           })}
         </nav>
 
-        <div className="sidebar-privacy">
-          <Shield size={14} />
-          <span>{t('privacy.localDevice')}</span>
+        <div className="sidebar-footer">
+          <a className="sidebar-source-link" href={sourceUrl} target="_blank" rel="noreferrer">
+            <Code2 size={14} />
+            <span>{shortCommitSha ? t('navigation.sourceCommit', { commit: shortCommitSha }) : t('navigation.sourceCode')}</span>
+          </a>
+          <div className="sidebar-privacy">
+            <Shield size={14} />
+            <span>{t('privacy.localDevice')}</span>
+          </div>
         </div>
       </aside>
     </>

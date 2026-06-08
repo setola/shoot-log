@@ -138,7 +138,8 @@ p {
 }
 
 .sidebar-brand span,
-.sidebar-privacy {
+.sidebar-privacy,
+.sidebar-source-link {
   color: var(--muted-foreground);
   font-size: 0.75rem;
 }
@@ -191,12 +192,30 @@ p {
   color: var(--primary);
 }
 
-.sidebar-privacy {
+.sidebar-footer {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.75rem;
+  border-top: 1px solid var(--sidebar-border);
+}
+
+.sidebar-privacy,
+.sidebar-source-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem;
-  border-top: 1px solid var(--sidebar-border);
+  padding: 0.45rem 0.25rem;
+}
+
+.sidebar-source-link {
+  border-radius: 0.55rem;
+  text-decoration: none;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.sidebar-source-link:hover {
+  color: var(--primary);
+  background: var(--sidebar-accent);
 }
 
 .topbar {

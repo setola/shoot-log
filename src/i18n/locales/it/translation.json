@@ -20,7 +20,9 @@
     "paperwork": "Documenti",
     "reports": "Report",
     "sync": "Drive Sync",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "sourceCode": "Codice sorgente",
+    "sourceCommit": "Sorgente {{commit}}"
   },
   "sections": {
     "dashboard": "Cruscotto",

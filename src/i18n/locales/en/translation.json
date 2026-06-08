@@ -20,7 +20,9 @@
     "paperwork": "Paperwork",
     "reports": "Reports",
     "sync": "Drive Sync",
-    "settings": "Settings"
+    "settings": "Settings",
+    "sourceCode": "Source code",
+    "sourceCommit": "Source {{commit}}"
   },
   "sections": {
     "dashboard": "Dashboard",
