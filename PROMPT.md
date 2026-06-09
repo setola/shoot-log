@@ -22,7 +22,7 @@ Build a web/PWA logbook for sport shooters to manage:
 
 - Firearms and round counts
 - Training sessions
-- Match participation, results, and PractiScore-based stage analysis
+- Match participation, results, and imported score-analysis data from PractiScore or Mare2 FITDS
 - Ammunition inventory and usage
 - Maintenance history
 - Paperwork, credentials, memberships, and reminders
@@ -76,9 +76,9 @@ The repository is already initialized as a static PWA skeleton:
 - Translation files in `src/i18n/locales/en/translation.json` and `src/i18n/locales/it/translation.json`
 - Light/dark theme selector using CSS variables and `localStorage`
 - Firearms CRUD implemented in `src/domain/firearms/FirearmsCrud.tsx`
-- Matches CRUD and PractiScore CAB import implemented in `src/domain/matches/MatchesCrud.tsx`
-- Dedicated PractiScore analysis screen implemented in `src/domain/matches/MatchAnalysis.tsx`
-- App settings for device-owner PractiScore identifiers persisted in IndexedDB
+- Matches CRUD with PractiScore CAB and Mare2 FITDS PDF import implemented in `src/domain/matches/MatchesCrud.tsx`
+- Dedicated match analysis screen implemented in `src/domain/matches/MatchAnalysis.tsx`
+- App settings for device-owner PractiScore/Mare2 identifiers and names persisted in IndexedDB
 - Firearm persistence helpers in `src/domain/firearms/firearmRepository.ts`
 - Minimal icon component in `src/components/Icon.tsx`
 - GitHub Pages deployment workflow in `.github/workflows/deploy.yml`
@@ -234,7 +234,7 @@ Implement:
 3. Firearms CRUD — done
 4. Training sessions CRUD
 5. Matches CRUD — done
-6. PractiScore CAB import and Analysis section — initial implementation done
+6. PractiScore CAB import, Mare2 FITDS PDF import, and Analysis section — initial implementation done
 7. Maintenance CRUD
 8. Basic ammunition tracking
 9. Dashboard summaries — static shell done; live summaries still needed
@@ -292,25 +292,28 @@ Implement:
 4. Incremental sync
 5. Better conflict resolution
 
-## PractiScore and match analysis guidance
+## Score import and match analysis guidance
 
-PractiScore support is local-first and import-based:
+Match score analysis is local-first and import-based:
 
-- Do not fetch PractiScore from an app-owned backend.
+- Do not fetch match results through an app-owned backend.
 - Accept a PractiScore result ID or URL and normalize it to the UUID-style match id.
 - Import user-downloaded PractiScore CAB files locally in the browser.
-- Store one PractiScore snapshot per local `MatchEvent` in IndexedDB.
-- If importing while editing an existing match, replace that match's local data and snapshot with the XML-derived data.
-- Current parser support targets the uncompressed CAB XML export observed in `design/WinMSS.cab`.
-- Keep parser and analysis logic in small testable modules (`practiscoreParser.ts`, `practiscoreAnalysis.ts`).
+- Import FITDS Mare2 score-verification PDFs locally in the browser.
+- Store one score snapshot per local `MatchEvent` in IndexedDB using the existing `practiscoreMatchImports` table/snapshot shape for compatibility.
+- If importing while editing an existing match, replace that match's local data and analysis snapshot with the imported data.
+- Current PractiScore parser support targets the uncompressed CAB XML export observed in `design/WinMSS.cab`.
+- Current Mare2 parser support targets the score-verification-by-competitor PDF layout observed in `design/6camp_dFWMLqQ4vR.pdf`.
+- Keep parser and analysis logic in small testable modules (`practiscoreParser.ts`, `mare2PdfParser.ts`, `practiscoreAnalysis.ts`).
 
 Analysis section expectations:
 
-- Use the imported PractiScore snapshot only; no network access required.
-- Allow selecting an imported match and a competitor with autocomplete.
+- Use imported local snapshots only; no network access required.
+- Allow selecting an imported match, a primary competitor, and an optional comparison competitor with autocomplete.
 - Preselect the device owner using Settings identifiers such as `IcsAlias` or full name.
+- Persist primary and comparison competitor selections locally so they survive match/app changes.
 - Compute stage placement within the competitor's division, sorted by descending hit factor.
-- Display hit distribution, stage placement trend, and compact per-stage details.
+- Display comparative hit distribution pie charts, stage placement trend, and compact per-stage details.
 
 ## Code organization guidance
 
@@ -403,11 +406,11 @@ Do implement features for:
 
 ## Next task recommendation
 
-The app now has a skeleton and Firearms CRUD. Recommended next steps:
+The app now has the local-first CRUD foundation, JSON/Drive backup, PractiScore CAB import, Mare2 FITDS PDF import, and a comparative Analysis section. Recommended next steps:
 
-1. Add Training Session CRUD linked to firearms.
-2. Update dashboard cards to use live Dexie data.
-3. Calculate firearm total round counts from initial count + training/match usage.
-4. Add Match CRUD.
-5. Add JSON export/import.
-6. Add Google Drive persistence after the local model stabilizes.
+1. Harden import validation for JSON backups, PractiScore CAB snapshots, and Mare2 PDF parsing.
+2. Add tests for analysis comparison behavior and Mare2 parser edge cases.
+3. Confirm Mare2 report layout variants and extend the parser if needed.
+4. Improve dashboard cards with richer live Dexie summaries.
+5. Add CSV/PDF reports and reminders.
+6. Design and implement client-side encrypted backups.

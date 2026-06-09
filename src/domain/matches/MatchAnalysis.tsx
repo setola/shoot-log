@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import { BarChart2 } from 'lucide-react';
@@ -7,19 +7,35 @@ import { DEFAULT_SETTINGS_ID } from '../settings/settingsRepository';
 import { calculateHitBreakdown, calculateStageDetails, calculateStagePlacementTrend, type HitSlice, type StageCompetitorDetail, type StagePlacementPoint } from './practiscoreAnalysis';
 import type { PractiscoreCompetitor, PractiscoreImportRecord } from './practiscoreTypes';
 
+const ANALYSIS_COMPETITOR_STORAGE_KEY = 'shooting-logbook-analysis-competitor';
+const ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY = 'shooting-logbook-analysis-compare-competitor';
+
 export function MatchAnalysis() {
   const { t } = useTranslation();
   const practiscoreImports = useLiveQuery(() => db.practiscoreMatchImports.toArray(), []);
   const appSettings = useLiveQuery(() => db.appSettings.get(DEFAULT_SETTINGS_ID), []);
   const [selectedAnalysisMatchId, setSelectedAnalysisMatchId] = useState('');
-  const [competitorQuery, setCompetitorQuery] = useState('');
+  const [competitorQuery, setCompetitorQuery] = useState(() => readStoredAnalysisValue(ANALYSIS_COMPETITOR_STORAGE_KEY));
+  const [comparisonCompetitorQuery, setComparisonCompetitorQuery] = useState(() => readStoredAnalysisValue(ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY));
   const selectedAnalysisImport = useMemo(() => findSelectedAnalysisImport(practiscoreImports ?? [], selectedAnalysisMatchId), [practiscoreImports, selectedAnalysisMatchId]);
   const ownerCompetitor = useMemo(() => findOwnerCompetitor(selectedAnalysisImport, appSettings?.ownerPractiscoreIdentifiers ?? []), [appSettings, selectedAnalysisImport]);
   const effectiveCompetitorQuery = competitorQuery || (ownerCompetitor ? competitorOptionValue(ownerCompetitor) : '');
   const selectedCompetitor = useMemo(() => findSelectedCompetitor(selectedAnalysisImport, effectiveCompetitorQuery), [selectedAnalysisImport, effectiveCompetitorQuery]);
+  const comparisonCompetitor = useMemo(() => findSelectedCompetitor(selectedAnalysisImport, comparisonCompetitorQuery), [selectedAnalysisImport, comparisonCompetitorQuery]);
   const hitBreakdown = useMemo(() => calculateHitBreakdown(selectedAnalysisImport, selectedCompetitor), [selectedAnalysisImport, selectedCompetitor]);
+  const comparisonHitBreakdown = useMemo(() => calculateHitBreakdown(selectedAnalysisImport, comparisonCompetitor), [selectedAnalysisImport, comparisonCompetitor]);
   const stagePlacementTrend = useMemo(() => calculateStagePlacementTrend(selectedAnalysisImport, selectedCompetitor), [selectedAnalysisImport, selectedCompetitor]);
+  const comparisonStagePlacementTrend = useMemo(() => calculateStagePlacementTrend(selectedAnalysisImport, comparisonCompetitor), [selectedAnalysisImport, comparisonCompetitor]);
   const stageDetails = useMemo(() => calculateStageDetails(selectedAnalysisImport, selectedCompetitor), [selectedAnalysisImport, selectedCompetitor]);
+  const comparisonStageDetails = useMemo(() => calculateStageDetails(selectedAnalysisImport, comparisonCompetitor), [selectedAnalysisImport, comparisonCompetitor]);
+
+  useEffect(() => {
+    writeStoredAnalysisValue(ANALYSIS_COMPETITOR_STORAGE_KEY, competitorQuery);
+  }, [competitorQuery]);
+
+  useEffect(() => {
+    writeStoredAnalysisValue(ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY, comparisonCompetitorQuery);
+  }, [comparisonCompetitorQuery]);
 
   if (!selectedAnalysisImport) {
     return (
@@ -40,35 +56,35 @@ export function MatchAnalysis() {
         </div>
       </div>
       <div className="panel form-grid match-analysis-panel">
-        <div className="two-columns">
+        <div className="three-columns analysis-controls-grid">
           <label>
             <span>{t('matches.analysis.match')}</span>
             <select value={selectedAnalysisImport.matchEventId} onChange={(event) => setSelectedAnalysisMatchId(event.target.value)}>
               {(practiscoreImports ?? []).map((record) => <option key={record.id} value={record.matchEventId}>{record.snapshot.match.name}</option>)}
             </select>
           </label>
-          <label>
+          <label className="analysis-competitor-field analysis-competitor-field-primary">
             <span>{t('matches.analysis.competitor')}</span>
             <input list="practiscore-competitors" value={effectiveCompetitorQuery} onChange={(event) => setCompetitorQuery(event.target.value)} placeholder={t('matches.analysis.competitorPlaceholder')} />
             <datalist id="practiscore-competitors">
               {selectedAnalysisImport.snapshot.competitors.map((competitor) => <option key={competitor.internalMemberId} value={competitorOptionValue(competitor)} />)}
             </datalist>
           </label>
+          <label className="analysis-competitor-field analysis-competitor-field-comparison">
+            <span>{t('matches.analysis.compareWith')}</span>
+            <input list="practiscore-competitors" value={comparisonCompetitorQuery} onChange={(event) => setComparisonCompetitorQuery(event.target.value)} placeholder={t('matches.analysis.comparePlaceholder')} />
+          </label>
         </div>
         {selectedCompetitor && hitBreakdown.total > 0 ? (
           <div className="analysis-charts-stack">
-            <div className="hit-analysis-grid">
-              <HitPieChart slices={hitBreakdown.slices} />
-              <div className="hit-legend">
-                <h4>{selectedCompetitor.displayName}</h4>
-                <p className="muted">{t('matches.analysis.totalHits', { count: hitBreakdown.total })}</p>
-                {hitBreakdown.slices.map((slice) => (
-                  <div className="hit-legend-row" key={slice.key}>
-                    <span className="hit-legend-color" style={{ background: slice.color }} />
-                    <span>{t(`matches.analysis.labels.${slice.key}`)}</span>
-                    <strong>{slice.value} · {formatPercent(slice.value, hitBreakdown.total)}</strong>
-                  </div>
-                ))}
+            <div className="hit-distribution-card">
+              <div>
+                <h4>{t('matches.analysis.hitDistributionTitle')}</h4>
+                <p className="muted">{t('matches.analysis.hitDistributionDescription')}</p>
+              </div>
+              <div className="hit-analysis-grid hit-comparison-grid">
+                <CompetitorHitBreakdown competitor={selectedCompetitor} breakdown={hitBreakdown} tone="primary" />
+                {comparisonCompetitor && comparisonHitBreakdown.total > 0 ? <CompetitorHitBreakdown competitor={comparisonCompetitor} breakdown={comparisonHitBreakdown} tone="comparison" /> : null}
               </div>
             </div>
             {stagePlacementTrend.length > 0 && (
@@ -77,7 +93,7 @@ export function MatchAnalysis() {
                   <h4>{t('matches.analysis.stagePlacementTitle')}</h4>
                   <p className="muted">{t('matches.analysis.stagePlacementDescription')}</p>
                 </div>
-                <StagePlacementLineChart points={stagePlacementTrend} />
+                <StagePlacementLineChart points={stagePlacementTrend} comparisonPoints={comparisonStagePlacementTrend} />
               </div>
             )}
             {stageDetails.length > 0 && (
@@ -85,9 +101,17 @@ export function MatchAnalysis() {
                 <div>
                   <h4>{t('matches.analysis.stageDetailsTitle')}</h4>
                   <p className="muted">{t('matches.analysis.stageDetailsDescription')}</p>
+                  <p className="stage-details-legend">
+                    <LegendToken tone="alpha" label="Alpha" />
+                    <LegendToken tone="charlie" label="Charlie" />
+                    <LegendToken tone="delta" label="Delta" />
+                    <LegendToken tone="miss" label="Miss" />
+                    <LegendToken tone="noShoot" label="No-shoot" />
+                    <LegendToken tone="procedural" label="Procedure" />
+                  </p>
                 </div>
                 <div className="stage-details-grid">
-                  {stageDetails.map((detail) => <StageDetailCard key={detail.stageId} detail={detail} />)}
+                  {stageDetails.map((detail) => <StageDetailCard key={detail.stageId} detail={detail} comparisonDetail={comparisonStageDetails.find((comparisonDetail) => comparisonDetail.stageId === detail.stageId)} />)}
                 </div>
               </div>
             )}
@@ -98,6 +122,19 @@ export function MatchAnalysis() {
       </div>
     </section>
   );
+}
+
+function readStoredAnalysisValue(key: string): string {
+  return window.localStorage.getItem(key) ?? '';
+}
+
+function writeStoredAnalysisValue(key: string, value: string): void {
+  const trimmedValue = value.trim();
+  if (trimmedValue) {
+    window.localStorage.setItem(key, trimmedValue);
+  } else {
+    window.localStorage.removeItem(key);
+  }
 }
 
 function findSelectedAnalysisImport(imports: PractiscoreImportRecord[], selectedMatchEventId: string): PractiscoreImportRecord | undefined {
@@ -154,46 +191,107 @@ function HitPieChart({ slices }: { slices: HitSlice[] }) {
   );
 }
 
-function StageDetailCard({ detail }: { detail: StageCompetitorDetail }) {
+function CompetitorHitBreakdown({ competitor, breakdown, tone }: { competitor: PractiscoreCompetitor; breakdown: { total: number; slices: HitSlice[] }; tone: 'primary' | 'comparison' }) {
+  const { t } = useTranslation();
+
+  return (
+    <div className={`competitor-hit-card competitor-hit-card-${tone}`}>
+      <HitPieChart slices={breakdown.slices} />
+      <div className="hit-legend">
+        <h4>{competitor.displayName}</h4>
+        {breakdown.slices.map((slice) => (
+          <div className="hit-legend-row" key={slice.key}>
+            <span className="hit-legend-color" style={{ background: slice.color }} />
+            <span>{t(`matches.analysis.labels.${slice.key}`)}</span>
+            <strong>{slice.value} · {formatPercent(slice.value, breakdown.total)}</strong>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function StageDetailCard({ detail, comparisonDetail }: { detail: StageCompetitorDetail; comparisonDetail?: StageCompetitorDetail }) {
   return (
     <article className="stage-detail-card">
       <div className="stage-detail-header">
-        <h5>{detail.stageName}</h5>
-        <span>{formatNumber(detail.hitFactor)} HF</span>
+        <h5>{detail.stageName} <small>({detail.minRounds ?? '—'}/{detail.maxPoints ?? '—'})</small></h5>
       </div>
-      <div className="stage-detail-meta">
-        <span>Min {detail.minRounds ?? '—'}</span>
-        <span>Max {detail.maxPoints ?? '—'}</span>
-        <span>{formatNumber(detail.time)}s</span>
-      </div>
-      <div className="stage-hit-row">
-        <StageHit label="A" value={detail.alpha} tone="alpha" />
-        <StageHit label="C" value={detail.charlie} tone="charlie" />
-        <StageHit label="D" value={detail.delta} tone="delta" />
-        <StageHit label="M" value={detail.miss} tone="miss" />
-        <StageHit label="NS" value={detail.noShoot} tone="noShoot" />
-        <StageHit label="P" value={detail.procedurals} tone="procedural" />
-      </div>
+      <StageDetailMetrics detail={detail} tone="primary" />
+      {comparisonDetail ? <StageDetailMetrics detail={comparisonDetail} tone="comparison" /> : null}
     </article>
   );
 }
 
-function StageHit({ label, value, tone }: { label: string; value: number; tone: 'alpha' | 'charlie' | 'delta' | 'miss' | 'noShoot' | 'procedural' }) {
-  return <span className={`stage-hit stage-hit-${tone}`}><strong>{value}</strong><small>{label}</small></span>;
+function StageDetailMetrics({ detail, tone }: { detail: StageCompetitorDetail; tone: 'primary' | 'comparison' }) {
+  return (
+    <div className={`stage-detail-metrics stage-detail-metrics-${tone}`}>
+      <StageMetric label="Time" value={`${formatNumber(detail.time)}s`} gap={formatPositiveGap(detail.timeGapFromFirst, 's')} />
+      <StageMetric label="Points" value={formatNumber(detail.points)} gap={formatNegativeGap(detail.pointsGapFromFirst)} />
+      <StageMetric label="HF" value={formatNumber(detail.hitFactor)} gap={formatNegativeGap(detail.hitFactorGapFromFirst)} />
+      <StageHitsSummary detail={detail} />
+    </div>
+  );
 }
 
-function StagePlacementLineChart({ points }: { points: StagePlacementPoint[] }) {
+function StageMetric({ label, value, gap }: { label: string; value: string; gap: string }) {
+  return (
+    <span className="stage-metric">
+      <small>{label}</small>
+      <strong>{value}</strong>
+      <em>{gap}</em>
+    </span>
+  );
+}
+
+function StageHitsSummary({ detail }: { detail: StageCompetitorDetail }) {
+  const hits = [
+    { label: 'A', value: detail.alpha, tone: 'alpha' },
+    { label: 'C', value: detail.charlie, tone: 'charlie' },
+    { label: 'D', value: detail.delta, tone: 'delta' },
+    { label: 'M', value: detail.miss, tone: 'miss' },
+    { label: 'NS', value: detail.noShoot, tone: 'noShoot' },
+    { label: 'P', value: detail.procedurals, tone: 'procedural' }
+  ].filter((hit) => hit.value > 0);
+
+  return (
+    <span className="stage-metric stage-hit-summary">
+      <small>Hits</small>
+      <strong>{hits.length > 0 ? hits.map((hit) => <StageHitSummaryItem key={hit.label} value={hit.value} tone={hit.tone} />) : '—'}</strong>
+    </span>
+  );
+}
+
+function StageHitSummaryItem({ value, tone }: { value: number; tone: string }) {
+  return <span className={`stage-hit-summary-item stage-hit-active stage-hit-${tone}`}>{value}</span>;
+}
+
+function LegendToken({ tone, label }: { tone: string; label: string }) {
+  return <span className={`stage-legend-token stage-hit-${tone}`}>{label}</span>;
+}
+
+function StagePlacementLineChart({ points, comparisonPoints = [] }: { points: StagePlacementPoint[]; comparisonPoints?: StagePlacementPoint[] }) {
   const width = 640;
   const height = 220;
   const padding = 34;
-  const maxPlacement = Math.max(...points.map((point) => point.placement), 1);
+  const maxPlacement = Math.max(...points.map((point) => point.placement), ...comparisonPoints.map((point) => point.placement), 1);
   const xStep = points.length > 1 ? (width - padding * 2) / (points.length - 1) : 0;
   const chartPoints = points.map((point, index) => ({
     ...point,
     x: padding + index * xStep,
     y: padding + ((point.placement - 1) / Math.max(maxPlacement - 1, 1)) * (height - padding * 2)
   }));
+  const comparisonChartPoints = comparisonPoints.flatMap((point) => {
+    const stageIndex = points.findIndex((primaryPoint) => primaryPoint.stageId === point.stageId);
+    if (stageIndex < 0) return [];
+    return [{
+      ...point,
+      x: padding + stageIndex * xStep,
+      y: padding + ((point.placement - 1) / Math.max(maxPlacement - 1, 1)) * (height - padding * 2)
+    }];
+  });
   const polyline = chartPoints.map((point) => `${point.x},${point.y}`).join(' ');
+  const comparisonPolyline = comparisonChartPoints.map((point) => `${point.x},${point.y}`).join(' ');
 
   return (
     <div className="stage-placement-chart-wrap">
@@ -203,11 +301,18 @@ function StagePlacementLineChart({ points }: { points: StagePlacementPoint[] }) 
         <text x="8" y={padding + 4} className="chart-label">#1</text>
         <text x="8" y={height - padding + 4} className="chart-label">#{maxPlacement}</text>
         <polyline points={polyline} className="placement-line" />
+        {comparisonPolyline ? <polyline points={comparisonPolyline} className="placement-line placement-line-comparison" /> : null}
         {chartPoints.map((point) => (
           <g key={point.stageId}>
             <circle cx={point.x} cy={point.y} r="4" className="placement-dot" />
             <text x={point.x} y={point.y - 9} textAnchor="middle" className="chart-label">#{point.placement}</text>
             <text x={point.x} y={height - 8} textAnchor="middle" className="chart-label">{point.stageName.replace(/^Stage\s+/i, 'S')}</text>
+          </g>
+        ))}
+        {comparisonChartPoints.map((point) => (
+          <g key={`comparison-${point.stageId}`}>
+            <circle cx={point.x} cy={point.y} r="4" className="placement-dot placement-dot-comparison" />
+            <text x={point.x} y={point.y + 16} textAnchor="middle" className="chart-label chart-label-comparison">#{point.placement}</text>
           </g>
         ))}
       </svg>
@@ -217,6 +322,14 @@ function StagePlacementLineChart({ points }: { points: StagePlacementPoint[] }) 
 
 function formatNumber(value: number | undefined): string {
   return value === undefined ? '—' : new Intl.NumberFormat(undefined, { maximumFractionDigits: 2 }).format(value);
+}
+
+function formatPositiveGap(value: number | undefined, suffix = ''): string {
+  return value === undefined ? '—' : `+${formatNumber(value)}${suffix}`;
+}
+
+function formatNegativeGap(value: number | undefined): string {
+  return value === undefined ? '—' : `-${formatNumber(value)}`;
 }
 
 function formatPercent(value: number, total: number): string {

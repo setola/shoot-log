@@ -150,39 +150,35 @@ CRUD screen with:
 - Registration reference
 - Notes
 
-Also include a PractiScore import panel:
-- PractiScore ID or URL field
-- Downloaded CAB file upload
-- Import action
-- Clear success/error state
-- PractiScore badge on imported match cards
+Also include score import panels:
+- PractiScore import with PractiScore ID or URL field, downloaded CAB file upload, import action, clear success/error state, and PractiScore badge on imported match cards
+- Mare2 FITDS PDF import with PDF file upload, import action, clear success/error state, and Mare2 badge on imported match cards
 
 ### Analysis concept
 
-Dedicated section for imported PractiScore match analysis.
+Dedicated section for imported match analysis from PractiScore CAB or Mare2 FITDS PDF snapshots.
 
 Layout:
 - Section heading: “Analysis”
 - Main panel using same card/form visual language as other sections
-- Top controls: match selector and competitor autocomplete search
-- Empty state if no PractiScore data exists yet
+- Top controls: match selector, primary competitor autocomplete search, and comparison competitor autocomplete search
+- Empty state if no imported score data exists yet
 
 Charts and summaries:
-- Pie chart for selected competitor's hit distribution: Alpha, Charlie, Delta, Miss, No-shoot
-- Legend with counts and percentages
-- Line chart for placement by stage, where lower ranking is visually better and placement is computed within division
+- Pie chart card for selected competitor's hit distribution: Alpha, Charlie, Delta, Miss, No-shoot
+- If a comparison competitor is selected, show a second pie chart card using the same hit-distribution layout
+- Legend with counts and percentages; do not emphasize total scored hits as a primary metric
+- Line chart for placement by stage, where closer to #1 is better and placement is computed within division
 - Compact stage detail cards showing:
-  - stage name
-  - minimum rounds
-  - maximum points
-  - time
-  - hit factor
-  - Alpha / Charlie / Delta / Miss / No-shoot / Procedure counts
+  - compact stage title with `(min rounds / max points)`
+  - time, points, and hit factor with gap from stage winner
+  - compact colored hit counts showing only values greater than zero
+  - comparison row when a comparison competitor is selected
 
 Visual style:
 - Clean analytical dashboard, not dense or tactical
 - Use small badges/chips and compact cards
-- Charts should use the existing accent blue plus calm semantic colors
+- Use the existing accent blue for the primary competitor, orange for the comparison competitor, and calm semantic colors for hit types
 - Preserve light/dark theme compatibility
 
 ### Google Drive sync/settings

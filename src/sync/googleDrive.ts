@@ -4,11 +4,20 @@ export const DRIVE_BACKUP_FILENAME = 'shooting-logbook-backup.json';
 const GOOGLE_IDENTITY_SCRIPT_URL = 'https://accounts.google.com/gsi/client';
 const DRIVE_FILES_ENDPOINT = 'https://www.googleapis.com/drive/v3/files';
 const DRIVE_UPLOAD_ENDPOINT = 'https://www.googleapis.com/upload/drive/v3/files';
+const DRIVE_AUTHORIZATION_STORAGE_KEY = 'shooting-logbook-google-drive-authorized';
+const DRIVE_ACCESS_TOKEN_STORAGE_KEY = 'shooting-logbook-google-drive-access-token';
+const ACCESS_TOKEN_EXPIRY_SAFETY_MS = 60_000;
 
 interface TokenResponse {
   access_token?: string;
+  expires_in?: number;
   error?: string;
   error_description?: string;
+}
+
+interface StoredAccessToken {
+  accessToken: string;
+  expiresAt: number;
 }
 
 interface GoogleTokenClient {
@@ -49,7 +58,11 @@ export function isGoogleDriveConfigured(): boolean {
 }
 
 export function hasGoogleDriveAccessToken(): boolean {
-  return Boolean(accessToken);
+  return Boolean(getValidAccessToken());
+}
+
+export function hasStoredGoogleDriveAuthorization(): boolean {
+  return window.localStorage.getItem(DRIVE_AUTHORIZATION_STORAGE_KEY) === 'true';
 }
 
 export async function connectGoogleDrive(prompt: 'consent' | '' = 'consent'): Promise<string> {
@@ -82,10 +95,15 @@ export async function connectGoogleDrive(prompt: 'consent' | '' = 'consent'): Pr
   }
 
   accessToken = response.access_token;
+  window.localStorage.setItem(DRIVE_AUTHORIZATION_STORAGE_KEY, 'true');
+  storeAccessToken(response.access_token, response.expires_in);
   return accessToken;
 }
 
 export async function disconnectGoogleDrive(): Promise<void> {
+  window.localStorage.removeItem(DRIVE_AUTHORIZATION_STORAGE_KEY);
+  window.localStorage.removeItem(DRIVE_ACCESS_TOKEN_STORAGE_KEY);
+
   if (!accessToken) {
     return;
   }
@@ -158,11 +176,47 @@ function getGoogleClientId(): string {
 }
 
 function requireAccessToken(): string {
-  if (!accessToken) {
+  const token = getValidAccessToken();
+
+  if (!token) {
     throw new Error('not-connected');
   }
 
+  return token;
+}
+
+function getValidAccessToken(): string | null {
+  if (accessToken) return accessToken;
+
+  const storedToken = readStoredAccessToken();
+  if (!storedToken) return null;
+
+  accessToken = storedToken;
   return accessToken;
+}
+
+function storeAccessToken(token: string, expiresInSeconds = 3600): void {
+  const expiresAt = Date.now() + Math.max(0, expiresInSeconds * 1000 - ACCESS_TOKEN_EXPIRY_SAFETY_MS);
+  const storedToken: StoredAccessToken = { accessToken: token, expiresAt };
+  window.localStorage.setItem(DRIVE_ACCESS_TOKEN_STORAGE_KEY, JSON.stringify(storedToken));
+}
+
+function readStoredAccessToken(): string | null {
+  const rawValue = window.localStorage.getItem(DRIVE_ACCESS_TOKEN_STORAGE_KEY);
+  if (!rawValue) return null;
+
+  try {
+    const storedToken = JSON.parse(rawValue) as Partial<StoredAccessToken>;
+    if (!storedToken.accessToken || !storedToken.expiresAt || storedToken.expiresAt <= Date.now()) {
+      window.localStorage.removeItem(DRIVE_ACCESS_TOKEN_STORAGE_KEY);
+      return null;
+    }
+
+    return storedToken.accessToken;
+  } catch {
+    window.localStorage.removeItem(DRIVE_ACCESS_TOKEN_STORAGE_KEY);
+    return null;
+  }
 }
 
 function authorizationHeaders(token: string): HeadersInit {

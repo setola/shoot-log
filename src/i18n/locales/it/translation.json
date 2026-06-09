@@ -186,7 +186,7 @@
     "title": "Sincronizzazione Google Drive",
     "description": "Connetti Google Drive per salvare e ripristinare questo registro locale dalla cartella dati app del tuo Drive.",
     "connectedTitle": "Google Drive connesso",
-    "connectedDescription": "Questo browser ha un token temporaneo per backup e ripristino su Drive.",
+    "connectedDescription": "Questo browser conserva il token Drive temporaneo corrente, così il refresh non richiede subito una nuova connessione.",
     "disconnectedTitle": "Google Drive non connesso",
     "disconnectedDescription": "Connetti Google Drive per abilitare backup e ripristino.",
     "lastSyncedAt": "Ultima sincronizzazione: {{date}}",
@@ -357,11 +357,27 @@
         "noShoot": "No-shoot"
       },
       "stagePlacementTitle": "Andamento piazzamento per stage",
-      "stagePlacementDescription": "Classifica per stage calcolata dall’hit factor dello stage. Più basso è meglio.",
+      "stagePlacementDescription": "Classifica per stage calcolata dall’hit factor dello stage. Più vicino al #1 è meglio.",
       "stageDetailsTitle": "Dettaglio stage",
       "stageDetailsDescription": "Vista compatta per stage con informazioni esercizio, colpi, penalità, tempo e hit factor.",
       "emptyTitle": "Nessun dato PractiScore",
-      "emptyDescription": "Importa un file CAB PractiScore dalla sezione Gare prima di aprire l’analisi."
+      "emptyDescription": "Importa un file CAB PractiScore dalla sezione Gare prima di aprire l’analisi.",
+      "stageDetailsLegend": "Colori colpi: verde Alpha, blu Charlie, giallo Delta, rosso Miss, viola No-shoot, grigio Procedura.",
+      "compareWith": "Confronta con",
+      "comparePlaceholder": "Cerca un altro tiratore",
+      "hitDistributionTitle": "Distribuzione colpi",
+      "hitDistributionDescription": "Ripartizione di colpi validi e penalità per i tiratori selezionati."
+    },
+    "mare2": {
+      "title": "Import PDF Mare2 FITDS",
+      "createHint": "Importa i PDF di verifica punteggi generati da Mare2. I dati restano locali e saranno disponibili in Analisi.",
+      "replaceHint": "Importando un PDF Mare2 durante la modifica, questa gara e lo snapshot di analisi vengono sostituiti.",
+      "pdfFile": "File PDF Mare2",
+      "importAction": "Importa PDF Mare2",
+      "importing": "Importazione…",
+      "validation": "Seleziona un file PDF Mare2 da importare.",
+      "importError": "Impossibile importare questo PDF Mare2.",
+      "importedSummary": "PDF Mare2 importato: {{stages}} stage · {{competitors}} tiratori · {{scores}} punteggi"
     }
   },
   "ammunition": {

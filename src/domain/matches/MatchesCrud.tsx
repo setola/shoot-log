@@ -5,6 +5,7 @@ import { Edit3, FileUp, Plus, Save, Trash2, Trophy, X } from 'lucide-react';
 import { db } from '../../db/schema';
 import type { MatchEvent } from './types';
 import { createEmptyMatchForm, createMatchEvent, deleteMatchEvent, matchToFormValues, type MatchFormValues, updateMatchEvent } from './matchRepository';
+import { parseMare2PdfSnapshot } from './mare2PdfParser';
 import { normalizePractiscoreMatchId, parsePractiscoreCabSnapshot } from './practiscoreParser';
 import { importPractiscoreSnapshot } from './practiscoreRepository';
 
@@ -21,6 +22,7 @@ export function MatchesCrud() {
   const [form, setForm] = useState<MatchFormValues>(createEmptyMatchForm);
   const [practiscoreInput, setPractiscoreInput] = useState('');
   const [practiscoreFile, setPractiscoreFile] = useState<File | null>(null);
+  const [mare2File, setMare2File] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
   const [importMessage, setImportMessage] = useState<string | null>(null);
   const [importError, setImportError] = useState<string | null>(null);
@@ -31,6 +33,7 @@ export function MatchesCrud() {
     setForm(createEmptyMatchForm());
     setPractiscoreInput('');
     setPractiscoreFile(null);
+    setMare2File(null);
   }
 
   function edit(match: MatchEvent) {
@@ -91,6 +94,40 @@ export function MatchesCrud() {
     }
   }
 
+  async function importMare2Pdf() {
+    setImportMessage(null);
+    setImportError(null);
+
+    if (!mare2File) {
+      setImportError(t('matches.mare2.validation'));
+      return;
+    }
+
+    try {
+      setImporting(true);
+      const snapshot = await parseMare2PdfSnapshot(mare2File);
+      const matchEventId = await importPractiscoreSnapshot(snapshot, editingId ?? undefined);
+      const summary = t('matches.mare2.importedSummary', { stages: snapshot.stages.length, competitors: snapshot.competitors.length, scores: snapshot.scores.length });
+      setImportMessage(summary);
+      setMare2File(null);
+      setEditingId(matchEventId);
+      setForm({
+        ...createEmptyMatchForm(),
+        name: snapshot.match.name,
+        date: snapshot.match.date,
+        discipline: 'Mare2 FITDS',
+        roundsFired: String(snapshot.stages.reduce((total, stage) => total + (stage.minRounds ?? 0), 0)),
+        registrationReference: snapshot.practiscoreMatchId,
+        notes: `Imported from Mare2 PDF ${snapshot.sourceFileName}`
+      });
+      setShowForm(true);
+    } catch (error) {
+      setImportError(error instanceof Error ? error.message : t('matches.mare2.importError'));
+    } finally {
+      setImporting(false);
+    }
+  }
+
   return (
     <section className="screen-stack">
       <div className="section-heading figma-heading">
@@ -123,6 +160,22 @@ export function MatchesCrud() {
             <button className="button" type="button" disabled={importing} onClick={() => void importPractiscore()}><FileUp size={16} />{importing ? t('matches.practiscore.importing') : t('matches.practiscore.importAction')}</button>
           </div>
         </div>
+        <div className="import-divider" />
+        <div className="form-title-row">
+          <div>
+            <h4>{t('matches.mare2.title')}</h4>
+            <p className="muted">{editingId ? t('matches.mare2.replaceHint') : t('matches.mare2.createHint')}</p>
+          </div>
+        </div>
+        <div className="two-columns">
+          <label>
+            <span>{t('matches.mare2.pdfFile')}</span>
+            <input type="file" accept=".pdf,application/pdf" onChange={(event) => setMare2File(event.target.files?.[0] ?? null)} />
+          </label>
+          <div className="form-actions-end">
+            <button className="button" type="button" disabled={importing} onClick={() => void importMare2Pdf()}><FileUp size={16} />{importing ? t('matches.mare2.importing') : t('matches.mare2.importAction')}</button>
+          </div>
+        </div>
         {importMessage && <p className="status-message status-success">{importMessage}</p>}
         {importError && <p className="status-message status-error">{importError}</p>}
       </div>
@@ -146,7 +199,7 @@ export function MatchesCrud() {
           {matches?.length === 0 && <div className="empty-state-card"><Trophy size={42} strokeWidth={1.4} /><h3>{t('matches.emptyTitle')}</h3><p>{t('matches.empty')}</p><button className="button" onClick={() => setShowForm(true)}><Plus size={16} />{t('matches.new')}</button></div>}
           <div className="record-list">{matches?.map((match) => {
             const practiscoreImport = practiscoreByMatchId.get(match.id);
-            return <article className="record-card" key={match.id}><div className="record-icon"><Trophy size={18} /></div><div className="record-content"><div className="record-title-row"><h4>{match.name}</h4>{match.placement && <span className="badge badge-success">#{match.placement}</span>}{practiscoreImport && <span className="badge badge-muted">PractiScore</span>}</div><p>{[formatDate(match.date), match.clubOrRange].filter(Boolean).join(' · ')}</p><p className="muted">{[match.discipline, match.divisionOrCategory, match.firearmId ? names.get(match.firearmId) : '', match.score ? t('matches.score', { score: match.score }) : ''].filter(Boolean).join(' · ')}</p>{practiscoreImport && <p className="muted">{t('matches.practiscore.cardSummary', { stages: practiscoreImport.snapshot.stages.length, competitors: practiscoreImport.snapshot.competitors.length, scores: practiscoreImport.snapshot.scores.length })}</p>}</div><div className="record-actions"><button className="icon-button" onClick={() => edit(match)} aria-label={t('actions.edit')}><Edit3 size={15} /></button><button className="icon-button danger" onClick={() => setDeleteTarget(match)} aria-label={t('actions.delete')}><Trash2 size={15} /></button></div></article>;
+            return <article className="record-card" key={match.id}><div className="record-icon"><Trophy size={18} /></div><div className="record-content"><div className="record-title-row"><h4>{match.name}</h4>{match.placement && <span className="badge badge-success">#{match.placement}</span>}{practiscoreImport && <span className="badge badge-muted">{practiscoreImport.practiscoreMatchId.startsWith('mare2:') ? 'Mare2' : 'PractiScore'}</span>}</div><p>{[formatDate(match.date), match.clubOrRange].filter(Boolean).join(' · ')}</p><p className="muted">{[match.discipline, match.divisionOrCategory, match.firearmId ? names.get(match.firearmId) : '', match.score ? t('matches.score', { score: match.score }) : ''].filter(Boolean).join(' · ')}</p>{practiscoreImport && <p className="muted">{t('matches.practiscore.cardSummary', { stages: practiscoreImport.snapshot.stages.length, competitors: practiscoreImport.snapshot.competitors.length, scores: practiscoreImport.snapshot.scores.length })}</p>}</div><div className="record-actions"><button className="icon-button" onClick={() => edit(match)} aria-label={t('actions.edit')}><Edit3 size={15} /></button><button className="icon-button danger" onClick={() => setDeleteTarget(match)} aria-label={t('actions.delete')}><Trash2 size={15} /></button></div></article>;
           })}</div>
         </div>
       </div>

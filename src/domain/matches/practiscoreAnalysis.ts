@@ -26,7 +26,11 @@ export type StageCompetitorDetail = {
   noShoot: number;
   procedurals: number;
   time?: number;
+  timeGapFromFirst?: number;
+  points?: number;
+  pointsGapFromFirst?: number;
   hitFactor?: number;
+  hitFactorGapFromFirst?: number;
 };
 
 export function calculateHitBreakdown(record: PractiscoreImportRecord | undefined, competitor: PractiscoreCompetitor | undefined): { total: number; slices: HitSlice[] } {
@@ -57,8 +61,13 @@ export function calculateHitBreakdown(record: PractiscoreImportRecord | undefine
 export function calculateStageDetails(record: PractiscoreImportRecord | undefined, competitor: PractiscoreCompetitor | undefined): StageCompetitorDetail[] {
   if (!record || !competitor) return [];
 
+  const memberIdsInDivision = getMemberIdsInCompetitorDivision(record, competitor);
+
   return record.snapshot.stages.flatMap((stage) => {
-    const score = record.snapshot.scores.find((stageScore) => stageScore.internalStageId === stage.internalStageId && stageScore.internalMemberId === competitor.internalMemberId && !isRemovedScore(stageScore));
+    const stageScores = record.snapshot.scores
+      .filter((stageScore) => stageScore.internalStageId === stage.internalStageId && memberIdsInDivision.has(stageScore.internalMemberId) && !stageScore.disqualified && !isRemovedScore(stageScore));
+    const score = stageScores.find((stageScore) => stageScore.internalMemberId === competitor.internalMemberId);
+    const firstPlaceScore = [...stageScores].sort((a, b) => (b.hitFactor ?? 0) - (a.hitFactor ?? 0))[0];
     if (!score) return [];
 
     return [{
@@ -73,7 +82,11 @@ export function calculateStageDetails(record: PractiscoreImportRecord | undefine
       noShoot: score.penalties ?? 0,
       procedurals: score.procedurals ?? 0,
       time: score.shootTime,
-      hitFactor: score.hitFactor
+      timeGapFromFirst: calculateGap(score.shootTime, firstPlaceScore?.shootTime),
+      points: score.finalScore,
+      pointsGapFromFirst: calculateGap(firstPlaceScore?.finalScore, score.finalScore),
+      hitFactor: score.hitFactor,
+      hitFactorGapFromFirst: calculateGap(firstPlaceScore?.hitFactor, score.hitFactor)
     }];
   });
 }
@@ -81,12 +94,7 @@ export function calculateStageDetails(record: PractiscoreImportRecord | undefine
 export function calculateStagePlacementTrend(record: PractiscoreImportRecord | undefined, competitor: PractiscoreCompetitor | undefined): StagePlacementPoint[] {
   if (!record || !competitor) return [];
 
-  const competitorDivisionId = competitor.divisionId;
-  const memberIdsInDivision = new Set(
-    record.snapshot.competitors
-      .filter((candidate) => !candidate.disqualified && (!competitorDivisionId || candidate.divisionId === competitorDivisionId))
-      .map((candidate) => candidate.internalMemberId)
-  );
+  const memberIdsInDivision = getMemberIdsInCompetitorDivision(record, competitor);
 
   return record.snapshot.stages.flatMap((stage) => {
     const stageScores = record.snapshot.scores
@@ -96,6 +104,20 @@ export function calculateStagePlacementTrend(record: PractiscoreImportRecord | u
 
     return placement > 0 ? [{ stageId: stage.internalStageId, stageName: stage.name, placement }] : [];
   });
+}
+
+function getMemberIdsInCompetitorDivision(record: PractiscoreImportRecord, competitor: PractiscoreCompetitor): Set<string> {
+  const competitorDivisionId = competitor.divisionId;
+  return new Set(
+    record.snapshot.competitors
+      .filter((candidate) => !candidate.disqualified && (!competitorDivisionId || candidate.divisionId === competitorDivisionId))
+      .map((candidate) => candidate.internalMemberId)
+  );
+}
+
+function calculateGap(value: number | undefined, reference: number | undefined): number | undefined {
+  if (value === undefined || reference === undefined) return undefined;
+  return Math.max(0, value - reference);
 }
 
 function isRemovedScore(score: PractiscoreStageScore): boolean {

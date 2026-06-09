@@ -4,7 +4,7 @@ Use this prompt for Figma updates only. The existing ShootLog UI already exists;
 
 ## Goal
 
-Add a dedicated **Analysis** screen for imported PractiScore match data. Keep the same calm, privacy-first, administrative visual language already used in the generated app.
+Add a dedicated **Analysis** screen for imported match score data from PractiScore CAB files and Mare2 FITDS PDFs. Keep the same calm, privacy-first, administrative visual language already used in the generated app.
 
 Do not introduce tactical, aggressive, militarized, or weapon-focused styling.
 
@@ -26,7 +26,7 @@ Create a new screen titled **Analysis**.
 Top section:
 
 - Section heading: “Analysis”
-- Description: “Select an imported PractiScore match and a competitor to inspect performance.”
+- Description: “Select an imported match and competitors to inspect performance.”
 
 Main content card:
 
@@ -42,10 +42,15 @@ Controls row:
 - Left: Match selector
   - Label: “Match”
   - Select dropdown with imported match name
-- Right: Competitor search/autocomplete
+- Center: Primary competitor search/autocomplete
   - Label: “Competitor”
   - Text input placeholder: “Search by name, alias or number”
   - Show an example selected value like: “TESSORE EMANUELE · IT027386 · #187”
+  - Use a blue left border/label accent to identify this as the primary competitor
+- Right: Comparison competitor search/autocomplete
+  - Label: “Compare with”
+  - Text input placeholder: “Search another competitor”
+  - Use an orange left border/label accent to match comparison rows and charts
 
 ## Analysis content
 
@@ -53,7 +58,7 @@ Show three analysis blocks inside the main card.
 
 ### 1. Hit distribution
 
-A compact pie chart showing:
+A compact card with title and description, containing one or two competitor pie chart cards. Each pie chart shows:
 
 - Alpha
 - Charlie
@@ -61,12 +66,20 @@ A compact pie chart showing:
 - Miss
 - No-shoot
 
-Next to the chart, show a legend:
+Next to each chart, show a legend:
 
 - colored dot
 - label
 - count
 - percentage
+
+Do not show “total scored hits / penalties” as a standalone metric inside each competitor chart.
+
+When a comparison competitor is selected:
+
+- Show two pie chart cards side by side on desktop and stacked on mobile
+- Primary competitor card uses blue left-border/name accent
+- Comparison competitor card uses orange left-border/name accent
 
 Use calm semantic colors:
 
@@ -86,13 +99,14 @@ Add a line chart titled:
 
 Subtitle:
 
-- “Ranking by stage, calculated from stage hit factor. Lower is better.”
+- “Ranking by stage, calculated from stage hit factor. Closer to #1 is better.”
 
 Chart requirements:
 
 - X axis: stages, e.g. S1, S2, S3…
 - Y axis: placement, with #1 at the top
-- Line uses the app primary blue
+- Primary line uses the app primary blue
+- Comparison line, if present, uses orange and may be dashed
 - Dots at each stage
 - Small labels showing placement, e.g. #12
 - Layout must remain readable on mobile; horizontal scroll is acceptable for many stages
@@ -103,43 +117,38 @@ Add compact stage cards in a responsive grid.
 
 Each stage card should show:
 
-- Stage name, e.g. “Stage 6”
-- Hit factor badge/value, e.g. “4.95 HF”
-- Metadata chips:
-  - “Min 32”
-  - “Max 160”
-  - “31.95s”
-- A compact six-cell hit row:
-  - A count
-  - C count
-  - D count
-  - M count
-  - NS count
-  - P count
+- Stage name plus compact course info, e.g. “Stage 6 (32/160)” where values are min rounds / max points
+- Metric columns: Time, Points, HF, Hits
+- Time, Points, and HF show the competitor value and the gap from first place in division
+- Hits shows only non-zero hit/penalty counts as compact colored numbers, with no separators and no total count
+- If a comparison competitor is selected, show a second metric row in the same card
 
 Example card data:
 
 ```text
-Stage 6        4.95 HF
-Min 32   Max 160   31.95s
-A 31 | C 1 | D 0 | M 0 | NS 0 | P 0
+Stage 6 (32/160)
+Time       Points     HF       Hits
+31.95s     158        4.95     31 1
++6.19s     -2         -1.20
 ```
 
 Visual style for stage cards:
 
 - compact, clean, scannable
 - muted card background inside main panel
-- small hit cells with subtle background
+- primary row has a blue left accent
+- comparison row has an orange left accent
 - numeric values emphasized
 - labels small and muted
+- include a short color legend above the cards with labels colored by hit type: Alpha green, Charlie blue, Delta amber, Miss red, No-shoot purple, Procedure gray
 
 ## Empty state
 
-If no PractiScore match has been imported, show an empty state:
+If no score snapshot has been imported, show an empty state:
 
 - Icon: chart/activity icon
-- Title: “No PractiScore data yet”
-- Text: “Import a PractiScore CAB file from Matches before opening analysis.”
+- Title: “No imported score data yet”
+- Text: “Import a PractiScore CAB file or Mare2 PDF from Matches before opening analysis.”
 
 Use same empty-state style as existing app cards.
 
@@ -167,22 +176,29 @@ The card should use the same settings-card style already present.
 
 ## Matches screen addition
 
-In the existing Matches screen, add/update a PractiScore import panel:
+In the existing Matches screen, add/update score import panels:
 
+PractiScore panel:
 - Title: “PractiScore import”
 - Field: “PractiScore ID or URL”
 - Field: “Downloaded CAB file”
 - Button: “Import PractiScore data”
 - Success/error message area
 
-Imported match cards should show a small **PractiScore** badge.
+Mare2 FITDS panel:
+- Title: “Mare2 FITDS PDF import”
+- Field: “Mare2 PDF file”
+- Button: “Import Mare2 PDF”
+- Success/error message area
+
+Imported match cards should show a small **PractiScore** or **Mare2** badge depending on source.
 
 ## Responsive behavior
 
 Desktop:
 
-- Controls row: two columns
-- Hit chart and legend: side by side
+- Controls row: three columns
+- Hit chart cards: side by side when comparing
 - Stage detail cards: responsive multi-column grid
 
 Mobile:

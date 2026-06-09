@@ -105,6 +105,7 @@ Current implementation notes:
 - Reactive IndexedDB reads: `dexie-react-hooks`.
 - PWA support: `vite-plugin-pwa`.
 - i18n: `i18next` + `react-i18next`.
+- PDF parsing: `pdfjs-dist` for local Mare2 FITDS score-verification imports.
 - Translation files live in `src/i18n/locales/{locale}/translation.json`.
 - Current locales: English (`en`) and Italian (`it`).
 - Styling: plain CSS in `src/styles/global.css` using CSS variables.
@@ -176,7 +177,8 @@ Implemented local-first modules:
 12. Google Drive connection and manual backup/restore to the user's `appDataFolder`.
 13. Source commit link in the sidebar footer.
 14. PractiScore CAB import for matches, storing a single local snapshot per match.
-15. Dedicated Analysis section for imported PractiScore matches, including competitor autocomplete/default owner matching, hit distribution pie chart, stage placement trend, and compact stage details.
+15. Mare2 FITDS PDF import for score verification reports, reusing the same local analysis snapshot shape.
+16. Dedicated Analysis section for imported match score snapshots, including competitor autocomplete/default owner matching, persisted comparison competitor, comparative hit distribution pie charts, stage placement trend, and compact stage details.
 
 Important limitations / follow-up work:
 
@@ -185,8 +187,9 @@ Important limitations / follow-up work:
 3. Conflict detection/merge strategy is not implemented.
 4. Dashboard summaries are present but should be expanded with more live computed data.
 5. PractiScore CAB parsing currently supports the uncompressed CAB export format observed in `design/WinMSS.cab`; compressed CAB support is still pending.
-6. Reports, CSV/PDF export, and reminders are still pending.
-7. Attachment encryption and incremental sync are still pending.
+6. Mare2 PDF parsing targets the score-verification-by-competitor layout observed in `design/6camp_dFWMLqQ4vR.pdf`; other Mare2 report layouts may need parser extensions.
+7. Reports, CSV/PDF export, and reminders are still pending.
+8. Attachment encryption and incremental sync are still pending.
 
 ## Data handling rules
 

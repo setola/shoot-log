@@ -16,6 +16,7 @@
     "dexie-react-hooks": "^4.4.0",
     "i18next": "latest",
     "lucide-react": "^1.17.0",
+    "pdfjs-dist": "^6.0.227",
     "react": "latest",
     "react-dom": "latest",
     "react-i18next": "latest",

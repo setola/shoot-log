@@ -6,6 +6,7 @@ import {
   disconnectGoogleDrive,
   downloadDriveBackup,
   hasGoogleDriveAccessToken,
+  hasStoredGoogleDriveAuthorization,
   isGoogleDriveConfigured,
   uploadDriveBackup
 } from '../sync/googleDrive';
@@ -26,7 +27,7 @@ export function DriveSyncPanel({
   onLastSyncedAtChange
 }: DriveSyncPanelProps) {
   const { t } = useTranslation();
-  const [connected, setConnected] = useState(hasGoogleDriveAccessToken());
+  const [connected, setConnected] = useState(() => hasGoogleDriveAccessToken() || hasStoredGoogleDriveAuthorization());
   const [state, setState] = useState<SyncState>('idle');
   const [error, setError] = useState<string | null>(null);
   const configured = isGoogleDriveConfigured();
