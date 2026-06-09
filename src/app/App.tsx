@@ -4,6 +4,7 @@ import { Dashboard } from '../components/Dashboard';
 import { DriveSyncPanel } from '../components/DriveSyncPanel';
 import { BottomNav, Header, Sidebar } from '../components/Navigation';
 import { SettingsPanel } from '../components/SettingsPanel';
+import { StatusMessage } from '../components/StatusMessage';
 import { db } from '../db/schema';
 import { AmmunitionCrud } from '../domain/ammunition/AmmunitionCrud';
 import { FirearmsCrud } from '../domain/firearms/FirearmsCrud';
@@ -36,7 +37,7 @@ function getInitialTheme(): Theme {
 
 function getInitialSection(): Section {
   const storedSection = window.localStorage.getItem(SECTION_STORAGE_KEY);
-  const sections: Section[] = ['dashboard', 'firearms', 'training', 'matches', 'analysis', 'ammunition', 'maintenance', 'paperwork', 'reports', 'sync', 'settings'];
+  const sections: Section[] = ['dashboard', 'firearms', 'training', 'matches', 'analysis', 'ammunition', 'maintenance', 'paperwork', 'reports', 'settings'];
   return sections.includes(storedSection as Section) ? (storedSection as Section) : 'dashboard';
 }
 
@@ -344,22 +345,18 @@ export function App() {
         return <MaintenanceCrud />;
       case 'paperwork':
         return <PaperworkCrud />;
-      case 'sync':
-        return (
-          <DriveSyncPanel
-            lastSyncedAt={lastDriveSyncedAt}
-            onBackupContentRequested={createBackupJson}
-            onRestoreContent={importBackup}
-            onLastSyncedAtChange={handleLastDriveSyncedAtChange}
-          />
-        );
       case 'settings':
         return (
           <SettingsPanel
-            theme={theme}
-            language={i18n.language}
-            onThemeChange={setTheme}
-            onLanguageChange={(language) => void i18n.changeLanguage(language)}
+            driveSyncContent={(
+              <DriveSyncPanel
+                embedded
+                lastSyncedAt={lastDriveSyncedAt}
+                onBackupContentRequested={createBackupJson}
+                onRestoreContent={importBackup}
+                onLastSyncedAtChange={handleLastDriveSyncedAtChange}
+              />
+            )}
             onExportData={() => void handleExportData()}
             onImportData={handleImportData}
             onClearData={handleClearData}
@@ -389,11 +386,11 @@ export function App() {
         />
         <main className="main-content">
           {autoImportStatus !== 'idle' ? (
-            <div className={`status-message ${autoImportStatus === 'error' ? 'status-error' : 'status-success'}`} role="status">
+            <StatusMessage tone={autoImportStatus === 'error' ? 'error' : 'success'} onDismiss={() => setAutoImportStatus('idle')}>
               {autoImportStatus === 'importing' && t('importUrl.importing')}
               {autoImportStatus === 'success' && t('importUrl.success')}
               {autoImportStatus === 'error' && t('importUrl.error', { error: autoImportError })}
-            </div>
+            </StatusMessage>
           ) : null}
           {renderSection()}
         </main>

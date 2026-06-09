@@ -178,8 +178,12 @@
     "owner": {
       "title": "Device owner",
       "identifiersLabel": "PractiScore identifiers / names",
-      "identifiersPlaceholder": "IT027386\nEmanuele Tessore",
-      "description": "One value per line or comma-separated. Analysis will use these aliases or names to preselect your competitor when a PractiScore match is opened."
+      "identifiersPlaceholder": "Identifier, alias, or full name",
+      "description": "Add one identifier or name at a time. Analysis will use these aliases or names to preselect your competitor when a match is opened.",
+      "addLabel": "Add identifier or name",
+      "addButton": "Add",
+      "empty": "No owner identifiers yet.",
+      "removeIdentifier": "Remove {{identifier}}"
     }
   },
   "sync": {

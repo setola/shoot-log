@@ -8,8 +8,7 @@ export function normalizePractiscoreMatchId(value: string): string {
   return uuidMatch ? uuidMatch[1].toUpperCase() : decoded.replace(/[{}]/g, '').trim().toUpperCase();
 }
 
-export async function parsePractiscoreCabSnapshot(file: File, practiscoreMatchIdInput: string): Promise<PractiscoreMatchSnapshot> {
-  const practiscoreMatchId = normalizePractiscoreMatchId(practiscoreMatchIdInput);
+export async function parsePractiscoreCabSnapshot(file: File, practiscoreMatchIdInput = ''): Promise<PractiscoreMatchSnapshot> {
   const files = extractCabFiles(await file.arrayBuffer());
   const rawXml: Record<string, string> = {};
 
@@ -21,15 +20,16 @@ export async function parsePractiscoreCabSnapshot(file: File, practiscoreMatchId
     rawXml[requiredFile] = content;
   }
 
-  return parsePractiscoreXmlSnapshot(rawXml, practiscoreMatchId, file.name);
+  return parsePractiscoreXmlSnapshot(rawXml, practiscoreMatchIdInput, file.name);
 }
 
-export function parsePractiscoreXmlSnapshot(rawXml: Record<string, string>, practiscoreMatchId: string, sourceFileName: string): PractiscoreMatchSnapshot {
+export function parsePractiscoreXmlSnapshot(rawXml: Record<string, string>, practiscoreMatchIdInput: string, sourceFileName: string): PractiscoreMatchSnapshot {
   const importedAt = new Date().toISOString();
   const matchRow = parseRows(rawXml['THEMATCH.XML'] ?? '')[0];
   if (!matchRow) {
     throw new Error('THEMATCH.XML does not contain match data.');
   }
+  const practiscoreMatchId = normalizePractiscoreMatchId(practiscoreMatchIdInput || stringValue(matchRow.MatchId) || sourceFileName);
 
   const stages = parseRows(rawXml['STAGE.XML'] ?? '').map<PractiscoreStage>((row) => ({
     internalStageId: stringValue(row.StageId),

@@ -1,12 +1,13 @@
 import { FormEvent, useMemo, useState } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
-import { Edit3, FileUp, Plus, Save, Trash2, Trophy, X } from 'lucide-react';
+import { Edit3, FileUp, Save, Trash2, Trophy, X } from 'lucide-react';
+import { StatusMessage } from '../../components/StatusMessage';
 import { db } from '../../db/schema';
 import type { MatchEvent } from './types';
 import { createEmptyMatchForm, createMatchEvent, deleteMatchEvent, matchToFormValues, type MatchFormValues, updateMatchEvent } from './matchRepository';
 import { parseMare2PdfSnapshot } from './mare2PdfParser';
-import { normalizePractiscoreMatchId, parsePractiscoreCabSnapshot } from './practiscoreParser';
+import { parsePractiscoreCabSnapshot } from './practiscoreParser';
 import { importPractiscoreSnapshot } from './practiscoreRepository';
 
 export function MatchesCrud() {
@@ -20,7 +21,6 @@ export function MatchesCrud() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<MatchEvent | null>(null);
   const [form, setForm] = useState<MatchFormValues>(createEmptyMatchForm);
-  const [practiscoreInput, setPractiscoreInput] = useState('');
   const [practiscoreFile, setPractiscoreFile] = useState<File | null>(null);
   const [mare2File, setMare2File] = useState<File | null>(null);
   const [importing, setImporting] = useState(false);
@@ -31,7 +31,6 @@ export function MatchesCrud() {
     setShowForm(false);
     setEditingId(null);
     setForm(createEmptyMatchForm());
-    setPractiscoreInput('');
     setPractiscoreFile(null);
     setMare2File(null);
   }
@@ -40,8 +39,6 @@ export function MatchesCrud() {
     setEditingId(match.id);
     setForm(matchToFormValues(match));
     setShowForm(true);
-    const practiscoreImport = practiscoreByMatchId.get(match.id);
-    setPractiscoreInput(practiscoreImport?.practiscoreMatchId ?? match.registrationReference ?? '');
   }
 
   async function submit(event: FormEvent) {
@@ -63,18 +60,17 @@ export function MatchesCrud() {
     setImportMessage(null);
     setImportError(null);
 
-    if (!practiscoreInput.trim() || !practiscoreFile) {
+    if (!practiscoreFile) {
       setImportError(t('matches.practiscore.validation'));
       return;
     }
 
     try {
       setImporting(true);
-      const snapshot = await parsePractiscoreCabSnapshot(practiscoreFile, practiscoreInput);
+      const snapshot = await parsePractiscoreCabSnapshot(practiscoreFile);
       const matchEventId = await importPractiscoreSnapshot(snapshot, editingId ?? undefined);
       const summary = t('matches.practiscore.importedSummary', { stages: snapshot.stages.length, competitors: snapshot.competitors.length, scores: snapshot.scores.length });
       setImportMessage(summary);
-      setPractiscoreInput(snapshot.practiscoreMatchId);
       setPractiscoreFile(null);
       setEditingId(matchEventId);
       setForm({
@@ -135,7 +131,6 @@ export function MatchesCrud() {
           <h2>{t('matches.title')}</h2>
           <p>{t('matches.description')}</p>
         </div>
-        {!showForm && <button className="button" onClick={() => setShowForm(true)}><Plus size={16} />{t('matches.new')}</button>}
       </div>
 
       <div className="panel form-grid practiscore-import-panel">
@@ -146,11 +141,6 @@ export function MatchesCrud() {
           </div>
           <FileUp size={20} />
         </div>
-        <label>
-          <span>{t('matches.practiscore.idOrUrl')}</span>
-          <input value={practiscoreInput} onChange={(event) => setPractiscoreInput(event.target.value)} placeholder={t('matches.practiscore.idPlaceholder')} />
-        </label>
-        {practiscoreInput.trim() && <p className="muted">{t('matches.practiscore.normalizedId', { id: normalizePractiscoreMatchId(practiscoreInput) })}</p>}
         <div className="two-columns">
           <label>
             <span>{t('matches.practiscore.cabFile')}</span>
@@ -176,8 +166,8 @@ export function MatchesCrud() {
             <button className="button" type="button" disabled={importing} onClick={() => void importMare2Pdf()}><FileUp size={16} />{importing ? t('matches.mare2.importing') : t('matches.mare2.importAction')}</button>
           </div>
         </div>
-        {importMessage && <p className="status-message status-success">{importMessage}</p>}
-        {importError && <p className="status-message status-error">{importError}</p>}
+        {importMessage && <StatusMessage tone="success" onDismiss={() => setImportMessage(null)}>{importMessage}</StatusMessage>}
+        {importError && <StatusMessage tone="error" onDismiss={() => setImportError(null)}>{importError}</StatusMessage>}
       </div>
 
 
@@ -196,7 +186,7 @@ export function MatchesCrud() {
           </form>
         )}
         <div className="list-panel-clean">
-          {matches?.length === 0 && <div className="empty-state-card"><Trophy size={42} strokeWidth={1.4} /><h3>{t('matches.emptyTitle')}</h3><p>{t('matches.empty')}</p><button className="button" onClick={() => setShowForm(true)}><Plus size={16} />{t('matches.new')}</button></div>}
+          {matches?.length === 0 && <div className="empty-state-card"><Trophy size={42} strokeWidth={1.4} /><h3>{t('matches.emptyTitle')}</h3><p>{t('matches.empty')}</p></div>}
           <div className="record-list">{matches?.map((match) => {
             const practiscoreImport = practiscoreByMatchId.get(match.id);
             return <article className="record-card" key={match.id}><div className="record-icon"><Trophy size={18} /></div><div className="record-content"><div className="record-title-row"><h4>{match.name}</h4>{match.placement && <span className="badge badge-success">#{match.placement}</span>}{practiscoreImport && <span className="badge badge-muted">{practiscoreImport.practiscoreMatchId.startsWith('mare2:') ? 'Mare2' : 'PractiScore'}</span>}</div><p>{[formatDate(match.date), match.clubOrRange].filter(Boolean).join(' · ')}</p><p className="muted">{[match.discipline, match.divisionOrCategory, match.firearmId ? names.get(match.firearmId) : '', match.score ? t('matches.score', { score: match.score }) : ''].filter(Boolean).join(' · ')}</p>{practiscoreImport && <p className="muted">{t('matches.practiscore.cardSummary', { stages: practiscoreImport.snapshot.stages.length, competitors: practiscoreImport.snapshot.competitors.length, scores: practiscoreImport.snapshot.scores.length })}</p>}</div><div className="record-actions"><button className="icon-button" onClick={() => edit(match)} aria-label={t('actions.edit')}><Edit3 size={15} /></button><button className="icon-button danger" onClick={() => setDeleteTarget(match)} aria-label={t('actions.delete')}><Trash2 size={15} /></button></div></article>;

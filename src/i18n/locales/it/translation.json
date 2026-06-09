@@ -178,8 +178,12 @@
     "owner": {
       "title": "Proprietario dispositivo",
       "identifiersLabel": "Identificativi PractiScore / nomi",
-      "identifiersPlaceholder": "IT027386\nEmanuele Tessore",
-      "description": "Un valore per riga o separato da virgole. L’analisi userà alias o nomi per preselezionare il tuo tiratore quando apri una gara PractiScore."
+      "identifiersPlaceholder": "Identificativo, alias o nome completo",
+      "description": "Aggiungi un identificativo o nome alla volta. Analisi userà questi alias o nomi per preselezionare il tuo tiratore quando viene aperta una gara.",
+      "addLabel": "Aggiungi identificativo o nome",
+      "addButton": "Aggiungi",
+      "empty": "Nessun identificativo proprietario.",
+      "removeIdentifier": "Rimuovi {{identifier}}"
     }
   },
   "sync": {

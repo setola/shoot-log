@@ -1,28 +1,19 @@
-import { Download, Info, Moon, Shield, Sun, Trash2, Upload } from 'lucide-react';
-import { useState } from 'react';
+import { Download, Info, Plus, Shield, Trash2, Upload, X } from 'lucide-react';
+import { useState, type ReactNode } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import { db } from '../db/schema';
 import { DEFAULT_SETTINGS_ID, updateOwnerPractiscoreIdentifiers } from '../domain/settings/settingsRepository';
 
 interface SettingsPanelProps {
-  theme: 'light' | 'dark';
-  language: string;
-  onThemeChange: (theme: 'light' | 'dark') => void;
-  onLanguageChange: (language: string) => void;
+  driveSyncContent: ReactNode;
   onExportData: () => void;
   onImportData: () => void;
   onClearData: () => Promise<void>;
 }
 
-const languages = ['en', 'it'] as const;
-const themes = ['light', 'dark'] as const;
-
 export function SettingsPanel({
-  theme,
-  language,
-  onThemeChange,
-  onLanguageChange,
+  driveSyncContent,
   onExportData,
   onImportData,
   onClearData
@@ -36,10 +27,6 @@ export function SettingsPanel({
     setConfirmClearOpen(false);
   }
 
-  async function handleOwnerIdentifiersBlur(value: string) {
-    await updateOwnerPractiscoreIdentifiers(value.split(/[\n,]+/));
-  }
-
   return (
     <section className="screen-stack" aria-labelledby="settings-title">
       <div className="section-heading figma-heading">
@@ -50,63 +37,14 @@ export function SettingsPanel({
       </div>
 
       <article className="settings-card">
-        <h3>{t('settingsPage.appearance.title')}</h3>
-        <div className="settings-group">
-          <div>
-            <p className="settings-label">{t('settings.theme')}</p>
-            <div className="segmented-grid segmented-grid-two" role="group" aria-label={t('settings.theme')}>
-              {themes.map((themeOption) => {
-                const Icon = themeOption === 'light' ? Sun : Moon;
-                return (
-                  <button
-                    key={themeOption}
-                    className={theme === themeOption ? 'segmented-option segmented-option-active' : 'segmented-option'}
-                    type="button"
-                    onClick={() => onThemeChange(themeOption)}
-                  >
-                    <Icon size={15} />
-                    {t(`settings.themeValues.${themeOption}`)}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div>
-            <p className="settings-label">{t('settings.language')}</p>
-            <div className="segmented-grid" role="group" aria-label={t('settings.language')}>
-              {languages.map((languageOption) => (
-                <button
-                  key={languageOption}
-                  className={language.startsWith(languageOption) ? 'segmented-option segmented-option-active' : 'segmented-option'}
-                  type="button"
-                  onClick={() => onLanguageChange(languageOption)}
-                >
-                  {t(`settings.languageNames.${languageOption}`)}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      </article>
-
-      <article className="settings-card">
-        <h3>{t('settingsPage.privacy.title')}</h3>
-        <div className="settings-group settings-group-compact">
-          <PrivacyNotice>{t('settingsPage.privacy.localOnly')}</PrivacyNotice>
-          <PrivacyNotice>{t('settingsPage.privacy.sensitive')}</PrivacyNotice>
-        </div>
-      </article>
-
-      <article className="settings-card">
         <h3>{t('settingsPage.owner.title')}</h3>
-        <div className="settings-group settings-group-compact">
-          <label>
-            <span className="settings-label">{t('settingsPage.owner.identifiersLabel')}</span>
-            <textarea key={appSettings?.updatedAt ?? 'empty-owner-identifiers'} rows={4} defaultValue={appSettings?.ownerPractiscoreIdentifiers.join('\n') ?? ''} onBlur={(event) => void handleOwnerIdentifiersBlur(event.target.value)} placeholder={t('settingsPage.owner.identifiersPlaceholder')} />
-          </label>
-          <p className="muted">{t('settingsPage.owner.description')}</p>
-        </div>
+        <OwnerIdentifiersEditor key={appSettings?.updatedAt ?? 'empty-owner-identifiers'} identifiers={appSettings?.ownerPractiscoreIdentifiers ?? []} />
+      </article>
+
+      <article className="settings-card">
+        <h3>{t('sync.title')}</h3>
+        <p className="muted">{t('sync.description')}</p>
+        {driveSyncContent}
       </article>
 
       <article className="settings-card">
@@ -143,6 +81,10 @@ export function SettingsPanel({
           <Info size={18} />
           <div>
             <p>{t('settingsPage.about.description')}</p>
+            <div className="settings-group settings-group-compact about-privacy-notes">
+              <PrivacyNotice>{t('settingsPage.privacy.localOnly')}</PrivacyNotice>
+              <PrivacyNotice>{t('settingsPage.privacy.sensitive')}</PrivacyNotice>
+            </div>
             <span>{t('settingsPage.about.version')}</span>
           </div>
         </div>
@@ -173,7 +115,56 @@ export function SettingsPanel({
   );
 }
 
-function PrivacyNotice({ children }: { children: React.ReactNode }) {
+function OwnerIdentifiersEditor({ identifiers }: { identifiers: string[] }) {
+  const { t } = useTranslation();
+  const [items, setItems] = useState(() => identifiers.filter(Boolean));
+  const [draft, setDraft] = useState('');
+
+  async function updateItems(nextItems: string[]) {
+    const normalizedItems = [...new Set(nextItems.map((item) => item.trim()).filter(Boolean))];
+    setItems(normalizedItems);
+    await updateOwnerPractiscoreIdentifiers(normalizedItems);
+  }
+
+  async function addDraft() {
+    const newItem = draft.trim();
+    if (!newItem) return;
+    setDraft('');
+    await updateItems([...items, newItem]);
+  }
+
+  return (
+    <div className="settings-group settings-group-compact">
+      <div className="owner-pill-list" aria-label={t('settingsPage.owner.identifiersLabel')}>
+        {items.length ? items.map((item) => (
+          <span className="owner-pill" key={item}>
+            {item}
+            <button type="button" aria-label={t('settingsPage.owner.removeIdentifier', { identifier: item })} onClick={() => void updateItems(items.filter((candidate) => candidate !== item))}>
+              <X size={13} />
+            </button>
+          </span>
+        )) : <span className="muted">{t('settingsPage.owner.empty')}</span>}
+      </div>
+      <label>
+        <span className="settings-label">{t('settingsPage.owner.addLabel')}</span>
+        <div className="owner-add-row">
+          <input value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              void addDraft();
+            }
+          }} placeholder={t('settingsPage.owner.identifiersPlaceholder')} />
+          <button className="button button-secondary" type="button" onClick={() => void addDraft()}>
+            <Plus size={15} />{t('settingsPage.owner.addButton')}
+          </button>
+        </div>
+      </label>
+      <p className="muted">{t('settingsPage.owner.description')}</p>
+    </div>
+  );
+}
+
+function PrivacyNotice({ children }: { children: ReactNode }) {
   return (
     <div className="privacy-note settings-privacy-note">
       <Shield size={15} />
@@ -183,7 +174,7 @@ function PrivacyNotice({ children }: { children: React.ReactNode }) {
 }
 
 interface SettingsActionProps {
-  icon: React.ReactNode;
+  icon: ReactNode;
   title: string;
   description: string;
   buttonLabel: string;

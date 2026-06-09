@@ -16,6 +16,7 @@ interface DriveSyncPanelProps {
   onBackupContentRequested: () => Promise<string>;
   onRestoreContent: (content: string) => Promise<void>;
   onLastSyncedAtChange: (timestamp: string | null) => void;
+  embedded?: boolean;
 }
 
 type SyncState = 'idle' | 'connecting' | 'syncing' | 'restoring' | 'error';
@@ -24,7 +25,8 @@ export function DriveSyncPanel({
   lastSyncedAt,
   onBackupContentRequested,
   onRestoreContent,
-  onLastSyncedAtChange
+  onLastSyncedAtChange,
+  embedded = false
 }: DriveSyncPanelProps) {
   const { t } = useTranslation();
   const [connected, setConnected] = useState(() => hasGoogleDriveAccessToken() || hasStoredGoogleDriveAuthorization());
@@ -107,16 +109,9 @@ export function DriveSyncPanel({
 
   const busy = state === 'connecting' || state === 'syncing' || state === 'restoring';
 
-  return (
-    <section className="screen-stack" aria-labelledby="sync-title">
-      <div className="section-heading figma-heading">
-        <div>
-          <h2 id="sync-title">{t('sync.title')}</h2>
-          <p>{t('sync.description')}</p>
-        </div>
-      </div>
-
-      <article className="settings-card sync-hero-card">
+  const content = (
+    <>
+      <div className="sync-hero-card">
         <div className="sync-status-icon">
           {busy ? <RefreshCw size={24} className="spin" /> : <Cloud size={24} />}
         </div>
@@ -127,16 +122,16 @@ export function DriveSyncPanel({
             {lastSyncedAt ? t('sync.lastSyncedAt', { date: new Date(lastSyncedAt).toLocaleString() }) : t('sync.neverSynced')}
           </span>
         </div>
-      </article>
+      </div>
 
       {!configured ? (
-        <article className="settings-card warning-card">
+        <div className="warning-card embedded-warning-card">
           <h3>{t('sync.configurationMissingTitle')}</h3>
           <p>{t('sync.configurationMissingDescription')}</p>
-        </article>
+        </div>
       ) : null}
 
-      <article className="settings-card">
+      <div>
         <h3>{t('sync.actionsTitle')}</h3>
         <div className="data-actions">
           <SyncAction
@@ -172,22 +167,35 @@ export function DriveSyncPanel({
             onClick={() => void handleDisconnect()}
           />
         </div>
-      </article>
+      </div>
 
-      <article className="settings-card">
-        <h3>{t('sync.privacyTitle')}</h3>
-        <p className="privacy-note settings-privacy-note">
-          <Shield size={15} />
-          <span>{t('sync.privacyDescription')}</span>
-        </p>
-      </article>
+      <p className="privacy-note settings-privacy-note">
+        <Shield size={15} />
+        <span>{t('sync.privacyDescription')}</span>
+      </p>
 
       {error ? (
-        <article className="settings-card warning-card" role="alert">
+        <div className="warning-card embedded-warning-card" role="alert">
           <h3>{t('sync.errorTitle')}</h3>
           <p>{error}</p>
-        </article>
+        </div>
       ) : null}
+    </>
+  );
+
+  if (embedded) {
+    return <div className="embedded-drive-sync">{content}</div>;
+  }
+
+  return (
+    <section className="screen-stack" aria-labelledby="sync-title">
+      <div className="section-heading figma-heading">
+        <div>
+          <h2 id="sync-title">{t('sync.title')}</h2>
+          <p>{t('sync.description')}</p>
+        </div>
+      </div>
+      <article className="settings-card embedded-drive-sync">{content}</article>
     </section>
   );
 }

@@ -1,7 +1,6 @@
 import {
   Activity,
   BarChart2,
-  Cloud,
   Code2,
   FileText,
   Grid2X2,
@@ -46,7 +45,6 @@ const navItems = [
   { id: 'maintenance', icon: Wrench },
   { id: 'paperwork', icon: FileText },
   { id: 'reports', icon: BarChart2 },
-  { id: 'sync', icon: Cloud },
   { id: 'settings', icon: Settings }
 ] as const satisfies ReadonlyArray<{ id: Section; icon: typeof Target }>;
 

@@ -1061,11 +1061,33 @@ button:disabled {
 }
 
 .status-message {
-  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin: 0 0 1rem;
   padding: 0.65rem 0.8rem;
   border-radius: 0.65rem;
   font-size: 0.9rem;
   font-weight: 650;
+}
+
+.status-message-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: 0 0 auto;
+  border: 0;
+  border-radius: 999px;
+  color: currentColor;
+  background: transparent;
+  cursor: pointer;
+}
+
+.status-message-close:hover {
+  background: color-mix(in srgb, currentColor 12%, transparent);
 }
 
 .status-success {
@@ -1510,4 +1532,74 @@ button:disabled {
   border-top: 1px solid var(--border);
   margin-top: 0.25rem;
   padding-top: 0.25rem;
+}
+
+.owner-pill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  min-height: 2.2rem;
+  align-items: center;
+}
+
+.owner-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.45rem 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--muted);
+  color: var(--foreground);
+  font-size: 0.84rem;
+  font-weight: 750;
+}
+
+.owner-pill button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 0;
+  border-radius: 999px;
+  color: var(--muted-foreground);
+  background: transparent;
+  cursor: pointer;
+}
+
+.owner-pill button:hover {
+  color: var(--destructive);
+  background: color-mix(in srgb, var(--destructive) 12%, transparent);
+}
+
+.owner-add-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.55rem;
+}
+
+.embedded-drive-sync {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.embedded-drive-sync > div > h3 {
+  margin-bottom: 0.75rem;
+}
+
+.embedded-warning-card {
+  padding: 0.8rem;
+  border-radius: 0.85rem;
+}
+
+.about-privacy-notes {
+  margin: 0.85rem 0;
+}
+
+@media (max-width: 720px) {
+  .owner-add-row {
+    grid-template-columns: 1fr;
+  }
 }

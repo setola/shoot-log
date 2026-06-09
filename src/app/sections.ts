@@ -8,5 +8,4 @@ export type Section =
   | 'maintenance'
   | 'paperwork'
   | 'reports'
-  | 'sync'
   | 'settings';

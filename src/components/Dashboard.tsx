@@ -46,7 +46,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
           <StatCard icon={<Trophy size={18} />} label={t('dashboard.stats.matches')} value={matchEvents?.length ?? 0} sub={t('dashboard.stats.allTime')} onClick={() => onNavigate('matches')} />
           <StatCard icon={<Package size={18} />} label={t('dashboard.stats.ammo')} value={ammoTransactions?.length ?? 0} sub={t('dashboard.stats.inventory')} onClick={() => onNavigate('ammunition')} />
           <StatCard icon={<Wrench size={18} />} label={t('dashboard.stats.maintenance')} value={maintenanceEvents?.length ?? 0} sub={t('dashboard.stats.reminders')} onClick={() => onNavigate('maintenance')} />
-          <StatCard icon={<Cloud size={18} />} label={t('dashboard.stats.drive')} value={t('dashboard.stats.notConnected')} sub={t('dashboard.stats.connectBackup')} onClick={() => onNavigate('sync')} />
+          <StatCard icon={<Cloud size={18} />} label={t('dashboard.stats.drive')} value={t('dashboard.stats.notConnected')} sub={t('dashboard.stats.connectBackup')} onClick={() => onNavigate('settings')} />
         </div>
       </section>
     </div>
