@@ -1,0 +1,204 @@
+{
+  "format": "shooting-logbook-backup",
+  "schemaVersion": 1,
+  "exportedAt": "2026-06-09T18:55:00.000Z",
+  "deviceName": "Sample data",
+  "payload": {
+    "firearms": [
+      {
+        "id": "sample-firearm-1",
+        "nickname": "Match pistol",
+        "manufacturer": "Example Arms",
+        "model": "SP-01 Sport",
+        "type": "pistol",
+        "caliber": "9x19",
+        "initialRoundCount": 1200,
+        "archived": false,
+        "notes": "Example firearm for demo imports.",
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z"
+      }
+    ],
+    "trainingSessions": [
+      {
+        "id": "sample-training-1",
+        "date": "2026-06-03",
+        "location": "Local range",
+        "discipline": "IPSC",
+        "firearmId": "sample-firearm-1",
+        "ammoDescription": "9x19 FMJ",
+        "roundsFired": 150,
+        "drills": ["Transitions", "Bill drill", "Stage plan dry run"],
+        "distance": "7-20 m",
+        "score": "Good consistency",
+        "notes": "Focused on entries and reload timing.",
+        "createdAt": "2026-06-03T18:00:00.000Z",
+        "updatedAt": "2026-06-03T18:00:00.000Z"
+      }
+    ],
+    "matchEvents": [
+      {
+        "id": "sample-match-1",
+        "name": "Sample Club Match",
+        "date": "2026-06-07",
+        "clubOrRange": "Demo Shooting Club",
+        "discipline": "PractiScore",
+        "divisionOrCategory": "Production",
+        "firearmId": "sample-firearm-1",
+        "roundsFired": 42,
+        "score": "Demo imported score",
+        "placement": "2",
+        "registrationReference": "sample-practiscore-match",
+        "practiscoreMatchId": "sample-practiscore-match",
+        "practiscoreInternalMatchId": "sample-practiscore-match",
+        "notes": "Imported sample score snapshot for Analysis demo.",
+        "createdAt": "2026-06-07T12:00:00.000Z",
+        "updatedAt": "2026-06-07T12:00:00.000Z"
+      }
+    ],
+    "practiscoreMatchImports": [
+      {
+        "id": "sample-match-1",
+        "matchEventId": "sample-match-1",
+        "practiscoreMatchId": "sample-practiscore-match",
+        "sourceFileName": "sample-score-import.json",
+        "importedAt": "2026-06-07T12:00:00.000Z",
+        "createdAt": "2026-06-07T12:00:00.000Z",
+        "updatedAt": "2026-06-07T12:00:00.000Z",
+        "snapshot": {
+          "practiscoreMatchId": "sample-practiscore-match",
+          "importedAt": "2026-06-07T12:00:00.000Z",
+          "sourceFileName": "sample-score-import.json",
+          "match": {
+            "internalMatchId": "sample-practiscore-match",
+            "name": "Sample Club Match",
+            "date": "2026-06-07"
+          },
+          "stages": [
+            { "internalStageId": "1", "name": "Stage 1", "minRounds": 12, "maxPoints": 60 },
+            { "internalStageId": "2", "name": "Stage 2", "minRounds": 14, "maxPoints": 70 },
+            { "internalStageId": "3", "name": "Stage 3", "minRounds": 16, "maxPoints": 80 }
+          ],
+          "competitors": [
+            {
+              "internalMemberId": "101",
+              "competitorNumber": "101",
+              "firstName": "Demo",
+              "lastName": "Owner",
+              "displayName": "OWNER, DEMO",
+              "alias": "IT000001",
+              "divisionId": "Production",
+              "categoryId": "Senior",
+              "disqualified": false
+            },
+            {
+              "internalMemberId": "102",
+              "competitorNumber": "102",
+              "firstName": "Alex",
+              "lastName": "Rival",
+              "displayName": "RIVAL, ALEX",
+              "alias": "IT000002",
+              "divisionId": "Production",
+              "categoryId": "Senior",
+              "disqualified": false
+            },
+            {
+              "internalMemberId": "103",
+              "competitorNumber": "103",
+              "firstName": "Chris",
+              "lastName": "Open",
+              "displayName": "OPEN, CHRIS",
+              "alias": "IT000003",
+              "divisionId": "Open",
+              "disqualified": false
+            }
+          ],
+          "scores": [
+            { "internalStageId": "1", "internalMemberId": "101", "scoreA": 10, "scoreC": 2, "scoreD": 0, "misses": 0, "penalties": 0, "procedurals": 0, "shootTime": 12.4, "hitFactor": 4.68, "finalScore": 58, "disqualified": false },
+            { "internalStageId": "2", "internalMemberId": "101", "scoreA": 11, "scoreC": 2, "scoreD": 1, "misses": 0, "penalties": 0, "procedurals": 0, "shootTime": 18.72, "hitFactor": 3.63, "finalScore": 68, "disqualified": false },
+            { "internalStageId": "3", "internalMemberId": "101", "scoreA": 13, "scoreC": 2, "scoreD": 0, "misses": 1, "penalties": 0, "procedurals": 0, "shootTime": 21.15, "hitFactor": 3.31, "finalScore": 70, "disqualified": false },
+            { "internalStageId": "1", "internalMemberId": "102", "scoreA": 12, "scoreC": 0, "scoreD": 0, "misses": 0, "penalties": 0, "procedurals": 0, "shootTime": 11.85, "hitFactor": 5.06, "finalScore": 60, "disqualified": false },
+            { "internalStageId": "2", "internalMemberId": "102", "scoreA": 9, "scoreC": 4, "scoreD": 1, "misses": 0, "penalties": 0, "procedurals": 1, "shootTime": 17.95, "hitFactor": 3.79, "finalScore": 68, "disqualified": false },
+            { "internalStageId": "3", "internalMemberId": "102", "scoreA": 14, "scoreC": 2, "scoreD": 0, "misses": 0, "penalties": 0, "procedurals": 0, "shootTime": 20.1, "hitFactor": 3.88, "finalScore": 78, "disqualified": false },
+            { "internalStageId": "1", "internalMemberId": "103", "scoreA": 11, "scoreC": 1, "scoreD": 0, "misses": 0, "penalties": 0, "procedurals": 0, "shootTime": 10.5, "hitFactor": 5.43, "finalScore": 57, "disqualified": false }
+          ],
+          "rawXml": {}
+        }
+      }
+    ],
+    "ammunitionBatches": [
+      {
+        "id": "sample-ammo-1",
+        "caliber": "9x19",
+        "brand": "Example Ammo",
+        "bulletWeight": "124 gr",
+        "lotNumber": "DEMO-2026-A",
+        "notes": "Sample ammunition batch.",
+        "createdAt": "2026-06-01T09:10:00.000Z",
+        "updatedAt": "2026-06-01T09:10:00.000Z"
+      }
+    ],
+    "ammoTransactions": [
+      {
+        "id": "sample-ammo-tx-1",
+        "batchId": "sample-ammo-1",
+        "caliber": "9x19",
+        "type": "added",
+        "quantity": 500,
+        "date": "2026-06-01",
+        "notes": "Initial sample stock.",
+        "createdAt": "2026-06-01T09:10:00.000Z",
+        "updatedAt": "2026-06-01T09:10:00.000Z"
+      },
+      {
+        "id": "sample-ammo-tx-2",
+        "batchId": "sample-ammo-1",
+        "caliber": "9x19",
+        "type": "used",
+        "quantity": 150,
+        "linkedEntityType": "trainingSession",
+        "linkedEntityId": "sample-training-1",
+        "date": "2026-06-03",
+        "createdAt": "2026-06-03T18:00:00.000Z",
+        "updatedAt": "2026-06-03T18:00:00.000Z"
+      }
+    ],
+    "maintenanceEvents": [
+      {
+        "id": "sample-maintenance-1",
+        "firearmId": "sample-firearm-1",
+        "date": "2026-06-04",
+        "roundCountAtMaintenance": 1350,
+        "type": "cleaning",
+        "notes": "Routine cleaning after training session.",
+        "nextReminderRoundCount": 1850,
+        "createdAt": "2026-06-04T20:00:00.000Z",
+        "updatedAt": "2026-06-04T20:00:00.000Z"
+      }
+    ],
+    "paperworkCredentials": [
+      {
+        "id": "sample-paperwork-1",
+        "type": "clubMembership",
+        "title": "Demo Shooting Club membership",
+        "issuingAuthority": "Demo Shooting Club",
+        "validFrom": "2026-01-01",
+        "validUntil": "2026-12-31",
+        "reminderDate": "2026-12-01",
+        "notes": "Sample paperwork record without sensitive references.",
+        "attachmentIds": [],
+        "createdAt": "2026-06-01T09:20:00.000Z",
+        "updatedAt": "2026-06-01T09:20:00.000Z"
+      }
+    ],
+    "paperworkAttachments": [],
+    "appSettings": [
+      {
+        "id": "default",
+        "ownerPractiscoreIdentifiers": ["IT000001", "Demo Owner", "OWNER, DEMO"],
+        "createdAt": "2026-06-01T09:00:00.000Z",
+        "updatedAt": "2026-06-01T09:00:00.000Z"
+      }
+    ]
+  }
+}

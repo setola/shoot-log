@@ -21,6 +21,8 @@ type Theme = 'light' | 'dark';
 const THEME_STORAGE_KEY = 'shooting-logbook-theme';
 const SECTION_STORAGE_KEY = 'shooting-logbook-section';
 const LAST_DRIVE_SYNC_STORAGE_KEY = 'shooting-logbook-last-drive-sync';
+const AUTO_IMPORT_URL_PARAMS = ['importJsonUrl', 'importUrl', 'jsonUrl'];
+const AUTO_IMPORT_SAMPLE_PARAMS = ['importSample', 'sampleData'];
 
 function getInitialTheme(): Theme {
   const storedTheme = window.localStorage.getItem(THEME_STORAGE_KEY);
@@ -70,12 +72,53 @@ function base64ToBlob(base64: string, mimeType: string): Blob {
   return new Blob([bytes], { type: mimeType });
 }
 
+function getAutoImportUrlFromLocation(): URL | null {
+  const params = new URLSearchParams(window.location.search);
+  const shouldImportSample = AUTO_IMPORT_SAMPLE_PARAMS.some((param) => isTruthyUrlParam(params.get(param)));
+
+  if (shouldImportSample) {
+    return new URL('./sample-backup.json', window.location.href);
+  }
+
+  const rawUrl = AUTO_IMPORT_URL_PARAMS.map((param) => params.get(param)).find(Boolean);
+  if (!rawUrl) return null;
+
+  const importUrl = new URL(rawUrl, window.location.href);
+  if (importUrl.protocol !== 'https:' && importUrl.protocol !== 'http:') {
+    throw new Error('unsupported-import-url-protocol');
+  }
+
+  return importUrl;
+}
+
+function isTruthyUrlParam(value: string | null): boolean {
+  return value !== null && value !== '0' && value.toLowerCase() !== 'false';
+}
+
+function removeAutoImportParamsFromLocation(): void {
+  const url = new URL(window.location.href);
+  let changed = false;
+
+  for (const param of [...AUTO_IMPORT_URL_PARAMS, ...AUTO_IMPORT_SAMPLE_PARAMS]) {
+    if (url.searchParams.has(param)) {
+      url.searchParams.delete(param);
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+  }
+}
+
 export function App() {
   const { i18n, t } = useTranslation();
   const [theme, setTheme] = useState<Theme>(getInitialTheme);
   const [activeSection, setActiveSection] = useState<Section>(getInitialSection);
   const [lastDriveSyncedAt, setLastDriveSyncedAt] = useState<string | null>(() => window.localStorage.getItem(LAST_DRIVE_SYNC_STORAGE_KEY));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [autoImportStatus, setAutoImportStatus] = useState<'idle' | 'importing' | 'success' | 'error'>('idle');
+  const [autoImportError, setAutoImportError] = useState<string | null>(null);
 
   useEffect(() => {
     document.documentElement.dataset.theme = theme;
@@ -86,6 +129,43 @@ export function App() {
   useEffect(() => {
     window.localStorage.setItem(SECTION_STORAGE_KEY, activeSection);
   }, [activeSection]);
+
+  useEffect(() => {
+    let autoImportUrl: URL | null;
+
+    try {
+      autoImportUrl = getAutoImportUrlFromLocation();
+    } catch (error) {
+      removeAutoImportParamsFromLocation();
+      queueMicrotask(() => {
+        setAutoImportError(error instanceof Error ? error.message : String(error));
+        setAutoImportStatus('error');
+      });
+      return;
+    }
+
+    if (!autoImportUrl) return;
+
+    removeAutoImportParamsFromLocation();
+    queueMicrotask(() => {
+      setAutoImportStatus('importing');
+      setAutoImportError(null);
+    });
+
+    void fetch(autoImportUrl.toString(), { cache: 'no-store' })
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error(`import-url-request-failed-${response.status}`);
+        }
+
+        await importBackup(await response.text());
+        setAutoImportStatus('success');
+      })
+      .catch((error: unknown) => {
+        setAutoImportError(error instanceof Error ? error.message : String(error));
+        setAutoImportStatus('error');
+      });
+  }, []);
 
   async function collectBackupPayload() {
     const [
@@ -307,7 +387,16 @@ export function App() {
           onThemeChange={setTheme}
           onLanguageChange={(language) => void i18n.changeLanguage(language)}
         />
-        <main className="main-content">{renderSection()}</main>
+        <main className="main-content">
+          {autoImportStatus !== 'idle' ? (
+            <div className={`status-message ${autoImportStatus === 'error' ? 'status-error' : 'status-success'}`} role="status">
+              {autoImportStatus === 'importing' && t('importUrl.importing')}
+              {autoImportStatus === 'success' && t('importUrl.success')}
+              {autoImportStatus === 'error' && t('importUrl.error', { error: autoImportError })}
+            </div>
+          ) : null}
+          {renderSection()}
+        </main>
       </div>
       <BottomNav active={activeSection} onNavigate={setActiveSection} />
     </div>

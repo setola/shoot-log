@@ -450,5 +450,10 @@
       "gunsmith": "Armaiolo",
       "other": "Altro"
     }
+  },
+  "importUrl": {
+    "importing": "Importazione backup da URL…",
+    "success": "Backup importato da URL.",
+    "error": "Impossibile importare il backup da URL: {{error}}"
   }
 }

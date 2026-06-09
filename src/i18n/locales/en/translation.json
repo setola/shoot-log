@@ -450,5 +450,10 @@
       "gunsmith": "Gunsmith",
       "other": "Other"
     }
+  },
+  "importUrl": {
+    "importing": "Importing backup from URL…",
+    "success": "Backup imported from URL.",
+    "error": "Could not import backup from URL: {{error}}"
   }
 }
