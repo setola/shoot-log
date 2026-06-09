@@ -160,17 +160,17 @@ In the existing Settings screen, add a card titled:
 
 Fields:
 
-- Multiline textarea label: “PractiScore identifiers / names”
-- Placeholder:
+- Pill list of existing owner identifiers/names
+- Single-line input label: “Add identifier or name”
+- Placeholder: “Identifier, alias, or full name”
+- Add button
+- Each pill has a remove X button
 
-```text
-IT027386
-Emanuele Tessore
-```
+Behavior:
 
-Helper text:
-
-- “One value per line or comma-separated. Analysis will use these aliases or names to preselect your competitor when a PractiScore match is opened.”
+- Add exactly one pill per submitted input value.
+- Do not split values by comma; commas are part of the single pill value.
+- Analysis will use these aliases or names to preselect the competitor when a match is opened.
 
 The card should use the same settings-card style already present.
 
@@ -180,18 +180,17 @@ In the existing Matches screen, add/update score import panels:
 
 PractiScore panel:
 - Title: “PractiScore import”
-- Field: “PractiScore ID or URL”
 - Field: “Downloaded CAB file”
 - Button: “Import PractiScore data”
-- Success/error message area
+- Dismissible success/error message area
 
 Mare2 FITDS panel:
 - Title: “Mare2 FITDS PDF import”
 - Field: “Mare2 PDF file”
 - Button: “Import Mare2 PDF”
-- Success/error message area
+- Dismissible success/error message area
 
-Imported match cards should show a small **PractiScore** or **Mare2** badge depending on source.
+Imported match cards should show a small **PractiScore** or **Mare2** badge depending on source. Do not include a standalone “Add match” button.
 
 ## Responsive behavior
 

@@ -78,9 +78,11 @@ The repository is already initialized as a static PWA skeleton:
 - Firearms CRUD implemented in `src/domain/firearms/FirearmsCrud.tsx`
 - Matches CRUD with PractiScore CAB and Mare2 FITDS PDF import implemented in `src/domain/matches/MatchesCrud.tsx`
 - Dedicated match analysis screen implemented in `src/domain/matches/MatchAnalysis.tsx`
-- App settings for device-owner PractiScore/Mare2 identifiers and names persisted in IndexedDB
+- App settings for device-owner PractiScore/Mare2 identifiers and names persisted in IndexedDB with pill-based add/remove UI
 - Firearm persistence helpers in `src/domain/firearms/firearmRepository.ts`
 - Minimal icon component in `src/components/Icon.tsx`
+- Google Drive sync is embedded in Settings, not a standalone navigation section
+- URL-driven JSON import supports `importJsonUrl` / `importUrl` / `jsonUrl`; bundled sample data supports `importSample=true` or `sampleData=true`
 - GitHub Pages deployment workflow in `.github/workflows/deploy.yml`
 - Docker Compose local dev with official `node:22-alpine` image and bind-mounted `./node_modules`
 
@@ -297,8 +299,7 @@ Implement:
 Match score analysis is local-first and import-based:
 
 - Do not fetch match results through an app-owned backend.
-- Accept a PractiScore result ID or URL and normalize it to the UUID-style match id.
-- Import user-downloaded PractiScore CAB files locally in the browser.
+- Import user-downloaded PractiScore CAB files locally in the browser; derive the match id from the CAB XML when possible instead of asking for a PractiScore URL.
 - Import FITDS Mare2 score-verification PDFs locally in the browser.
 - Store one score snapshot per local `MatchEvent` in IndexedDB using the existing `practiscoreMatchImports` table/snapshot shape for compatibility.
 - If importing while editing an existing match, replace that match's local data and analysis snapshot with the imported data.
@@ -312,6 +313,7 @@ Analysis section expectations:
 - Allow selecting an imported match, a primary competitor, and an optional comparison competitor with autocomplete.
 - Preselect the device owner using Settings identifiers such as `IcsAlias` or full name.
 - Persist primary and comparison competitor selections locally so they survive match/app changes.
+- Device-owner identifiers in Settings should be edited as individual pills; commas are part of the value, not separators.
 - Compute stage placement within the competitor's division, sorted by descending hit factor.
 - Display comparative hit distribution pie charts, stage placement trend, and compact per-stage details.
 
@@ -414,3 +416,4 @@ The app now has the local-first CRUD foundation, JSON/Drive backup, PractiScore 
 4. Improve dashboard cards with richer live Dexie summaries.
 5. Add CSV/PDF reports and reminders.
 6. Design and implement client-side encrypted backups.
+7. Add tests for URL-driven import and reusable status-message dismissal behavior.

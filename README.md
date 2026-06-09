@@ -8,7 +8,8 @@ Privacy-first, local-first PWA for sport shooting records.
 - IndexedDB local database via Dexie
 - i18n via i18next/react-i18next with translations in `src/i18n/locales`
 - PWA support via `vite-plugin-pwa`
-- Future Google Drive backup/sync via the user's own Drive `appDataFolder`
+- Google Drive backup/sync via the user's own Drive `appDataFolder`
+- Local score imports from PractiScore CAB and Mare2 FITDS PDF files
 - No app-owned backend database
 
 ## Local development
@@ -34,9 +35,27 @@ npm run dev
 npm run build
 ```
 
+## Import sample data by URL
+
+The app can import JSON backup data at startup from a CORS-enabled URL:
+
+```text
+?importJsonUrl=https%3A%2F%2Fexample.com%2Fbackup.json
+```
+
+Aliases are also supported: `importUrl` and `jsonUrl`.
+
+To load the bundled demo dataset:
+
+```text
+?importSample=true
+```
+
+The URL parameter is removed after startup to avoid repeated imports on refresh.
+
 ## Google Drive sync
 
-Google Drive sync is browser-only and uses the user's own Drive `appDataFolder`.
+Google Drive sync is available inside Settings. It is browser-only and uses the user's own Drive `appDataFolder`.
 
 1. Create an OAuth 2.0 Client ID in Google Cloud Console.
 2. Use application type **Web application**.

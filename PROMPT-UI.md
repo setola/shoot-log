@@ -48,8 +48,9 @@ Primary sections:
 - Maintenance
 - Paperwork
 - Reports
-- Google Drive Sync
 - Settings
+
+Google Drive sync is shown inside Settings, not as a separate primary section.
 
 Desktop:
 - Spacious centered layout
@@ -151,8 +152,10 @@ CRUD screen with:
 - Notes
 
 Also include score import panels:
-- PractiScore import with PractiScore ID or URL field, downloaded CAB file upload, import action, clear success/error state, and PractiScore badge on imported match cards
-- Mare2 FITDS PDF import with PDF file upload, import action, clear success/error state, and Mare2 badge on imported match cards
+- PractiScore import with downloaded CAB file upload, import action, clear dismissible success/error state, and PractiScore badge on imported match cards
+- Mare2 FITDS PDF import with PDF file upload, import action, clear dismissible success/error state, and Mare2 badge on imported match cards
+
+Do not include a generic “Add match” action; match score data should be created through import flows.
 
 ### Analysis concept
 
@@ -181,9 +184,17 @@ Visual style:
 - Use the existing accent blue for the primary competitor, orange for the comparison competitor, and calm semantic colors for hit types
 - Preserve light/dark theme compatibility
 
-### Google Drive sync/settings
+### Settings with Google Drive sync
 
-Privacy-first sync panel with states:
+Settings should contain:
+- Device-owner identifiers as removable/addable pills, one value per pill; commas are treated as part of a single value
+- Google Drive sync card
+- Data management card
+- About ShootLog card with privacy notes
+
+Do not duplicate theme/language selectors here if they already exist in the header.
+
+Privacy-first sync card states:
 - Not connected
 - Connected
 - Syncing
@@ -198,10 +209,7 @@ Buttons:
 
 Use “Connect Google Drive”, not “Login”.
 
-Settings include:
-- Language selector
-- Theme selector: Light / Dark
-- Device-owner PractiScore identifiers / names, entered as multiline text
+Settings data management includes:
 - Export data
 - Import data
 - Future encryption/passphrase settings
@@ -236,7 +244,7 @@ Suggested icons:
 - Paperwork: document
 - Analysis: activity/chart line
 - Reports: chart
-- Sync: cloud upload
+- Sync: cloud upload, used inside Settings
 - Privacy/encryption: shield/lock
 - Add: plus
 - Save: check

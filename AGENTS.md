@@ -172,9 +172,9 @@ Implemented local-first modules:
 7. Ammunition batches and stock movement basics.
 8. Paperwork/credentials CRUD.
 9. Paperwork attachments stored locally as IndexedDB `Blob`s.
-10. Settings panel with theme/language/data actions and local device-owner PractiScore identifiers.
-11. JSON export/import, including base64 serialization of paperwork attachments, PractiScore snapshots, and app settings.
-12. Google Drive connection and manual backup/restore to the user's `appDataFolder`.
+10. Settings panel with data actions, embedded Google Drive sync, about/privacy information, and pill-based local device-owner identifiers.
+11. JSON export/import, including base64 serialization of paperwork attachments, score snapshots, and app settings; URL-driven import and bundled sample data import are supported.
+12. Google Drive connection and manual backup/restore to the user's `appDataFolder`, exposed inside Settings.
 13. Source commit link in the sidebar footer.
 14. PractiScore CAB import for matches, storing a single local snapshot per match.
 15. Mare2 FITDS PDF import for score verification reports, reusing the same local analysis snapshot shape.
@@ -252,6 +252,10 @@ Prefer practical labels:
 - Analysis
 - Reports
 - Settings
+
+Navigation note:
+
+- Google Drive sync belongs inside Settings, not as a standalone navigation item.
 
 Use warnings sparingly but clearly for:
 
