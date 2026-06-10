@@ -164,7 +164,6 @@ Fields may include:
 - roundsFired
 - score
 - placement
-- registrationReference
 - notes
 - createdAt
 - updatedAt
@@ -301,21 +300,23 @@ Match score analysis is local-first and import-based:
 - Do not fetch match results through an app-owned backend.
 - Import user-downloaded PractiScore CAB files locally in the browser; derive the match id from the CAB XML when possible instead of asking for a PractiScore URL.
 - Import FITDS Mare2 score-verification PDFs locally in the browser.
+- Prefer drag-and-drop file zones for all local file import/upload points; keep them clickable as file-picking fallbacks.
+- Import/upload modals must show selected filename plus bottom-right Cancel and confirming CTA actions, with an X close button in the top-right.
 - Store one score snapshot per local `MatchEvent` in IndexedDB using the existing `practiscoreMatchImports` table/snapshot shape for compatibility.
 - If importing while editing an existing match, replace that match's local data and analysis snapshot with the imported data.
-- Current PractiScore parser support targets the uncompressed CAB XML export observed in `design/WinMSS.cab`.
-- Current Mare2 parser support targets the score-verification-by-competitor PDF layout observed in `design/6camp_dFWMLqQ4vR.pdf`.
+- Current PractiScore parser support targets the uncompressed CAB XML export observed in `test-data/match-imports/WinMSS.cab`.
+- Current Mare2 parser support targets the score-verification-by-competitor PDF layout observed in `test-data/match-imports/6camp_dFWMLqQ4vR.pdf`.
 - Keep parser and analysis logic in small testable modules (`practiscoreParser.ts`, `mare2PdfParser.ts`, `practiscoreAnalysis.ts`).
 
 Analysis section expectations:
 
 - Use imported local snapshots only; no network access required.
-- Allow selecting an imported match, a primary competitor, and an optional comparison competitor with autocomplete.
-- Preselect the device owner using Settings identifiers such as `IcsAlias` or full name.
-- Persist primary and comparison competitor selections locally so they survive match/app changes.
+- Allow selecting an imported match and multiple comparison competitors with autocomplete.
+- Suggest the device owner as the first competitor pill using Settings identifiers such as `IcsAlias` or full name, but allow removing that pill like any other competitor.
+- Persist manually selected comparison competitor pills locally so they survive match/app changes.
 - Device-owner identifiers in Settings should be edited as individual pills; commas are part of the value, not separators.
 - Compute stage placement within the competitor's division, sorted by descending hit factor.
-- Display comparative hit distribution pie charts, stage placement trend, and compact per-stage details.
+- Display comparative hit distribution pie charts, stage placement trend, comparative stage metric charts, and compact multi-competitor per-stage details.
 
 ## Code organization guidance
 

@@ -1,5 +1,5 @@
-import { Download, Info, Plus, Shield, Trash2, Upload, X } from 'lucide-react';
-import { useState, type ReactNode } from 'react';
+import { Download, FileUp, Info, Plus, Shield, Trash2, Upload, X } from 'lucide-react';
+import { useState, type DragEvent, type ReactNode } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useTranslation } from 'react-i18next';
 import { db } from '../db/schema';
@@ -8,7 +8,7 @@ import { DEFAULT_SETTINGS_ID, updateOwnerPractiscoreIdentifiers } from '../domai
 interface SettingsPanelProps {
   driveSyncContent: ReactNode;
   onExportData: () => void;
-  onImportData: () => void;
+  onImportData: (file: File) => void;
   onClearData: () => Promise<void>;
 }
 
@@ -21,10 +21,30 @@ export function SettingsPanel({
   const { t } = useTranslation();
   const appSettings = useLiveQuery(() => db.appSettings.get(DEFAULT_SETTINGS_ID), []);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
 
   async function handleClearData() {
     await onClearData();
     setConfirmClearOpen(false);
+  }
+
+  function handleImportDrop(event: DragEvent<HTMLLabelElement>) {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file) setImportFile(file);
+  }
+
+  function handleImportConfirm() {
+    if (!importFile) return;
+    onImportData(importFile);
+    setImportFile(null);
+    setImportOpen(false);
+  }
+
+  function closeImportDialog() {
+    setImportFile(null);
+    setImportOpen(false);
   }
 
   return (
@@ -62,7 +82,7 @@ export function SettingsPanel({
             title={t('settingsPage.data.importTitle')}
             description={t('settingsPage.data.importDescription')}
             buttonLabel={t('settingsPage.data.importButton')}
-            onClick={onImportData}
+            onClick={() => setImportOpen(true)}
           />
           <SettingsAction
             danger
@@ -89,6 +109,33 @@ export function SettingsPanel({
           </div>
         </div>
       </article>
+
+      {importOpen ? (
+        <div className="dialog-backdrop" role="presentation" onMouseDown={closeImportDialog}>
+          <div className="panel form-grid import-dialog" role="dialog" aria-modal="true" aria-labelledby="import-data-title" onMouseDown={(event) => event.stopPropagation()}>
+            <div className="form-title-row import-dialog-heading">
+              <div>
+                <h3 id="import-data-title">{t('settingsPage.data.importTitle')}</h3>
+                <p className="muted import-dialog-intro">{t('settingsPage.data.importDescription')}</p>
+              </div>
+              <button className="icon-button" type="button" aria-label={t('actions.close')} onClick={closeImportDialog}>
+                <X size={16} />
+              </button>
+            </div>
+            <label className="import-drop-zone" onDragOver={(event) => event.preventDefault()} onDrop={handleImportDrop}>
+              <FileUp size={28} />
+              <strong>{t('settingsPage.data.importDropTitle')}</strong>
+              <span>{t('settingsPage.data.importDropHint')}</span>
+              <input type="file" accept="application/json,.json" onChange={(event) => setImportFile(event.target.files?.[0] ?? null)} />
+            </label>
+            {importFile ? <p className="muted">{t('settingsPage.data.selectedFile', { fileName: importFile.name })}</p> : null}
+            <div className="dialog-actions">
+              <button className="button button-secondary" type="button" onClick={closeImportDialog}>{t('actions.cancel')}</button>
+              <button className="button" type="button" disabled={!importFile} onClick={handleImportConfirm}><Upload size={16} />{t('settingsPage.data.importButton')}</button>
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {confirmClearOpen ? (
         <div className="dialog-backdrop" role="presentation" onMouseDown={() => setConfirmClearOpen(false)}>

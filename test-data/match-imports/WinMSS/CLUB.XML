@@ -1,0 +1,71 @@
+<xml xmlns:s='uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+  xmlns:dt='uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+  xmlns:rs='urn:schemas-microsoft-com:rowset'
+  xmlns:z='#RowsetSchema'>
+<s:Schema id='RowsetSchema'>
+    <s:ElementType name='row' content='eltOnly' rs:updatable='true'>
+        <s:AttributeType name='ClubId' rs:number='1' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatch'
+             rs:basecolumn='ClubId'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='ClubCode' rs:number='2' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='ClubCode'>
+            <s:datatype dt:type='string' dt:maxLength='6'/>
+        </s:AttributeType>
+        <s:AttributeType name='Club' rs:number='3' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblClub'
+             rs:basecolumn='Club' rs:keycolumn='true'>
+            <s:datatype dt:type='string' dt:maxLength='50'/>
+        </s:AttributeType>
+        <s:AttributeType name='Contact' rs:number='4' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='Contact'>
+            <s:datatype dt:type='string' dt:maxLength='50'/>
+        </s:AttributeType>
+        <s:AttributeType name='Address1' rs:number='5' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='Address1'>
+            <s:datatype dt:type='string' dt:maxLength='40'/>
+        </s:AttributeType>
+        <s:AttributeType name='Address2' rs:number='6' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='Address2'>
+            <s:datatype dt:type='string' dt:maxLength='40'/>
+        </s:AttributeType>
+        <s:AttributeType name='City' rs:number='7' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblClub'
+             rs:basecolumn='City'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='Province' rs:number='8' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='Province'>
+            <s:datatype dt:type='string' dt:maxLength='24'/>
+        </s:AttributeType>
+        <s:AttributeType name='CountryId' rs:number='9' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='TypeCountryId'>
+            <s:datatype dt:type='string' dt:maxLength='3'/>
+        </s:AttributeType>
+        <s:AttributeType name='PostCode' rs:number='10' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='PostCode'>
+            <s:datatype dt:type='string' dt:maxLength='10'/>
+        </s:AttributeType>
+        <s:AttributeType name='Phone' rs:number='11' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblClub'
+             rs:basecolumn='Phone'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='PhoneAlt' rs:number='12' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='PhoneAlternate'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='PhoneFax' rs:number='13' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='PhoneFax'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='Email' rs:number='14' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblClub'
+             rs:basecolumn='Email'>
+            <s:datatype dt:type='string' dt:maxLength='36'/>
+        </s:AttributeType>
+        <s:AttributeType name='WebSite' rs:number='15' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblClub' rs:basecolumn='WebSite'>
+            <s:datatype dt:type='string' dt:maxLength='64'/>
+        </s:AttributeType>
+        <s:extends type='rs:rowbase'/>
+    </s:ElementType>
+</s:Schema><rs:data>
+</rs:data>
+</xml>

@@ -5,7 +5,7 @@ import { calculateStagePlacementTrend } from './practiscoreAnalysis';
 import type { PractiscoreImportRecord } from './practiscoreTypes';
 
 async function loadSampleImport(): Promise<PractiscoreImportRecord> {
-  const bytes = await readFile('design/WinMSS.cab');
+  const bytes = await readFile('test-data/match-imports/WinMSS.cab');
   const snapshot = await parsePractiscoreCabSnapshot(new File([bytes], 'WinMSS.cab'), '{82B59923-3BEF-4503-8CE7-DC70A25397F3}');
 
   return {

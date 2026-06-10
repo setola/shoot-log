@@ -9,7 +9,6 @@ export interface MatchEvent {
   roundsFired: number;
   score?: string;
   placement?: string;
-  registrationReference?: string;
   practiscoreMatchId?: string;
   practiscoreInternalMatchId?: string;
   notes?: string;

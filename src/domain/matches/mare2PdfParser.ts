@@ -133,7 +133,7 @@ function parseCompetitorLine(line: string): PractiscoreCompetitor | undefined {
   const match = line.match(/^\s*(\d+)\s+(.+?)\s+DIV:\s*(\S+)\s+CLASS:\s*(\S+)\s+FACTOR:\s*(\S+)(?:\s+CATEGORY:\s*(.*))?\s*$/);
   if (!match) return undefined;
 
-  const [, number, rawName, division, competitorClass, , category] = match;
+  const [, number, rawName, division, , , category] = match;
   const displayName = rawName.trim().replace(/\s+/g, ' ');
   const [lastName, ...firstNameParts] = displayName.split(',').map((part) => part.trim());
 
@@ -144,7 +144,7 @@ function parseCompetitorLine(line: string): PractiscoreCompetitor | undefined {
     lastName: lastName || undefined,
     displayName,
     divisionId: division,
-    categoryId: [competitorClass, category?.trim()].filter(Boolean).join(' · ') || undefined,
+    categoryId: optionalText(category),
     disqualified: false
   };
 }
@@ -169,6 +169,11 @@ function parseStageScoreLine(line: string, internalMemberId: string): Practiscor
     finalScore: parseInteger(points),
     disqualified: false
   };
+}
+
+function optionalText(value: string | undefined): string | undefined {
+  const trimmed = value?.trim();
+  return trimmed ? trimmed : undefined;
 }
 
 function parseInteger(value: string): number {

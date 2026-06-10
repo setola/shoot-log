@@ -163,7 +163,10 @@
       "importButton": "Importa dati",
       "clearTitle": "Cancella tutti i dati",
       "clearDescription": "Elimina definitivamente tutti i dati del registro da questo dispositivo.",
-      "clearButton": "Cancella tutto"
+      "clearButton": "Cancella tutto",
+      "importDropTitle": "Trascina qui il backup",
+      "importDropHint": "oppure clicca per scegliere un backup JSON da questo dispositivo",
+      "selectedFile": "File selezionato: {{fileName}}"
     },
     "about": {
       "title": "Informazioni su ShootLog",
@@ -268,7 +271,8 @@
       "addAnother": "Allega un altro",
       "download": "Scarica allegato",
       "delete": "Elimina allegato",
-      "editHint": "Dopo il salvataggio, scansioni o PDF allegati si gestiscono dalla scheda del documento."
+      "editHint": "Dopo il salvataggio, scansioni o PDF allegati si gestiscono dalla scheda del documento.",
+      "dropHint": "Trascina qui un PDF o un’immagine, oppure clicca per scegliere un file"
     }
   },
   "training": {
@@ -323,7 +327,6 @@
       "rounds": "Colpi sparati",
       "score": "Punteggio",
       "placement": "Piazzamento",
-      "registration": "Riferimento iscrizione",
       "notes": "Note"
     },
     "placeholders": {
@@ -331,7 +334,7 @@
     },
     "practiscore": {
       "title": "Import PractiScore",
-      "createHint": "Inserisci un ID o URL PractiScore e importa il file CAB scaricato. Verrà creata una gara locale dai dati XML.",
+      "createHint": "Importa il file CAB scaricato dai risultati PractiScore. Verrà creata una gara locale dai dati XML.",
       "replaceHint": "Importando durante la modifica, i dati locali della gara e lo snapshot PractiScore vengono sostituiti.",
       "idOrUrl": "ID o URL PractiScore",
       "idPlaceholder": "https://practiscore.com/results/html/{...}",
@@ -339,16 +342,17 @@
       "cabFile": "File CAB scaricato",
       "importAction": "Importa dati PractiScore",
       "importing": "Importazione…",
-      "validation": "Inserisci un ID o URL PractiScore e scegli il file CAB scaricato.",
+      "validation": "Scegli il file CAB PractiScore scaricato.",
       "importError": "Impossibile importare i dati PractiScore.",
       "importedSummary": "Importati {{stages}} stage, {{competitors}} tiratori e {{scores}} punteggi stage.",
-      "cardSummary": "PractiScore: {{stages}} stage · {{competitors}} tiratori · {{scores}} punteggi"
+      "cardSummary": "PractiScore: {{stages}} stage · {{competitors}} tiratori · {{scores}} punteggi",
+      "downloadHelp": "Dai risultati PractiScore apri l’opzione di esportazione/download della gara e salva il pacchetto CAB. Importa il CAB così com’è: non scompattarlo e non modificarlo."
     },
     "analysis": {
       "title": "Analisi gara",
       "description": "Seleziona una gara PractiScore importata e un tiratore per analizzare la distribuzione dei colpi.",
       "match": "Gara",
-      "competitor": "Tiratore",
+      "competitor": "Tiratore da analizzare",
       "competitorPlaceholder": "Cerca per nome, alias o numero",
       "pickCompetitor": "Scegli un tiratore dal campo di ricerca per mostrare il grafico.",
       "noCompetitorSelected": "Nessun tiratore corrispondente selezionato.",
@@ -367,10 +371,19 @@
       "emptyTitle": "Nessun dato PractiScore",
       "emptyDescription": "Importa un file CAB PractiScore dalla sezione Gare prima di aprire l’analisi.",
       "stageDetailsLegend": "Colori colpi: verde Alpha, blu Charlie, giallo Delta, rosso Miss, viola No-shoot, grigio Procedura.",
-      "compareWith": "Confronta con",
-      "comparePlaceholder": "Cerca un altro tiratore",
+      "compareWith": "Tiratori di confronto",
+      "comparePlaceholder": "Cerca e seleziona un tiratore",
       "hitDistributionTitle": "Distribuzione colpi",
-      "hitDistributionDescription": "Ripartizione di colpi validi e penalità per i tiratori selezionati."
+      "hitDistributionDescription": "Ripartizione di colpi validi e penalità per i tiratori selezionati.",
+      "hitFactorChartTitle": "Hit factor per stage",
+      "timeChartTitle": "Tempo per stage",
+      "pointsChartTitle": "Punti per stage",
+      "chartBar": "Barre",
+      "chartLine": "Linea",
+      "hitFactorChartDescription": "Confronta l’hit factor per stage; valori più alti sono migliori.",
+      "timeChartDescription": "Confronta il tempo grezzo dello stage; valori più bassi sono migliori.",
+      "pointsChartDescription": "Confronta i punti ottenuti per stage.",
+      "ownerPill": "owner"
     },
     "mare2": {
       "title": "Import PDF Mare2 FITDS",
@@ -381,7 +394,18 @@
       "importing": "Importazione…",
       "validation": "Seleziona un file PDF Mare2 da importare.",
       "importError": "Impossibile importare questo PDF Mare2.",
-      "importedSummary": "PDF Mare2 importato: {{stages}} stage · {{competitors}} tiratori · {{scores}} punteggi"
+      "importedSummary": "PDF Mare2 importato: {{stages}} stage · {{competitors}} tiratori · {{scores}} punteggi",
+      "downloadHelp": "Dai risultati Mare2/FITDS apri “Score Verification By Competitor” e usa esporta o stampa in PDF per quel report. Il parser si aspetta quel layout per tiratore."
+    },
+    "listTitle": "Gare registrate",
+    "listCount": "{{count}} gare salvate",
+    "import": {
+      "stages": "{{count}} stage",
+      "competitors": "{{count}} tiratori",
+      "dropTitle": "Trascina qui il file",
+      "dropHint": "oppure clicca per sceglierlo da questo dispositivo",
+      "selectedFile": "File selezionato: {{fileName}}",
+      "fromLabel": "Importa da:"
     }
   },
   "ammunition": {

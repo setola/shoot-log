@@ -1,0 +1,61 @@
+<xml xmlns:s='uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+  xmlns:dt='uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+  xmlns:rs='urn:schemas-microsoft-com:rowset'
+  xmlns:z='#RowsetSchema'>
+<s:Schema id='RowsetSchema'>
+    <s:ElementType name='row' content='eltOnly' rs:updatable='true'>
+        <s:AttributeType name='MatchId' rs:number='1' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatch'
+             rs:basecolumn='MatchId' rs:keycolumn='true' rs:autoincrement='true'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='MatchName' rs:number='2' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatch' rs:basecolumn='MatchName'>
+            <s:datatype dt:type='string' dt:maxLength='50'/>
+        </s:AttributeType>
+        <s:AttributeType name='MatchDt' rs:number='3' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatch' rs:basecolumn='MatchDt'>
+            <s:datatype dt:type='dateTime' rs:dbtype='variantdate' dt:maxLength='16' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='ClubId' rs:number='4' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatch'
+             rs:basecolumn='ClubId'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Chrono' rs:number='5' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatch'
+             rs:basecolumn='Chronograph'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='MatchLevel' rs:number='6' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatch' rs:basecolumn='TypeMatchLevel'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='CountryId' rs:number='7' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatch' rs:basecolumn='TypeCountryId'>
+            <s:datatype dt:type='string' dt:maxLength='3'/>
+        </s:AttributeType>
+        <s:AttributeType name='FirearmId' rs:number='8' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatch' rs:basecolumn='TypeFirearmId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='SquadCount' rs:number='9' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatch' rs:basecolumn='SquadCount'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='MD' rs:number='10' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatch'
+             rs:basecolumn='MatchDirector'>
+            <s:datatype dt:type='string' dt:maxLength='40'/>
+        </s:AttributeType>
+        <s:AttributeType name='RM' rs:number='11' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatch'
+             rs:basecolumn='RangeMaster'>
+            <s:datatype dt:type='string' dt:maxLength='40'/>
+        </s:AttributeType>
+        <s:AttributeType name='SD' rs:number='12' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatch'
+             rs:basecolumn='StatsDirector'>
+            <s:datatype dt:type='string' dt:maxLength='40'/>
+        </s:AttributeType>
+        <s:extends type='rs:rowbase'/>
+    </s:ElementType>
+</s:Schema>
+<rs:data>
+   <z:row MatchId='1' MatchName='5^ PROVA CAMPIONATO FEDERALE - MA3' MatchDt='2026-05-31T00:00:00' Chrono='False' MatchLevel='2' CountryId='CAN' FirearmId='1' SquadCount='31'/>
+</rs:data>
+</xml>

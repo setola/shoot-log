@@ -163,7 +163,10 @@
       "importButton": "Import data",
       "clearTitle": "Clear all data",
       "clearDescription": "This will permanently delete all logbook data from this device.",
-      "clearButton": "Clear all data"
+      "clearButton": "Clear all data",
+      "importDropTitle": "Drop the backup file here",
+      "importDropHint": "or click to choose a JSON backup from this device",
+      "selectedFile": "Selected file: {{fileName}}"
     },
     "about": {
       "title": "About ShootLog",
@@ -268,7 +271,8 @@
       "addAnother": "Attach another",
       "download": "Download attachment",
       "delete": "Delete attachment",
-      "editHint": "After saving, attached scans or PDFs can be managed from the document card."
+      "editHint": "After saving, attached scans or PDFs can be managed from the document card.",
+      "dropHint": "Drop a PDF or image here, or click to choose a file"
     }
   },
   "training": {
@@ -323,7 +327,6 @@
       "rounds": "Rounds fired",
       "score": "Score",
       "placement": "Placement",
-      "registration": "Registration reference",
       "notes": "Notes"
     },
     "placeholders": {
@@ -331,7 +334,7 @@
     },
     "practiscore": {
       "title": "PractiScore import",
-      "createHint": "Enter a PractiScore result ID or URL and import the downloaded CAB file. A local match will be created from the XML data.",
+      "createHint": "Import the downloaded CAB file from PractiScore results. A local match will be created from the XML data.",
       "replaceHint": "Importing while editing replaces the local match data and its PractiScore snapshot.",
       "idOrUrl": "PractiScore ID or URL",
       "idPlaceholder": "https://practiscore.com/results/html/{...}",
@@ -339,16 +342,17 @@
       "cabFile": "Downloaded CAB file",
       "importAction": "Import PractiScore data",
       "importing": "Importing…",
-      "validation": "Enter a PractiScore ID or URL and choose the downloaded CAB file.",
+      "validation": "Choose the downloaded PractiScore CAB file.",
       "importError": "Unable to import PractiScore data.",
       "importedSummary": "Imported {{stages}} stages, {{competitors}} competitors and {{scores}} stage scores.",
-      "cardSummary": "PractiScore: {{stages}} stages · {{competitors}} competitors · {{scores}} scores"
+      "cardSummary": "PractiScore: {{stages}} stages · {{competitors}} competitors · {{scores}} scores",
+      "downloadHelp": "From PractiScore results, open the match export/download option and save the CAB package. Import the CAB as-is; do not unzip or edit it."
     },
     "analysis": {
       "title": "Match analysis",
       "description": "Select an imported PractiScore match and a competitor to inspect hit distribution.",
       "match": "Match",
-      "competitor": "Competitor",
+      "competitor": "Analyze competitor",
       "competitorPlaceholder": "Search by name, alias or number",
       "pickCompetitor": "Choose a competitor from the search field to show the chart.",
       "noCompetitorSelected": "No matching competitor selected.",
@@ -367,10 +371,19 @@
       "emptyTitle": "No PractiScore data yet",
       "emptyDescription": "Import a PractiScore CAB file from Matches before opening analysis.",
       "stageDetailsLegend": "Hit colors: green Alpha, blue Charlie, amber Delta, red Miss, purple No-shoot, gray Procedure.",
-      "compareWith": "Compare with",
-      "comparePlaceholder": "Search another competitor",
+      "compareWith": "Comparison competitors",
+      "comparePlaceholder": "Search and select a competitor",
       "hitDistributionTitle": "Hit distribution",
-      "hitDistributionDescription": "Breakdown of scored hits and penalties for the selected competitors."
+      "hitDistributionDescription": "Breakdown of scored hits and penalties for the selected competitors.",
+      "hitFactorChartTitle": "Hit factor by stage",
+      "timeChartTitle": "Time by stage",
+      "pointsChartTitle": "Points by stage",
+      "chartBar": "Bars",
+      "chartLine": "Line",
+      "hitFactorChartDescription": "Compares per-stage hit factor; higher values are better.",
+      "timeChartDescription": "Compares raw stage time; lower values are better.",
+      "pointsChartDescription": "Compares scored points by stage.",
+      "ownerPill": "owner"
     },
     "mare2": {
       "title": "Mare2 FITDS PDF import",
@@ -381,7 +394,18 @@
       "importing": "Importing…",
       "validation": "Choose a Mare2 PDF file to import.",
       "importError": "Unable to import this Mare2 PDF.",
-      "importedSummary": "Imported Mare2 PDF: {{stages}} stages · {{competitors}} competitors · {{scores}} scores"
+      "importedSummary": "Imported Mare2 PDF: {{stages}} stages · {{competitors}} competitors · {{scores}} scores",
+      "downloadHelp": "From Mare2/FITDS results, open “Score Verification By Competitor” and export or print that report to PDF. This parser expects that competitor-by-competitor layout."
+    },
+    "listTitle": "Registered matches",
+    "listCount": "{{count}} saved matches",
+    "import": {
+      "stages": "{{count}} stages",
+      "competitors": "{{count}} competitors",
+      "dropTitle": "Drop the file here",
+      "dropHint": "or click to choose it from this device",
+      "selectedFile": "Selected file: {{fileName}}",
+      "fromLabel": "Import from:"
     }
   },
   "ammunition": {

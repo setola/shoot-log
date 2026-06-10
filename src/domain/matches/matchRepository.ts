@@ -5,7 +5,7 @@ import type { MatchEvent } from './types';
 export type MatchFormValues = Omit<MatchEvent, 'id' | 'createdAt' | 'updatedAt' | 'roundsFired'> & { roundsFired: string };
 
 export function createEmptyMatchForm(): MatchFormValues {
-  return { name: '', date: new Date().toISOString().slice(0, 10), clubOrRange: '', discipline: '', divisionOrCategory: '', firearmId: '', roundsFired: '0', score: '', placement: '', registrationReference: '', notes: '' };
+  return { name: '', date: new Date().toISOString().slice(0, 10), clubOrRange: '', discipline: '', divisionOrCategory: '', firearmId: '', roundsFired: '0', score: '', placement: '', notes: '' };
 }
 
 export function matchToFormValues(match: MatchEvent): MatchFormValues {
@@ -41,7 +41,6 @@ function normalize(values: MatchFormValues): Omit<MatchEvent, 'id' | 'createdAt'
     roundsFired: Number(values.roundsFired) || 0,
     score: optional(values.score),
     placement: optional(values.placement),
-    registrationReference: optional(values.registrationReference),
     notes: optional(values.notes)
   };
 }

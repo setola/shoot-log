@@ -64,19 +64,8 @@ export function PaperworkCrud() {
     resetForm();
   }
 
-  async function handleUpload(recordId: string) {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/pdf,image/*';
-    input.onchange = async () => {
-      const file = input.files?.[0];
-      if (!file) {
-        return;
-      }
-
-      await addPaperworkAttachment(recordId, file);
-    };
-    input.click();
+  async function handleUpload(recordId: string, file: File) {
+    await addPaperworkAttachment(recordId, file);
   }
 
   function handleDownload(attachmentId: string) {
@@ -124,14 +113,14 @@ export function PaperworkCrud() {
         ) : null}
       </div>
 
-      <div className={showForm ? 'crud-layout' : 'crud-layout crud-layout-list-only'}>
+      <div className="crud-layout crud-layout-list-only">
         {showForm ? (
-          <form className="panel form-grid" onSubmit={handleSubmit}>
+          <div className="dialog-backdrop" role="presentation" onMouseDown={resetForm}>
+          <form className="panel form-grid entity-form-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()} onSubmit={handleSubmit}>
             <div className="form-title-row">
               <h3>{editingRecord ? t('paperwork.editTitle') : t('paperwork.createTitle')}</h3>
-              <button className="button button-ghost button-small" type="button" onClick={resetForm}>
-                <X size={15} />
-                {t('actions.cancel')}
+              <button className="icon-button" type="button" aria-label={t('actions.close')} onClick={resetForm}>
+                <X size={16} />
               </button>
             </div>
 
@@ -227,13 +216,15 @@ export function PaperworkCrud() {
               {t('paperwork.privacyNote')}
             </p>
 
-            <div className="form-actions">
+            <div className="dialog-actions">
+              <button className="button button-secondary" type="button" onClick={resetForm}>{t('actions.cancel')}</button>
               <button className="button" type="submit">
                 <Save size={16} />
                 {editingId ? t('actions.save') : t('paperwork.createAction')}
               </button>
             </div>
           </form>
+          </div>
         ) : null}
 
         <div className="list-panel-clean">
@@ -269,7 +260,7 @@ export function PaperworkCrud() {
                   <AttachmentList
                     record={record}
                     attachments={attachments?.filter((attachment) => attachment.credentialId === record.id) ?? []}
-                    onUpload={() => void handleUpload(record.id)}
+                    onUpload={(file) => void handleUpload(record.id, file)}
                     onDownload={handleDownload}
                     onDelete={(attachmentId) => void handleDeleteAttachment(record.id, attachmentId)}
                   />
@@ -316,7 +307,7 @@ export function PaperworkCrud() {
 interface AttachmentListProps {
   record: PaperworkCredential;
   attachments: PaperworkAttachment[];
-  onUpload: () => void;
+  onUpload: (file: File) => void;
   onDownload: (attachmentId: string) => void;
   onDelete: (attachmentId: string) => void;
 }
@@ -340,10 +331,20 @@ function AttachmentList({ record, attachments, onUpload, onDownload, onDelete }:
           </button>
         </div>
       ))}
-      <button className="button button-secondary button-small attachment-upload" type="button" onClick={onUpload}>
+      <label className="attachment-drop-zone" onDragOver={(event) => event.preventDefault()} onDrop={(event) => {
+        event.preventDefault();
+        const file = event.dataTransfer.files[0];
+        if (file) onUpload(file);
+      }}>
         <Upload size={14} />
-        {record.attachmentIds?.length ? t('paperwork.attachments.addAnother') : t('paperwork.attachments.add')}
-      </button>
+        <span>{record.attachmentIds?.length ? t('paperwork.attachments.addAnother') : t('paperwork.attachments.add')}</span>
+        <small>{t('paperwork.attachments.dropHint')}</small>
+        <input type="file" accept="application/pdf,image/*" onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file) onUpload(file);
+          event.currentTarget.value = '';
+        }} />
+      </label>
     </div>
   );
 }

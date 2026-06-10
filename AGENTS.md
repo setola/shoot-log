@@ -178,7 +178,7 @@ Implemented local-first modules:
 13. Source commit link in the sidebar footer.
 14. PractiScore CAB import for matches, storing a single local snapshot per match.
 15. Mare2 FITDS PDF import for score verification reports, reusing the same local analysis snapshot shape.
-16. Dedicated Analysis section for imported match score snapshots, including competitor autocomplete/default owner matching, persisted comparison competitor, comparative hit distribution pie charts, stage placement trend, and compact stage details.
+16. Dedicated Analysis section for imported match score snapshots, including match selector, multi-competitor autocomplete comparison with device-owner auto-suggestion, comparative hit distribution pie charts, stage placement trend, comparative stage metric charts, and compact multi-competitor stage details.
 
 Important limitations / follow-up work:
 
@@ -186,8 +186,8 @@ Important limitations / follow-up work:
 2. Import validation is basic and should be hardened before treating imports as fully trusted.
 3. Conflict detection/merge strategy is not implemented.
 4. Dashboard summaries are present but should be expanded with more live computed data.
-5. PractiScore CAB parsing currently supports the uncompressed CAB export format observed in `design/WinMSS.cab`; compressed CAB support is still pending.
-6. Mare2 PDF parsing targets the score-verification-by-competitor layout observed in `design/6camp_dFWMLqQ4vR.pdf`; other Mare2 report layouts may need parser extensions.
+5. PractiScore CAB parsing currently supports the uncompressed CAB export format observed in `test-data/match-imports/WinMSS.cab`; compressed CAB support is still pending.
+6. Mare2 PDF parsing targets the score-verification-by-competitor layout observed in `test-data/match-imports/6camp_dFWMLqQ4vR.pdf`; other Mare2 report layouts may need parser extensions.
 7. Reports, CSV/PDF export, and reminders are still pending.
 8. Attachment encryption and incremental sync are still pending.
 
@@ -264,6 +264,18 @@ Use warnings sparingly but clearly for:
 - Destructive imports
 - Conflict resolution
 
+File upload UX:
+
+- Prefer a drag-and-drop file zone anywhere the user loads a local file.
+- The drop zone should also be clickable and use a hidden file input for accessibility/fallback.
+- Show the selected filename before the user confirms the operation.
+
+Modal actions:
+
+- Every modal must have an X close button in the top-right corner.
+- Destructive/confirming actions belong in the bottom-right action row.
+- The cancel button sits immediately to the left of the confirming CTA.
+
 ## Safety and legal boundaries
 
 This application is a sport shooting logbook, not a weapons modification or tactical instruction system.
@@ -300,6 +312,8 @@ When editing:
 - Keep all user-facing strings in locale JSON files.
 - Preserve light/dark theme compatibility by using CSS variables instead of hard-coded colors.
 - Add tests for schema transforms, imports/exports, crypto helpers, and sync logic when practical.
+- Match import test fixtures live under `test-data/match-imports/`.
+- Browser/manual import smoke tests should use device-owner identifiers `IT027386` and `TESSORE, EMANUELE` in Settings.
 - Do not introduce backend dependencies without explicit approval.
 
 Before final response:

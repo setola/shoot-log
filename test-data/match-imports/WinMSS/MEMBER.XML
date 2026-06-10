@@ -1,0 +1,350 @@
+<xml xmlns:s='uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+  xmlns:dt='uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+  xmlns:rs='urn:schemas-microsoft-com:rowset'
+  xmlns:z='#RowsetSchema'>
+<s:Schema id='RowsetSchema'>
+    <s:ElementType name='row' content='eltOnly' rs:updatable='true'>
+        <s:AttributeType name='MemberId' rs:number='1' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='MemberId' rs:keycolumn='true' rs:autoincrement='true'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Lastname' rs:number='2' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='Lastname'>
+            <s:datatype dt:type='string' dt:maxLength='25'/>
+        </s:AttributeType>
+        <s:AttributeType name='Firstname' rs:number='3' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='Firstname'>
+            <s:datatype dt:type='string' dt:maxLength='15'/>
+        </s:AttributeType>
+        <s:AttributeType name='Init' rs:number='4' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='Comment'>
+            <s:datatype dt:type='string' dt:maxLength='1'/>
+        </s:AttributeType>
+        <s:AttributeType name='IcsAlias' rs:number='5' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='ICS'>
+            <s:datatype dt:type='string' dt:maxLength='16'/>
+        </s:AttributeType>
+        <s:AttributeType name='RefNo' rs:number='6' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='RefNo'>
+            <s:datatype dt:type='string' dt:maxLength='10'/>
+        </s:AttributeType>
+        <s:AttributeType name='InActive' rs:number='7' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='InActive'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Female' rs:number='8' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='Female'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='PrintLabel' rs:number='9' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='PrintLabel'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='RegionId' rs:number='10' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='TypeRegionId'>
+            <s:datatype dt:type='string' dt:maxLength='3'/>
+        </s:AttributeType>
+        <s:AttributeType name='DOB' rs:number='11' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='DOB'>
+            <s:datatype dt:type='dateTime' rs:dbtype='variantdate' dt:maxLength='16' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Address1' rs:number='12' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='Address1'>
+            <s:datatype dt:type='string' dt:maxLength='40'/>
+        </s:AttributeType>
+        <s:AttributeType name='Address2' rs:number='13' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='Address2'>
+            <s:datatype dt:type='string' dt:maxLength='40'/>
+        </s:AttributeType>
+        <s:AttributeType name='City' rs:number='14' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='City'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='Province' rs:number='15' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='Province'>
+            <s:datatype dt:type='string' dt:maxLength='24'/>
+        </s:AttributeType>
+        <s:AttributeType name='CountryId' rs:number='16' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='TypeCountryId'>
+            <s:datatype dt:type='string' dt:maxLength='3'/>
+        </s:AttributeType>
+        <s:AttributeType name='PostCode' rs:number='17' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='PostCode'>
+            <s:datatype dt:type='string' dt:maxLength='10'/>
+        </s:AttributeType>
+        <s:AttributeType name='PhoneHome' rs:number='18' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='PhoneHome'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='PhoneAlt' rs:number='19' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='PhoneAlternate'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='PhoneFax' rs:number='20' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='PhoneFax'>
+            <s:datatype dt:type='string' dt:maxLength='20'/>
+        </s:AttributeType>
+        <s:AttributeType name='Email' rs:number='21' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='Email'>
+            <s:datatype dt:type='string' dt:maxLength='36'/>
+        </s:AttributeType>
+        <s:AttributeType name='ClassId' rs:number='22' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='TypeScoreClassId'>
+            <s:datatype dt:type='string' dt:maxLength='1'/>
+        </s:AttributeType>
+        <s:AttributeType name='DfltDivId' rs:number='23' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='DfltDivisionId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='DfltCatId' rs:number='24' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='DfltNonTeamCategoryId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='DfltTagId' rs:number='25' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='DfltTagId'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='QualId' rs:number='26' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMember' rs:basecolumn='TypeQualificationId'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Register' rs:number='27' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='Register'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Note' rs:number='28' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMember'
+             rs:basecolumn='Note'>
+            <s:datatype dt:type='string' dt:maxLength='536870910' rs:long='true'/>
+        </s:AttributeType>
+        <s:extends type='rs:rowbase'/>
+    </s:ElementType>
+</s:Schema><rs:data>
+ <z:row MemberId='1' Lastname='BONOMI' Firstname='MICHELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022790' Register='False'/>
+ <z:row MemberId='2' Lastname='ROSSETTI' Firstname='TIZIANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018832' Register='False'/>
+ <z:row MemberId='3' Lastname='MARTINENGO' Firstname='GIOVANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT003958' Register='False'/>
+ <z:row MemberId='4' Lastname='GOSIO' Firstname='ALFREDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT007748' Register='False'/>
+ <z:row MemberId='5' Lastname='MAESTRELLO' Firstname='FRANCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT013417' Register='False'/>
+ <z:row MemberId='6' Lastname='LEGGI' Firstname='ENZO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018920' Register='False'/>
+ <z:row MemberId='7' Lastname='TANASI' Firstname='ALESSANDRO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026901' Register='False'/>
+ <z:row MemberId='8' Lastname='ROSSITTO' Firstname='ROBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT001506' Register='False'/>
+ <z:row MemberId='9' Lastname='MALINA' Firstname='MARIJAN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017946' Register='False'/>
+ <z:row MemberId='10' Lastname='CAVALLARO' Firstname='ELIA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019204' Register='False'/>
+ <z:row MemberId='11' Lastname='TAROZZI' Firstname='DANIELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT000390' Register='False'/>
+ <z:row MemberId='12' Lastname='ZANOTTO' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020560' Register='False'/>
+ <z:row MemberId='13' Lastname='SGUOTTI' Firstname='ERMANNO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT016813' Register='False'/>
+ <z:row MemberId='14' Lastname='CARLESSO' Firstname='MICHELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026482' Register='False'/>
+ <z:row MemberId='15' Lastname='MAURICH' Firstname='ALLEN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023229' Register='False'/>
+ <z:row MemberId='16' Lastname='AZZOLIN' Firstname='DAVIDE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025208' Register='False'/>
+ <z:row MemberId='17' Lastname='FRANCALLI' Firstname='FRANCESCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022904' Register='False'/>
+ <z:row MemberId='18' Lastname='DEPIETRI' Firstname='STEFANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT016067' Register='False'/>
+ <z:row MemberId='19' Lastname='TORESAN' Firstname='FAUSTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015536' Register='False'/>
+ <z:row MemberId='20' Lastname='PIZZOLATO' Firstname='CORRADO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025216' Register='False'/>
+ <z:row MemberId='21' Lastname='PAULETICH' Firstname='GIANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024047' Register='False'/>
+ <z:row MemberId='22' Lastname='VISINTINI' Firstname='IVAN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014491' Register='False'/>
+ <z:row MemberId='23' Lastname='GRUSSU' Firstname='PASQUALINO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014043' Register='False'/>
+ <z:row MemberId='24' Lastname='BOLZONELLA' Firstname='CRISTOPHER' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025765' Register='False'/>
+ <z:row MemberId='25' Lastname='LINAJA' Firstname='SEBASTIAN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021770' Register='False'/>
+ <z:row MemberId='26' Lastname='MICHIELOTTO' Firstname='GIACOMO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023544' Register='False'/>
+ <z:row MemberId='27' Lastname='VECE' Firstname='RENATO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027230' Register='False'/>
+ <z:row MemberId='28' Lastname='FORZUTTI' Firstname='MANOLO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022282' Register='False'/>
+ <z:row MemberId='29' Lastname='BASAGLIA' Firstname='ENDRO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023030' Register='False'/>
+ <z:row MemberId='30' Lastname='ZANELLA' Firstname='LUCIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017899' Register='False'/>
+ <z:row MemberId='31' Lastname='BOSCARIOL' Firstname='GRAZIANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT009584' Register='False'/>
+ <z:row MemberId='32' Lastname='TONIN' Firstname='MICHELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026513' Register='False'/>
+ <z:row MemberId='33' Lastname='SPOLVERATO' Firstname='GABRIELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026552' Register='False'/>
+ <z:row MemberId='34' Lastname='QUINTARIO' Firstname='GIANANTONIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018926' Register='False'/>
+ <z:row MemberId='35' Lastname='ZIVELONGHI' Firstname='LORENA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027096' Register='False'/>
+ <z:row MemberId='36' Lastname='GRITTI' Firstname='CRISTIANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015288' Register='False'/>
+ <z:row MemberId='37' Lastname='IPPOLITO' Firstname='LEONARDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT006016' Register='False'/>
+ <z:row MemberId='38' Lastname='AVOLEDO' Firstname='MANUELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT011873' Register='False'/>
+ <z:row MemberId='39' Lastname='QUAGGIO' Firstname='AMLETO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020938' Register='False'/>
+ <z:row MemberId='40' Lastname='BRUTTO' Firstname='FEDERICO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026932' Register='False'/>
+ <z:row MemberId='41' Lastname='TABACCHI' Firstname='IVANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018121' Register='False'/>
+ <z:row MemberId='42' Lastname='BUCHBERGER' Firstname='EURO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027759' Register='False'/>
+ <z:row MemberId='43' Lastname='CICHELLERO' Firstname='STEFANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023693' Register='False'/>
+ <z:row MemberId='44' Lastname='VALENZISI' Firstname='MICHELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018801' Register='False'/>
+ <z:row MemberId='45' Lastname='MARCHESINI' Firstname='LORENZO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT000042' Register='False'/>
+ <z:row MemberId='46' Lastname='BASSINI' Firstname='ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024654' Register='False'/>
+ <z:row MemberId='47' Lastname='IUS' Firstname='SERGIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT011887' Register='False'/>
+ <z:row MemberId='48' Lastname='GRITTI' Firstname='MASSIMO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025342' Register='False'/>
+ <z:row MemberId='49' Lastname='ANSELMI' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022632' Register='False'/>
+ <z:row MemberId='50' Lastname='GIACOMAZZI' Firstname='DAVIDE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022905' Register='False'/>
+ <z:row MemberId='51' Lastname='MANTOVANI' Firstname='NICOLA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021904' Register='False'/>
+ <z:row MemberId='52' Lastname='MALAGUTTI' Firstname='DANIELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015908' Register='False'/>
+ <z:row MemberId='53' Lastname='GNATA' Firstname='ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025672' Register='False'/>
+ <z:row MemberId='54' Lastname='FIORINI' Firstname='ANNALISA' InActive='False' Female='true' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028092' Register='False'/>
+ <z:row MemberId='55' Lastname='SENO' Firstname='MIRKO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022080' Register='False'/>
+ <z:row MemberId='56' Lastname='ORSATTI' Firstname='CLAUDIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015897' Register='False'/>
+ <z:row MemberId='57' Lastname='VIVIAN' Firstname='SIMONE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027467' Register='False'/>
+ <z:row MemberId='58' Lastname='BETTENZOLI' Firstname='NICOLA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023549' Register='False'/>
+ <z:row MemberId='59' Lastname='CASARI' Firstname='MAURIZIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT012903' Register='False'/>
+ <z:row MemberId='60' Lastname='BULLARA' Firstname='CARLO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT012456' Register='False'/>
+ <z:row MemberId='61' Lastname='CECCATO' Firstname='ALBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022281' Register='False'/>
+ <z:row MemberId='62' Lastname='LIBERO' Firstname='MARCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024951' Register='False'/>
+ <z:row MemberId='63' Lastname='FARNETANI' Firstname='MARCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017179' Register='False'/>
+ <z:row MemberId='64' Lastname='SCARIETTO' Firstname='STEVE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028738' Register='False'/>
+ <z:row MemberId='65' Lastname='CEFALÙ ' Firstname='SALVATORE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023046' Register='False'/>
+ <z:row MemberId='66' Lastname='TRAINOTTI' Firstname='ROBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT011886' Register='False'/>
+ <z:row MemberId='67' Lastname='CAUSIN' Firstname='PAOLO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027392' Register='False'/>
+ <z:row MemberId='68' Lastname='MONTAGNIN' Firstname='GIANLUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT013419' Register='False'/>
+ <z:row MemberId='69' Lastname='CAZZADOR' Firstname='DANIELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019215' Register='False'/>
+ <z:row MemberId='70' Lastname='BAROSI' Firstname='MICHELE MARIA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024625' Register='False'/>
+ <z:row MemberId='71' Lastname='VETRANO' Firstname='VINCENZO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028377' Register='False'/>
+ <z:row MemberId='72' Lastname='LIUT' Firstname='DENIS' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024771' Register='False'/>
+ <z:row MemberId='73' Lastname='MATTERAZZO' Firstname='PIETRO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014512' Register='False'/>
+ <z:row MemberId='74' Lastname='BERTO' Firstname='VALERIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017900' Register='False'/>
+ <z:row MemberId='75' Lastname='MONALDINI' Firstname='ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023523' Register='False'/>
+ <z:row MemberId='76' Lastname='BETTENZOLI' Firstname='FULVIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023616' Register='False'/>
+ <z:row MemberId='77' Lastname='CAVAGLIERI' Firstname='MATTEO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026903' Register='False'/>
+ <z:row MemberId='78' Lastname='SCHIESARO' Firstname='GIANLUIGI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT005206' Register='False'/>
+ <z:row MemberId='79' Lastname='FILIPPI' Firstname='MATTEO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025871' Register='False'/>
+ <z:row MemberId='80' Lastname='CANNATARO' Firstname='PAOLO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027514' Register='False'/>
+ <z:row MemberId='81' Lastname='PERAZZOLI' Firstname='NICOLA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026633' Register='False'/>
+ <z:row MemberId='82' Lastname='PERISSINOTTO' Firstname='BRUNO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018197' Register='False'/>
+ <z:row MemberId='83' Lastname='CECCHINI' Firstname='LORENA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026129' Register='False'/>
+ <z:row MemberId='84' Lastname='VIALE' Firstname='FABIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015829' Register='False'/>
+ <z:row MemberId='85' Lastname='PERAZZOLI' Firstname='FRANCESCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT013861' Register='False'/>
+ <z:row MemberId='86' Lastname='FOSSATI' Firstname='ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020786' Register='False'/>
+ <z:row MemberId='87' Lastname='DE LONTI' Firstname='GIANLUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015152' Register='False'/>
+ <z:row MemberId='88' Lastname='VANCINI' Firstname='RICCARDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019661' Register='False'/>
+ <z:row MemberId='89' Lastname='NARDER' Firstname='ANNIBALE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015325' Register='False'/>
+ <z:row MemberId='90' Lastname='BOVOLENTA' Firstname='STEFANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT013074' Register='False'/>
+ <z:row MemberId='91' Lastname='MANFRÈ' Firstname='GABRIELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027761' Register='False'/>
+ <z:row MemberId='92' Lastname='BIRO' Firstname='ZOLTAN ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026426' Register='False'/>
+ <z:row MemberId='93' Lastname='PAZI' Firstname='ALESSANDRO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023051' Register='False'/>
+ <z:row MemberId='94' Lastname='XODO' Firstname='ALEXANDRE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT013028' Register='False'/>
+ <z:row MemberId='95' Lastname='FERGNANI' Firstname='GIACOMO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015502' Register='False'/>
+ <z:row MemberId='96' Lastname='MELANDRI' Firstname='STEFANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT000451' Register='False'/>
+ <z:row MemberId='97' Lastname='TOSIN' Firstname='SIMONE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028936' Register='False'/>
+ <z:row MemberId='98' Lastname='IMBECK' Firstname='HANS JURGEN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018364' Register='False'/>
+ <z:row MemberId='99' Lastname='VAROTTO' Firstname='MORENO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020944' Register='False'/>
+ <z:row MemberId='100' Lastname='RIGON' Firstname='GIANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018798' Register='False'/>
+ <z:row MemberId='101' Lastname='DALLA SANTA' Firstname='JURIJ' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019044' Register='False'/>
+ <z:row MemberId='102' Lastname='MARANGON' Firstname='DAVIDE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014511' Register='False'/>
+ <z:row MemberId='103' Lastname='SOFFRITTI' Firstname='MATTEO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023606' Register='False'/>
+ <z:row MemberId='104' Lastname='GJONI ' Firstname='IGLI ' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027725' Register='False'/>
+ <z:row MemberId='105' Lastname='MASSAROTTI' Firstname='ROBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT004318' Register='False'/>
+ <z:row MemberId='106' Lastname='MUGGIA' Firstname='MATTEO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT010175' Register='False'/>
+ <z:row MemberId='107' Lastname='ZIVIC' Firstname='STEFANO ' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027809' Register='False'/>
+ <z:row MemberId='108' Lastname='SELVASI' Firstname='ALBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024758' Register='False'/>
+ <z:row MemberId='109' Lastname='PEDRIALI' Firstname='GIULIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019862' Register='False'/>
+ <z:row MemberId='110' Lastname='BUSOLINI' Firstname='FILIPPO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT000120' Register='False'/>
+ <z:row MemberId='111' Lastname='QUAGLIATI' Firstname='MIRKO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019097' Register='False'/>
+ <z:row MemberId='112' Lastname='ANDREOTTI' Firstname='LEONARDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022812' Register='False'/>
+ <z:row MemberId='113' Lastname='URLINI' Firstname='MAURO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025364' Register='False'/>
+ <z:row MemberId='114' Lastname='RIZZI' Firstname='MICHELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014522' Register='False'/>
+ <z:row MemberId='115' Lastname='ZANARDO' Firstname='ALBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026546' Register='False'/>
+ <z:row MemberId='116' Lastname='SCANAVIN' Firstname='FABIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT009242' Register='False'/>
+ <z:row MemberId='117' Lastname='BROLLO' Firstname='MASSIMO GIOVANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT010174' Register='False'/>
+ <z:row MemberId='118' Lastname='MUNARI' Firstname='FRANCESCO ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025345' Register='False'/>
+ <z:row MemberId='119' Lastname='TABACCHIN' Firstname='STEFANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028598' Register='False'/>
+ <z:row MemberId='120' Lastname='MEGGIO' Firstname='GIOVANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028868' Register='False'/>
+ <z:row MemberId='121' Lastname='GRAZIANI' Firstname='PIERPAOLO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019861' Register='False'/>
+ <z:row MemberId='122' Lastname='ANTIGA' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022489' Register='False'/>
+ <z:row MemberId='123' Lastname='ANGELI' Firstname='STEFANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023885' Register='False'/>
+ <z:row MemberId='124' Lastname='VERONESE' Firstname='GIROLAMO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT016824' Register='False'/>
+ <z:row MemberId='125' Lastname='BORGATO' Firstname='MAURIZIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT004520' Register='False'/>
+ <z:row MemberId='126' Lastname='BENEDET' Firstname='FULVIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015607' Register='False'/>
+ <z:row MemberId='127' Lastname='DA PRA' Firstname='ALICE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028918' Register='False'/>
+ <z:row MemberId='128' Lastname='PIZZINATO' Firstname='ENRICO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT009072' Register='False'/>
+ <z:row MemberId='129' Lastname='PIAIA' Firstname='MASSIMO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028915' Register='False'/>
+ <z:row MemberId='130' Lastname='RACCAGNI' Firstname='MICHAEL' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT016033' Register='False'/>
+ <z:row MemberId='131' Lastname='RESTIOTTO' Firstname='IVANA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018393' Register='False'/>
+ <z:row MemberId='132' Lastname='PEDRON' Firstname='MARCO VALERIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT000187' Register='False'/>
+ <z:row MemberId='133' Lastname='BISCONCIN' Firstname='IVAN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT011875' Register='False'/>
+ <z:row MemberId='134' Lastname='CHESO' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT011943' Register='False'/>
+ <z:row MemberId='135' Lastname='MERLOTTO' Firstname='MAURIZIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT009073' Register='False'/>
+ <z:row MemberId='136' Lastname='TOFFOLETTO' Firstname='GIANLUCA ' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026935' Register='False'/>
+ <z:row MemberId='137' Lastname='GIOVANNINI' Firstname='GIANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT009406' Register='False'/>
+ <z:row MemberId='138' Lastname='SORSI' Firstname='SHEILA' InActive='False' Female='true' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020846' Register='False'/>
+ <z:row MemberId='139' Lastname='SEVDARAJ' Firstname='ADNAND' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017532' Register='False'/>
+ <z:row MemberId='140' Lastname='DI MARCO' Firstname='ANDREA LIBERO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027407' Register='False'/>
+ <z:row MemberId='141' Lastname='DEGRASSI' Firstname='ROBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017893' Register='False'/>
+ <z:row MemberId='142' Lastname='FABIANI' Firstname='ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT010684' Register='False'/>
+ <z:row MemberId='143' Lastname='SARTORI' Firstname='GILBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015052' Register='False'/>
+ <z:row MemberId='144' Lastname='SALVIATO' Firstname='ALDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027393' Register='False'/>
+ <z:row MemberId='145' Lastname='CASELLI' Firstname='GUIDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015896' Register='False'/>
+ <z:row MemberId='146' Lastname='PONTONI' Firstname='SILVANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024383' Register='False'/>
+ <z:row MemberId='147' Lastname='MAMOLO' Firstname='ROBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015992' Register='False'/>
+ <z:row MemberId='148' Lastname='PAOLINI' Firstname='GIANGUIDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025906' Register='False'/>
+ <z:row MemberId='149' Lastname='LORETI' Firstname='MAURIZIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020828' Register='False'/>
+ <z:row MemberId='150' Lastname='ZANCOPÈ' Firstname='FEDERICO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT016825' Register='False'/>
+ <z:row MemberId='151' Lastname='MORETTI' Firstname='NICO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020102' Register='False'/>
+ <z:row MemberId='152' Lastname='TREVISANATO' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017159' Register='False'/>
+ <z:row MemberId='153' Lastname='DE STEFANI' Firstname='TIZIANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT007313' Register='False'/>
+ <z:row MemberId='154' Lastname='PIVATO' Firstname='DANIELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT003163' Register='False'/>
+ <z:row MemberId='155' Lastname='VANUZZO' Firstname='GERMANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023892' Register='False'/>
+ <z:row MemberId='156' Lastname='BORGHI' Firstname='WILLIAM' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT013534' Register='False'/>
+ <z:row MemberId='157' Lastname='BARATELLA' Firstname='GIUSEPPE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014378' Register='False'/>
+ <z:row MemberId='158' Lastname='BRIGANTI' Firstname='ARMANDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015050' Register='False'/>
+ <z:row MemberId='159' Lastname='RONCARATI' Firstname='RAFFAELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019542' Register='False'/>
+ <z:row MemberId='160' Lastname='DESTRO' Firstname='CARLO DONATO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT012670' Register='False'/>
+ <z:row MemberId='161' Lastname='MARRANO' Firstname='GIOVANNA' InActive='False' Female='true' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026528' Register='False'/>
+ <z:row MemberId='162' Lastname='RANGO' Firstname='LORIS' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT012669' Register='False'/>
+ <z:row MemberId='163' Lastname='SPERANDIO' Firstname='NATHALI' InActive='False' Female='true' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022136' Register='False'/>
+ <z:row MemberId='164' Lastname='MARSIGLI' Firstname='EMANUELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020196' Register='False'/>
+ <z:row MemberId='165' Lastname='BRAIDO' Firstname='RICCARDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021557' Register='False'/>
+ <z:row MemberId='166' Lastname='COVRE' Firstname='RUDY' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT000508' Register='False'/>
+ <z:row MemberId='167' Lastname='BARBIERI' Firstname='DARIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020603' Register='False'/>
+ <z:row MemberId='168' Lastname='SULEJMONI' Firstname='ALBERT' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022998' Register='False'/>
+ <z:row MemberId='169' Lastname='BALZANI' Firstname='FRANCESCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024430' Register='False'/>
+ <z:row MemberId='170' Lastname='PIGNATTI' Firstname='ALBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018893' Register='False'/>
+ <z:row MemberId='171' Lastname='ALEOTTI' Firstname='ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015503' Register='False'/>
+ <z:row MemberId='172' Lastname='STOPPA' Firstname='SIMONE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014010' Register='False'/>
+ <z:row MemberId='173' Lastname='VENTUROLI' Firstname='VALERIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT012807' Register='False'/>
+ <z:row MemberId='174' Lastname='CAMERIN' Firstname='STEFANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021771' Register='False'/>
+ <z:row MemberId='175' Lastname='MIAN' Firstname='DOMENICO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022052' Register='False'/>
+ <z:row MemberId='176' Lastname='COSTA' Firstname='NICOLÒ' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027533' Register='False'/>
+ <z:row MemberId='177' Lastname='LEITER' Firstname='LUCIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT008538' Register='False'/>
+ <z:row MemberId='178' Lastname='ZIVELONGHI' Firstname='GIOVANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT015154' Register='False'/>
+ <z:row MemberId='179' Lastname='TONIAZZO' Firstname='ENRICO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026607' Register='False'/>
+ <z:row MemberId='180' Lastname='BELTRAMINI' Firstname='WALTER' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024079' Register='False'/>
+ <z:row MemberId='181' Lastname='DEL PIERO' Firstname='ALBERTO ' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028519' Register='False'/>
+ <z:row MemberId='182' Lastname='MARIUZZA' Firstname='MARCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028520' Register='False'/>
+ <z:row MemberId='183' Lastname='SCUSSOLIN' Firstname='VALTER' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT005071' Register='False'/>
+ <z:row MemberId='184' Lastname='DEGRASSI' Firstname='FULVIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023078' Register='False'/>
+ <z:row MemberId='185' Lastname='BENÀ' Firstname='FRANCESCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018924' Register='False'/>
+ <z:row MemberId='186' Lastname='ZANOL' Firstname='LORIS' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT028857' Register='False'/>
+ <z:row MemberId='187' Lastname='TESSORE' Firstname='EMANUELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027386' Register='False'/>
+ <z:row MemberId='188' Lastname='PARISE' Firstname='ROBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT013059' Register='False'/>
+ <z:row MemberId='189' Lastname='BUSTON' Firstname='ALESSANDRO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024278' Register='False'/>
+ <z:row MemberId='190' Lastname='IMBESI' Firstname='LUIGI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027723' Register='False'/>
+ <z:row MemberId='191' Lastname='POLETTI' Firstname='MICHELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT017821' Register='False'/>
+ <z:row MemberId='192' Lastname='PANCALDI' Firstname='VARNER' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021250' Register='False'/>
+ <z:row MemberId='193' Lastname='MARCATO' Firstname='EMANUELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT009227' Register='False'/>
+ <z:row MemberId='194' Lastname='CAMINOTTO' Firstname='FRANCESCO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021924' Register='False'/>
+ <z:row MemberId='195' Lastname='CIPRIANI' Firstname='IGINO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014492' Register='False'/>
+ <z:row MemberId='196' Lastname='ZADRA' Firstname='MARKUS' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT018779' Register='False'/>
+ <z:row MemberId='197' Lastname='GUERRATO' Firstname='LORENZO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026969' Register='False'/>
+ <z:row MemberId='198' Lastname='MARCHESINI' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT002634' Register='False'/>
+ <z:row MemberId='199' Lastname='VARDANEGA ' Firstname='CLAUDIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023343' Register='False'/>
+ <z:row MemberId='200' Lastname='CAPELLI' Firstname='EGIDIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT006310' Register='False'/>
+ <z:row MemberId='201' Lastname='SGUBIN' Firstname='GIULIANO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024162' Register='False'/>
+ <z:row MemberId='202' Lastname='MORELLI' Firstname='MAURO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT012808' Register='False'/>
+ <z:row MemberId='203' Lastname='LISANDRI' Firstname='CRISTIAN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019618' Register='False'/>
+ <z:row MemberId='204' Lastname='LUPINELLI' Firstname='STEFANIA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024754' Register='False'/>
+ <z:row MemberId='205' Lastname='TOLOMELLI' Firstname='GIANLUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT024757' Register='False'/>
+ <z:row MemberId='206' Lastname='FRASSON' Firstname='SANDRO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020604' Register='False'/>
+ <z:row MemberId='207' Lastname='STREPPARAVA' Firstname='SIMONE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021127' Register='False'/>
+ <z:row MemberId='208' Lastname='ZAMBONIN' Firstname='CLAUDIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT006245' Register='False'/>
+ <z:row MemberId='209' Lastname='TEGGI' Firstname='ANTONIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022326' Register='False'/>
+ <z:row MemberId='210' Lastname='TOSATTO' Firstname='GIORGIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026512' Register='False'/>
+ <z:row MemberId='211' Lastname='MONTALI' Firstname='CESARE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026496' Register='False'/>
+ <z:row MemberId='212' Lastname='LEARDINI' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT020852' Register='False'/>
+ <z:row MemberId='213' Lastname='COCCHI' Firstname='DAVID' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT016983' Register='False'/>
+ <z:row MemberId='214' Lastname='CARMINA' Firstname='MATTIA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT025818' Register='False'/>
+ <z:row MemberId='215' Lastname='MAZZALI' Firstname='ULISSE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT022778' Register='False'/>
+ <z:row MemberId='216' Lastname='PIÑEIRO REY' Firstname='GUILLERMO' InActive='False' Female='false' PrintLabel='False' RegionId='ESP' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='EE034143' Register='False'/>
+ <z:row MemberId='217' Lastname='PENITENTI' Firstname='IVAN' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT014702' Register='False'/>
+ <z:row MemberId='218' Lastname='MAESTRI' Firstname='GIOVANNI ' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023333' Register='False'/>
+ <z:row MemberId='219' Lastname='D&#x27;ANGIOLILLO' Firstname='FEDELE' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT007756' Register='False'/>
+ <z:row MemberId='220' Lastname='PICCININI' Firstname='FLAVIO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026314' Register='False'/>
+ <z:row MemberId='221' Lastname='BISMONDO' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019842' Register='False'/>
+ <z:row MemberId='222' Lastname='ZAGNI' Firstname='GIOVANNI' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT023357' Register='False'/>
+ <z:row MemberId='223' Lastname='BERGOUG' Firstname='ROBERT' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT019756' Register='False'/>
+ <z:row MemberId='224' Lastname='VALLINI' Firstname='ROBERTO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT026307' Register='False'/>
+ <z:row MemberId='225' Lastname='MANCINELLI' Firstname='LUCA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021560' Register='False'/>
+ <z:row MemberId='226' Lastname='GIGLIO' Firstname='RICCARDO' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT021019' Register='False'/>
+ <z:row MemberId='227' Lastname='MALAGOLI' Firstname='ANDREA' InActive='False' Female='false' PrintLabel='False' RegionId='ITA' Province='' ClassId='U' DfltDivId='0' DfltCatId='0' DfltTagId='0' QualId='0' IcsAlias='IT027832' Register='False'/>
+</rs:data>
+</xml>

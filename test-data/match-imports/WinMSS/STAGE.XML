@@ -1,0 +1,108 @@
+<xml xmlns:s='uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+  xmlns:dt='uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+  xmlns:rs='urn:schemas-microsoft-com:rowset'
+  xmlns:z='#RowsetSchema'>
+<s:Schema id='RowsetSchema'>
+    <s:ElementType name='row' content='eltOnly' rs:updatable='true'>
+        <s:AttributeType name='MatchId' rs:number='1' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='MatchId' rs:keycolumn='true'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='StageId' rs:number='2' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='StageId' rs:keycolumn='true'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='StageName' rs:number='3' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='StageName'>
+            <s:datatype dt:type='string' dt:maxLength='32'/>
+        </s:AttributeType>
+        <s:AttributeType name='Location' rs:number='4' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='Location'>
+            <s:datatype dt:type='string' dt:maxLength='32'/>
+        </s:AttributeType>
+        <s:AttributeType name='FirearmId' rs:number='5' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TypeFirearmId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='CourseId' rs:number='6' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TypeStageCourseId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='ScoringId' rs:number='7' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TypeScoringId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TrgtTypeId' rs:number='8' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TypeTargetClassifyId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='IcsStageId' rs:number='9' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TypeStdStageSetupId'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Remove' rs:number='10' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchStage'
+             rs:basecolumn='RemoveScoring'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TrgtPaper' rs:number='11' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TrgtPaper'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TrgtPopper' rs:number='12' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TrgtPopper'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TrgtPlates' rs:number='13' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TrgtPlates'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TrgtVanish' rs:number='14' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TrgtDisappear'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TrgtPenlty' rs:number='15' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='TrgtPenalty'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='MinRounds' rs:number='16' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='MinRounds'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='ReportOn' rs:number='17' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchStage'
+             rs:basecolumn='ReportOn'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='MaxPoints' rs:number='18' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='MaxPoints'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='StartPos' rs:number='19' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='StartPosition'>
+            <s:datatype dt:type='string' dt:maxLength='536870910' rs:long='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='StartOn' rs:number='20' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='StartOn'>
+            <s:datatype dt:type='string' dt:maxLength='8'/>
+        </s:AttributeType>
+        <s:AttributeType name='StringCnt' rs:number='21' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='StringsOfFire'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Descriptn' rs:number='22' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchStage' rs:basecolumn='Description'>
+            <s:datatype dt:type='string' dt:maxLength='536870910' rs:long='true'/>
+        </s:AttributeType>
+        <s:extends type='rs:rowbase'/>
+    </s:ElementType>
+</s:Schema>
+<rs:data>
+   <z:row MatchId='1' StageId='1' StageName='Stage 1' FirearmId='1' CourseId='1' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='5' TrgtPopper='2' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='32' MinRounds='12' ReportOn='False' MaxPoints='60'/>
+   <z:row MatchId='1' StageId='2' StageName='Stage 2' FirearmId='1' CourseId='2' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='11' TrgtPopper='2' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='32' MinRounds='24' ReportOn='False' MaxPoints='120'/>
+   <z:row MatchId='1' StageId='3' StageName='Stage 3' FirearmId='1' CourseId='3' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='15' TrgtPopper='2' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='32' MinRounds='32' ReportOn='False' MaxPoints='160'/>
+   <z:row MatchId='1' StageId='4' StageName='Stage 4' FirearmId='1' CourseId='1' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='5' TrgtPopper='2' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='0' MinRounds='12' ReportOn='False' MaxPoints='60'/>
+   <z:row MatchId='1' StageId='5' StageName='Stage 5' FirearmId='1' CourseId='2' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='11' TrgtPopper='2' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='32' MinRounds='24' ReportOn='False' MaxPoints='120'/>
+   <z:row MatchId='1' StageId='6' StageName='Stage 6' FirearmId='1' CourseId='3' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='14' TrgtPopper='4' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='32' MinRounds='32' ReportOn='False' MaxPoints='160'/>
+   <z:row MatchId='1' StageId='7' StageName='Stage 7' FirearmId='1' CourseId='1' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='5' TrgtPopper='2' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='32' MinRounds='12' ReportOn='False' MaxPoints='60'/>
+   <z:row MatchId='1' StageId='8' StageName='Stage 8' FirearmId='1' CourseId='1' ScoringId='1' TrgtTypeId='2' IcsStageId='0' Remove='False' TrgtPaper='5' TrgtPopper='2' TrgtPlates='0' TrgtVanish='0' TrgtPenlty='32' MinRounds='12' ReportOn='False' MaxPoints='60'/>
+</rs:data>
+</xml>

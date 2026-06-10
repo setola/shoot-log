@@ -1,0 +1,44 @@
+<xml xmlns:s='uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+  xmlns:dt='uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+  xmlns:rs='urn:schemas-microsoft-com:rowset'
+  xmlns:z='#RowsetSchema'>
+<s:Schema id='RowsetSchema'>
+    <s:ElementType name='row' content='eltOnly' rs:updatable='true'>
+        <s:AttributeType name='MatchId' rs:number='1' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchTeam' rs:basecolumn='MatchId' rs:keycolumn='true'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TeamId' rs:number='2' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchTeam'
+             rs:basecolumn='TeamId' rs:keycolumn='true'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='DivId' rs:number='3' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchTeam'
+             rs:basecolumn='TypeDivisionId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='CatId' rs:number='4' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchTeam'
+             rs:basecolumn='TypeNonTeamCategoryId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Team' rs:number='5' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchTeam'
+             rs:basecolumn='Team'>
+            <s:datatype dt:type='string' dt:maxLength='32'/>
+        </s:AttributeType>
+        <s:extends type='rs:rowbase'/>
+    </s:ElementType>
+</s:Schema>
+<rs:data>
+   <z:row MatchId='1' TeamId='0' DivId='4' CatId='0' Team='A.S.D. LE TRE PIUME - HANDGUN Production'/>
+   <z:row MatchId='1' TeamId='1' DivId='24' CatId='0' Team='Sport Gun Shooting Club A.S.D. - HANDGUN Production Optics'/>
+   <z:row MatchId='1' TeamId='2' DivId='24' CatId='0' Team='A.S.D. LE TRE PIUME - HANDGUN Production Optics'/>
+   <z:row MatchId='1' TeamId='3' DivId='50' CatId='0' Team='A.S.D. Ass. Padovana T.D.S. - HANDGUN Optics'/>
+   <z:row MatchId='1' TeamId='4' DivId='2' CatId='0' Team='Sport Gun Shooting Club A.S.D. - HANDGUN Standard'/>
+   <z:row MatchId='1' TeamId='5' DivId='4' CatId='0' Team='Estense Shooting Club ASD - HANDGUN Production'/>
+   <z:row MatchId='1' TeamId='6' DivId='4' CatId='0' Team='Sport Gun Shooting Club A.S.D. - HANDGUN Production'/>
+   <z:row MatchId='1' TeamId='7' DivId='4' CatId='0' Team='A.S.D. Ass. Padovana T.D.S. - HANDGUN Production'/>
+   <z:row MatchId='1' TeamId='8' DivId='1' CatId='0' Team='A.S.D. LE TRE PIUME - HANDGUN Open'/>
+   <z:row MatchId='1' TeamId='9' DivId='29' CatId='0' Team='A.S.D. LE TRE PIUME - PCC Optics'/>
+   <z:row MatchId='1' TeamId='10' DivId='4' CatId='0' Team='ASD A.T.V. ASSOCIAZIONE TIRATORI VENETI - HANDGUN Production'/>
+   <z:row MatchId='1' TeamId='11' DivId='2' CatId='0' Team='A.S.D. LE TRE PIUME - HANDGUN Standard'/>
+</rs:data>
+</xml>

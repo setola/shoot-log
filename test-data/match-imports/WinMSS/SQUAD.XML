@@ -1,0 +1,55 @@
+<xml xmlns:s='uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+  xmlns:dt='uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+  xmlns:rs='urn:schemas-microsoft-com:rowset'
+  xmlns:z='#RowsetSchema'>
+<s:Schema id='RowsetSchema'>
+    <s:ElementType name='row' content='eltOnly' rs:updatable='true'>
+        <s:AttributeType name='MatchId' rs:number='1' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchSquad' rs:basecolumn='MatchId' rs:keycolumn='true'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='SquadId' rs:number='2' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchSquad' rs:basecolumn='SquadId' rs:keycolumn='true'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Squad' rs:number='3' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchSquad'
+             rs:basecolumn='Squad'>
+            <s:datatype dt:type='string' dt:maxLength='3'/>
+        </s:AttributeType>
+        <s:extends type='rs:rowbase'/>
+    </s:ElementType>
+</s:Schema>
+<rs:data>
+ <z:row MatchId='1' SquadId='0' Squad='0'/>
+ <z:row MatchId='1' SquadId='1' Squad='1'/>
+ <z:row MatchId='1' SquadId='2' Squad='2'/>
+ <z:row MatchId='1' SquadId='3' Squad='3'/>
+ <z:row MatchId='1' SquadId='4' Squad='4'/>
+ <z:row MatchId='1' SquadId='5' Squad='5'/>
+ <z:row MatchId='1' SquadId='6' Squad='6'/>
+ <z:row MatchId='1' SquadId='7' Squad='7'/>
+ <z:row MatchId='1' SquadId='8' Squad='8'/>
+ <z:row MatchId='1' SquadId='9' Squad='9'/>
+ <z:row MatchId='1' SquadId='10' Squad='10'/>
+ <z:row MatchId='1' SquadId='11' Squad='11'/>
+ <z:row MatchId='1' SquadId='12' Squad='12'/>
+ <z:row MatchId='1' SquadId='13' Squad='13'/>
+ <z:row MatchId='1' SquadId='14' Squad='14'/>
+ <z:row MatchId='1' SquadId='15' Squad='15'/>
+ <z:row MatchId='1' SquadId='16' Squad='16'/>
+ <z:row MatchId='1' SquadId='17' Squad='17'/>
+ <z:row MatchId='1' SquadId='18' Squad='18'/>
+ <z:row MatchId='1' SquadId='19' Squad='20'/>
+ <z:row MatchId='1' SquadId='20' Squad='21'/>
+ <z:row MatchId='1' SquadId='21' Squad='23'/>
+ <z:row MatchId='1' SquadId='22' Squad='25'/>
+ <z:row MatchId='1' SquadId='23' Squad='26'/>
+ <z:row MatchId='1' SquadId='24' Squad='27'/>
+ <z:row MatchId='1' SquadId='25' Squad='28'/>
+ <z:row MatchId='1' SquadId='26' Squad='29'/>
+ <z:row MatchId='1' SquadId='27' Squad='30'/>
+ <z:row MatchId='1' SquadId='28' Squad='31'/>
+ <z:row MatchId='1' SquadId='29' Squad='32'/>
+ <z:row MatchId='1' SquadId='30' Squad='100'/>
+</rs:data>
+</xml>

@@ -148,14 +148,16 @@ CRUD screen with:
 - Rounds fired
 - Score
 - Placement
-- Registration reference
 - Notes
 
-Also include score import panels:
-- PractiScore import with downloaded CAB file upload, import action, clear dismissible success/error state, and PractiScore badge on imported match cards
-- Mare2 FITDS PDF import with PDF file upload, import action, clear dismissible success/error state, and Mare2 badge on imported match cards
+Also include score import flows:
+- Provide import CTAs for PractiScore and Mare2.
+- Each import opens a modal with concise instructions and a drag-and-drop file zone.
+- PractiScore import uses a user-downloaded CAB file; Mare2 import uses a FITDS/Mare2 PDF.
+- Drop zones must also be clickable file pickers and show the selected filename before confirmation.
+- Imported match cards show a colored source pill for PractiScore or Mare2.
 
-Do not include a generic “Add match” action; match score data should be created through import flows.
+Generic match CRUD may exist for manual records, but imported score analysis data should be created through the PractiScore/Mare2 import flows.
 
 ### Analysis concept
 
@@ -164,24 +166,25 @@ Dedicated section for imported match analysis from PractiScore CAB or Mare2 FITD
 Layout:
 - Section heading: “Analysis”
 - Main panel using same card/form visual language as other sections
-- Top controls: match selector, primary competitor autocomplete search, and comparison competitor autocomplete search
+- Top controls: match selector plus a neutral comparison competitors autocomplete search
 - Empty state if no imported score data exists yet
 
 Charts and summaries:
-- Pie chart card for selected competitor's hit distribution: Alpha, Charlie, Delta, Miss, No-shoot
-- If a comparison competitor is selected, show a second pie chart card using the same hit-distribution layout
-- Legend with counts and percentages; do not emphasize total scored hits as a primary metric
+- Pie chart cards for every selected comparison competitor, including the first/primary competitor
+- Device owner is suggested as the first pill when Settings identifiers match, but can be removed like any other competitor
+- Hit distribution includes Alpha, Charlie, Delta, Miss, No-shoot, and procedural values when present
+- Each pie card title spans the full card width and shows competitor name plus placement as `#XX`; legend shows counts and percentages only
 - Line chart for placement by stage, where closer to #1 is better and placement is computed within division
 - Compact stage detail cards showing:
   - compact stage title with `(min rounds / max points)`
   - time, points, and hit factor with gap from stage winner
   - compact colored hit counts showing only values greater than zero
-  - comparison row when a comparison competitor is selected
+  - one row per selected competitor, including competitor name
 
 Visual style:
 - Clean analytical dashboard, not dense or tactical
 - Use small badges/chips and compact cards
-- Use the existing accent blue for the primary competitor, orange for the comparison competitor, and calm semantic colors for hit types
+- Use the existing accent blue for the first competitor, a rotating palette for additional competitors, and calm semantic colors for hit types
 - Preserve light/dark theme compatibility
 
 ### Settings with Google Drive sync
@@ -224,6 +227,7 @@ Create a reusable UI kit:
 - Primary, secondary, ghost, and icon buttons
 - Badge and empty state
 - Confirmation dialog
+- File drop zone: prefer this over plain file buttons for every local file upload/import
 - Collapsible sensitive section
 - Sync status indicator
 - Theme and language selectors
@@ -254,6 +258,7 @@ Suggested icons:
 ## Accessibility
 
 Ensure:
+- Modals have an X close button in the top-right; bottom-right actions place Cancel immediately left of the confirming CTA
 - WCAG-friendly contrast in both themes
 - Visible focus states
 - Labels for all fields

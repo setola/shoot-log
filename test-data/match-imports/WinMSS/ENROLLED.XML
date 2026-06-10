@@ -1,0 +1,303 @@
+<xml xmlns:s='uuid:BDC6E3F0-6DA3-11d1-A2A3-00AA00C14882'
+  xmlns:dt='uuid:C2F41010-65B3-11d1-A29F-00AA00C14882'
+  xmlns:rs='urn:schemas-microsoft-com:rowset'
+  xmlns:z='#RowsetSchema'>
+<s:Schema id='RowsetSchema'>
+    <s:ElementType name='row' content='eltOnly' rs:updatable='true'>
+        <s:AttributeType name='MatchId' rs:number='1' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchCompetitor' rs:basecolumn='MatchId' rs:keycolumn='true'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='MemberId' rs:number='2' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchCompetitor' rs:basecolumn='MemberId' rs:keycolumn='true'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='CompId' rs:number='3' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='CompetitorId'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='DivId' rs:number='4' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='TypeDivisionId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='CatId' rs:number='5' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='TypeNonTeamCategoryId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TeamId' rs:number='6' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='TeamId'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='SquadId' rs:number='7' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchCompetitor' rs:basecolumn='SquadId'>
+            <s:datatype dt:type='ui1' dt:maxLength='1' rs:precision='3' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='TagId' rs:number='8' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='TagId'>
+            <s:datatype dt:type='int' dt:maxLength='4' rs:precision='10' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='MajorPF' rs:number='9' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='MajorPowerFactor'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='Classified' rs:number='10' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='ClassifiedScoring'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='IsDisq' rs:number='11' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='IsDisqualified'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='DisqRuleId' rs:number='12' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchCompetitor' rs:basecolumn='TypeDisqualifyRuleId'>
+            <s:datatype dt:type='i2' dt:maxLength='2' rs:precision='5' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='StageDisq' rs:number='13' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='StageDisqualification'>
+            <s:datatype dt:type='boolean' dt:maxLength='2' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='DisqDt' rs:number='14' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchCompetitor' rs:basecolumn='DisqualifyDateTime'>
+            <s:datatype dt:type='dateTime' rs:dbtype='variantdate' dt:maxLength='16' rs:fixedlength='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='DisqMemo' rs:number='15' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true'
+             rs:basetable='tblMatchCompetitor' rs:basecolumn='DisqualifyMemo'>
+            <s:datatype dt:type='string' dt:maxLength='536870910' rs:long='true'/>
+        </s:AttributeType>
+        <s:AttributeType name='RefNo' rs:number='16' rs:nullable='true' rs:maydefer='true' rs:writeunknown='true' rs:basetable='tblMatchCompetitor'
+             rs:basecolumn='RefNo'>
+            <s:datatype dt:type='string' dt:maxLength='10'/>
+        </s:AttributeType>
+        <s:extends type='rs:rowbase'/>
+    </s:ElementType>
+</s:Schema>
+<rs:data>
+  <z:row MatchId='1' MemberId='1' CompId='1' DivId='24' CatId='0'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='2' CompId='2' DivId='4' CatId='4'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='3' CompId='3' DivId='18' CatId='6'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='4' CompId='4' DivId='4' CatId='3'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='5' CompId='5' DivId='50' CatId='4'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='6' CompId='6' DivId='29' CatId='4'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='7' CompId='7' DivId='4' CatId='0'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='8' CompId='8' DivId='29' CatId='6'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='9' CompId='9' DivId='50' CatId='0'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='10' CompId='10' DivId='4' CatId='0'  TeamId='0' SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='11' CompId='11' DivId='50' CatId='4'  SquadId='27' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='12' CompId='12' DivId='29' CatId='3'  SquadId='6' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='13' CompId='13' DivId='18' CatId='3'  SquadId='18' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='14' CompId='14' DivId='29' CatId='4'  SquadId='29' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='15' CompId='15' DivId='4' CatId='0'  SquadId='29' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='16' CompId='16' DivId='4' CatId='3'  SquadId='12' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='17' CompId='17' DivId='24' CatId='3'  SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='18' CompId='18' DivId='4' CatId='4'  SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='19' CompId='19' DivId='24' CatId='4'  SquadId='13' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='20' CompId='20' DivId='24' CatId='0'  TeamId='1' SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='21' CompId='21' DivId='4' CatId='6'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='22' CompId='22' DivId='4' CatId='4'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='23' CompId='23' DivId='18' CatId='4'  SquadId='16' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='24' CompId='24' DivId='24' CatId='0'  TeamId='2' SquadId='24' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='25' CompId='25' DivId='50' CatId='0'  SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='26' CompId='26' DivId='50' CatId='0'  TeamId='3' SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='27' CompId='27' DivId='2' CatId='3'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='28' CompId='28' DivId='4' CatId='3'  SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='29' CompId='29' DivId='4' CatId='3'  SquadId='7' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='30' CompId='30' DivId='2' CatId='4'  TeamId='4' SquadId='13' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='31' CompId='31' DivId='29' CatId='4'  SquadId='4' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='32' CompId='32' DivId='24' CatId='0'  TeamId='1' SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='33' CompId='33' DivId='4' CatId='0'  TeamId='5' SquadId='1' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='34' CompId='34' DivId='24' CatId='4'  TeamId='2' SquadId='17' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='35' CompId='35' DivId='4' CatId='7'  SquadId='21' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='36' CompId='36' DivId='4' CatId='3'  TeamId='6' SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='37' CompId='37' DivId='18' CatId='6'  SquadId='27' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='38' CompId='38' DivId='4' CatId='0'  SquadId='22' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='39' CompId='39' DivId='24' CatId='0'  SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='40' CompId='40' DivId='4' CatId='0'  SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='41' CompId='41' DivId='4' CatId='0'  SquadId='25' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='42' CompId='42' DivId='4' CatId='4'  TeamId='7' SquadId='29' TagId='0' MajorPF='False' IsDisq='True' DisqRuleId='24'  DisqDt='2026-05-31T12:33:22'  DisqMemo='Stage 3; 10.5.2 Volata puntata oltre angolo di sicurezza  o oltre il parapalle' StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='43' CompId='43' DivId='4' CatId='0'  SquadId='22' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='44' CompId='44' DivId='4' CatId='0'  SquadId='7' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='45' CompId='45' DivId='50' CatId='4'  SquadId='29' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='46' CompId='46' DivId='4' CatId='0'  SquadId='19' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='47' CompId='47' DivId='31' CatId='4'  SquadId='1' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='48' CompId='48' DivId='24' CatId='3'  SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='49' CompId='49' DivId='2' CatId='4'  SquadId='23' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='50' CompId='50' DivId='4' CatId='0'  SquadId='29' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='51' CompId='51' DivId='24' CatId='0'  SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='52' CompId='52' DivId='50' CatId='4'  SquadId='4' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='53' CompId='53' DivId='4' CatId='0'  SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='54' CompId='54' DivId='29' CatId='1'  SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='55' CompId='55' DivId='24' CatId='3'  TeamId='1' SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='56' CompId='56' DivId='1' CatId='4'  TeamId='8' SquadId='16' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='57' CompId='57' DivId='4' CatId='0'  TeamId='6' SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='58' CompId='58' DivId='4' CatId='0'  SquadId='12' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='59' CompId='59' DivId='2' CatId='4'  SquadId='19' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='60' CompId='60' DivId='29' CatId='4'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='61' CompId='61' DivId='4' CatId='0'  TeamId='6' SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='62' CompId='62' DivId='29' CatId='0'  TeamId='9' SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='63' CompId='63' DivId='18' CatId='3'  SquadId='8' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='64' CompId='64' DivId='4' CatId='0'  SquadId='7' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='65' CompId='65' DivId='50' CatId='3'  SquadId='27' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='66' CompId='66' DivId='31' CatId='4'  SquadId='1' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='67' CompId='67' DivId='24' CatId='0'  TeamId='2' SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='68' CompId='68' DivId='4' CatId='4'  TeamId='10' SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='69' CompId='69' DivId='24' CatId='4'  SquadId='7' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='70' CompId='70' DivId='29' CatId='2'  SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='71' CompId='71' DivId='4' CatId='0'  SquadId='20' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='72' CompId='72' DivId='29' CatId='0'  SquadId='25' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='73' CompId='73' DivId='4' CatId='4'  SquadId='22' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='74' CompId='74' DivId='50' CatId='4'  SquadId='13' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='75' CompId='75' DivId='24' CatId='0'  SquadId='12' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='76' CompId='76' DivId='4' CatId='4'  SquadId='12' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='77' CompId='77' DivId='4' CatId='3'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='78' CompId='78' DivId='29' CatId='6'  SquadId='29' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='79' CompId='79' DivId='50' CatId='0'  SquadId='22' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='80' CompId='80' DivId='2' CatId='4'  SquadId='18' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='81' CompId='81' DivId='2' CatId='3'  SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='82' CompId='82' DivId='24' CatId='3'  SquadId='7' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='83' CompId='83' DivId='4' CatId='7'  SquadId='26' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='84' CompId='84' DivId='29' CatId='0'  TeamId='9' SquadId='18' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='85' CompId='85' DivId='4' CatId='0'  SquadId='1' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='86' CompId='86' DivId='29' CatId='6'  SquadId='18' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='87' CompId='87' DivId='1' CatId='3'  SquadId='13' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='88' CompId='88' DivId='4' CatId='4'  SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='89' CompId='89' DivId='4' CatId='3'  SquadId='13' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='90' CompId='90' DivId='1' CatId='4'  TeamId='8' SquadId='29' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='91' CompId='91' DivId='4' CatId='0'  TeamId='7' SquadId='29' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='92' CompId='92' DivId='29' CatId='3'  SquadId='22' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='93' CompId='93' DivId='4' CatId='3'  SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='94' CompId='94' DivId='24' CatId='0'  TeamId='2' SquadId='18' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='95' CompId='95' DivId='50' CatId='3'  SquadId='19' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='96' CompId='96' DivId='18' CatId='4'  SquadId='27' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='97' CompId='97' DivId='24' CatId='0'  SquadId='6' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='98' CompId='98' DivId='29' CatId='4'  SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='99' CompId='99' DivId='24' CatId='3'  SquadId='17' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='100' CompId='100' DivId='4' CatId='3'  SquadId='20' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='101' CompId='101' DivId='4' CatId='3'  TeamId='10' SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='102' CompId='102' DivId='29' CatId='3'  SquadId='25' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='103' CompId='103' DivId='1' CatId='3'  TeamId='8' SquadId='16' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='104' CompId='104' DivId='4' CatId='3'  SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='105' CompId='105' DivId='2' CatId='4'  SquadId='26' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='106' CompId='106' DivId='50' CatId='3'  TeamId='3' SquadId='8' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='107' CompId='107' DivId='29' CatId='0'  SquadId='25' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='108' CompId='108' DivId='4' CatId='0'  TeamId='10' SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='109' CompId='109' DivId='4' CatId='0'  TeamId='5' SquadId='11' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='110' CompId='110' DivId='1' CatId='6'  SquadId='11' TagId='0' MajorPF='True' IsDisq='True' DisqRuleId='24'  DisqDt='2026-05-30T11:49:56'  DisqMemo='Stage 3; 10.5.2 Volata puntata oltre angolo di sicurezza  o oltre il parapalle' StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='111' CompId='111' DivId='29' CatId='4'  TeamId='9' SquadId='18' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='112' CompId='112' DivId='2' CatId='3'  SquadId='7' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='113' CompId='113' DivId='24' CatId='4'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='114' CompId='114' DivId='2' CatId='3'  SquadId='11' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='115' CompId='115' DivId='4' CatId='0'  TeamId='5' SquadId='11' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='116' CompId='116' DivId='29' CatId='4'  SquadId='16' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='117' CompId='117' DivId='24' CatId='3'  SquadId='8' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='118' CompId='118' DivId='24' CatId='4'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='119' CompId='119' DivId='4' CatId='0'  SquadId='7' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='120' CompId='120' DivId='24' CatId='3'  SquadId='6' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='121' CompId='121' DivId='4' CatId='4'  SquadId='11' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='122' CompId='122' DivId='2' CatId='3'  TeamId='4' SquadId='1' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='123' CompId='123' DivId='4' CatId='4'  SquadId='12' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='124' CompId='124' DivId='50' CatId='3'  TeamId='3' SquadId='8' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='125' CompId='125' DivId='2' CatId='6'  SquadId='23' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='126' CompId='126' DivId='31' CatId='4'  SquadId='1' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='127' CompId='127' DivId='50' CatId='7'  SquadId='25' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='128' CompId='128' DivId='18' CatId='4'  SquadId='24' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='129' CompId='129' DivId='2' CatId='3'  SquadId='25' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='130' CompId='130' DivId='4' CatId='0'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='131' CompId='131' DivId='4' CatId='7'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='132' CompId='132' DivId='24' CatId='4'  SquadId='17' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='133' CompId='133' DivId='50' CatId='3'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='134' CompId='134' DivId='24' CatId='4'  SquadId='12' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='135' CompId='135' DivId='18' CatId='4'  SquadId='24' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='136' CompId='136' DivId='24' CatId='3'  SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='137' CompId='137' DivId='18' CatId='6'  SquadId='27' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='138' CompId='138' DivId='29' CatId='1'  SquadId='24' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='139' CompId='139' DivId='4' CatId='3'  SquadId='20' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='140' CompId='140' DivId='4' CatId='3'  TeamId='7' SquadId='8' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='141' CompId='141' DivId='24' CatId='4'  SquadId='24' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='142' CompId='142' DivId='18' CatId='4'  SquadId='8' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='143' CompId='143' DivId='2' CatId='4'  SquadId='16' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='144' CompId='144' DivId='2' CatId='3'  TeamId='11' SquadId='25' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='145' CompId='145' DivId='18' CatId='4'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='146' CompId='146' DivId='50' CatId='4'  SquadId='26' TagId='0' MajorPF='False' IsDisq='True' DisqRuleId='24'  DisqDt='2026-05-31T12:46:36'  DisqMemo='Stage 7; 10.5.2 Volata puntata oltre angolo di sicurezza  o oltre il parapalle; Stage 8; 10.5.2 Volata puntata oltre angolo di sicurezza  o oltre il parapalle' StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='147' CompId='147' DivId='2' CatId='4'  SquadId='16' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='148' CompId='148' DivId='24' CatId='4'  SquadId='24' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='149' CompId='149' DivId='4' CatId='4'  SquadId='27' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='150' CompId='150' DivId='2' CatId='0'  SquadId='23' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='151' CompId='151' DivId='29' CatId='0'  SquadId='23' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='152' CompId='152' DivId='4' CatId='4'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='153' CompId='153' DivId='2' CatId='6'  TeamId='4' SquadId='20' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='154' CompId='154' DivId='2' CatId='4'  TeamId='11' SquadId='21' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='155' CompId='155' DivId='4' CatId='4'  SquadId='24' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='156' CompId='156' DivId='1' CatId='3'  TeamId='8' SquadId='21' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='157' CompId='157' DivId='4' CatId='4'  SquadId='4' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='158' CompId='158' DivId='2' CatId='4'  TeamId='11' SquadId='21' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='159' CompId='159' DivId='4' CatId='3'  SquadId='4' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='160' CompId='160' DivId='2' CatId='6'  TeamId='11' SquadId='21' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='161' CompId='161' DivId='50' CatId='1'  SquadId='13' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='162' CompId='162' DivId='2' CatId='4'  SquadId='21' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='163' CompId='163' DivId='29' CatId='1'  SquadId='23' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='164' CompId='164' DivId='50' CatId='3'  SquadId='13' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='165' CompId='165' DivId='24' CatId='0'  SquadId='23' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='166' CompId='166' DivId='4' CatId='3'  TeamId='5' SquadId='17' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='167' CompId='167' DivId='24' CatId='4'  SquadId='5' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='168' CompId='168' DivId='2' CatId='0'  SquadId='19' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='169' CompId='169' DivId='24' CatId='0'  SquadId='22' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='170' CompId='170' DivId='4' CatId='0'  SquadId='23' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='171' CompId='171' DivId='50' CatId='3'  SquadId='19' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='172' CompId='172' DivId='31' CatId='4'  SquadId='18' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='173' CompId='173' DivId='4' CatId='4'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='174' CompId='174' DivId='4' CatId='0'  SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='175' CompId='175' DivId='4' CatId='3'  SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='176' CompId='176' DivId='4' CatId='2'  SquadId='26' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='177' CompId='177' DivId='4' CatId='4'  SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='178' CompId='178' DivId='4' CatId='4'  TeamId='6' SquadId='21' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='179' CompId='179' DivId='2' CatId='3'  TeamId='4' SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='180' CompId='180' DivId='29' CatId='3'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='181' CompId='181' DivId='4' CatId='3'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='182' CompId='182' DivId='4' CatId='4'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='183' CompId='183' DivId='50' CatId='4'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='184' CompId='184' DivId='18' CatId='6'  SquadId='9' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='185' CompId='185' DivId='1' CatId='4'  SquadId='30' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='186' CompId='186' DivId='2' CatId='0'  SquadId='28' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='187' CompId='187' DivId='29' CatId='0'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='188' CompId='188' DivId='4' CatId='4'  TeamId='0' SquadId='21' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='189' CompId='189' DivId='24' CatId='3'  SquadId='4' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='190' CompId='190' DivId='4' CatId='0'  TeamId='0' SquadId='16' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='191' CompId='191' DivId='29' CatId='4'  TeamId='9' SquadId='19' TagId='0' MajorPF='False' IsDisq='True' DisqRuleId='24'  DisqDt='2026-05-31T08:14:31'  DisqMemo='Stage 8; 10.5.2 Volata puntata oltre angolo di sicurezza  o oltre il parapalle' StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='192' CompId='192' DivId='1' CatId='4'  SquadId='20' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='193' CompId='193' DivId='2' CatId='3'  SquadId='22' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='194' CompId='194' DivId='29' CatId='4'  SquadId='17' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='195' CompId='195' DivId='31' CatId='4'  SquadId='17' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='196' CompId='196' DivId='1' CatId='4'  SquadId='25' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='197' CompId='197' DivId='2' CatId='2'  SquadId='23' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='198' CompId='198' DivId='4' CatId='4'  SquadId='17' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='199' CompId='199' DivId='4' CatId='3'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='200' CompId='200' DivId='2' CatId='6'  SquadId='12' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='201' CompId='201' DivId='29' CatId='3'  SquadId='26' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='MMM'/>
+  <z:row MatchId='1' MemberId='202' CompId='202' DivId='29' CatId='4'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='203' CompId='203' DivId='24' CatId='3'  SquadId='30' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='204' CompId='204' DivId='4' CatId='7'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='205' CompId='205' DivId='1' CatId='4'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='206' CompId='206' DivId='24' CatId='4'  SquadId='2' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='207' CompId='207' DivId='29' CatId='3'  SquadId='6' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='208' CompId='208' DivId='5' CatId='4'  SquadId='6' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='209' CompId='209' DivId='2' CatId='3'  SquadId='11' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='210' CompId='210' DivId='24' CatId='4'  TeamId='1' SquadId='11' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='211' CompId='211' DivId='2' CatId='3'  SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='212' CompId='212' DivId='1' CatId='0'  SquadId='10' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='213' CompId='213' DivId='29' CatId='3'  SquadId='26' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='214' CompId='214' DivId='4' CatId='0'  SquadId='26' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='215' CompId='215' DivId='2' CatId='4'  SquadId='11' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='216' CompId='216' DivId='4' CatId='0'  SquadId='1' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='UUU'/>
+  <z:row MatchId='1' MemberId='217' CompId='217' DivId='50' CatId='0'  SquadId='15' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='AAA'/>
+  <z:row MatchId='1' MemberId='218' CompId='218' DivId='4' CatId='4'  SquadId='13' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='219' CompId='219' DivId='50' CatId='3'  SquadId='26' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='220' CompId='220' DivId='4' CatId='2'  TeamId='0' SquadId='4' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='221' CompId='221' DivId='24' CatId='3'  SquadId='8' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='BBB'/>
+  <z:row MatchId='1' MemberId='222' CompId='222' DivId='1' CatId='4'  SquadId='16' TagId='0' MajorPF='True' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='223' CompId='223' DivId='50' CatId='6'  SquadId='12' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='224' CompId='224' DivId='4' CatId='3'  SquadId='1' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='DDD'/>
+  <z:row MatchId='1' MemberId='225' CompId='225' DivId='29' CatId='3'  SquadId='14' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='CCC'/>
+  <z:row MatchId='1' MemberId='226' CompId='226' DivId='24' CatId='0'  SquadId='20' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+  <z:row MatchId='1' MemberId='227' CompId='227' DivId='29' CatId='0'  SquadId='3' TagId='0' MajorPF='False' IsDisq='False' DisqRuleId='0'   StageDisq='False' RefNo='GGG'/>
+</rs:data>
+</xml>

@@ -231,23 +231,12 @@ export function App() {
     URL.revokeObjectURL(url);
   }
 
-  function handleImportData() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'application/json,.json';
-    input.onchange = () => {
-      const file = input.files?.[0];
-      if (!file) {
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        void importBackup(String(reader.result ?? ''));
-      };
-      reader.readAsText(file);
+  function handleImportData(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      void importBackup(String(reader.result ?? ''));
     };
-    input.click();
+    reader.readAsText(file);
   }
 
   async function importBackup(rawJson: string) {

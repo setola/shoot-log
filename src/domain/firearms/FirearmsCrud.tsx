@@ -89,14 +89,14 @@ export function FirearmsCrud() {
         ) : null}
       </div>
 
-      <div className={showForm ? 'crud-layout' : 'crud-layout crud-layout-list-only'}>
+      <div className="crud-layout crud-layout-list-only">
         {showForm ? (
-          <form className="panel form-grid" onSubmit={handleSubmit}>
+          <div className="dialog-backdrop" role="presentation" onMouseDown={resetForm}>
+          <form className="panel form-grid entity-form-dialog" role="dialog" aria-modal="true" onMouseDown={(event) => event.stopPropagation()} onSubmit={handleSubmit}>
             <div className="form-title-row">
               <h3>{editingFirearm ? t('firearms.editTitle') : t('firearms.createTitle')}</h3>
-              <button className="button button-ghost button-small" type="button" onClick={resetForm}>
-                <X size={15} />
-                {t('actions.cancel')}
+              <button className="icon-button" type="button" aria-label={t('actions.close')} onClick={resetForm}>
+                <X size={16} />
               </button>
             </div>
 
@@ -215,13 +215,15 @@ export function FirearmsCrud() {
               </div>
             </details>
 
-            <div className="form-actions">
+            <div className="dialog-actions">
+              <button className="button button-secondary" type="button" onClick={resetForm}>{t('actions.cancel')}</button>
               <button className="button" type="submit">
                 <Save size={16} />
                 {editingId ? t('actions.save') : t('actions.create')}
               </button>
             </div>
           </form>
+          </div>
         ) : null}
 
         <div className="list-panel-clean">

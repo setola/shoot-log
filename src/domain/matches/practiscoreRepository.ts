@@ -2,11 +2,12 @@ import { db } from '../../db/schema';
 import { nowIso } from '../../utils/time';
 import type { MatchEvent } from './types';
 import type { PractiscoreImportRecord, PractiscoreMatchSnapshot } from './practiscoreTypes';
+import { normalizeImportedDiscipline, summarizeOwnerDivisionAndCategoryValue, summarizeSnapshotDivisionsAndCategoriesValue } from './snapshotSummary';
 
-export async function importPractiscoreSnapshot(snapshot: PractiscoreMatchSnapshot, existingMatchEventId?: string): Promise<string> {
+export async function importPractiscoreSnapshot(snapshot: PractiscoreMatchSnapshot, existingMatchEventId?: string, ownerIdentifiers: string[] = []): Promise<string> {
   const now = nowIso();
   const matchEventId = existingMatchEventId ?? crypto.randomUUID();
-  const matchEvent = createMatchEventFromSnapshot(snapshot, matchEventId, now);
+  const matchEvent = createMatchEventFromSnapshot(snapshot, matchEventId, now, ownerIdentifiers);
   const importRecord: PractiscoreImportRecord = {
     id: matchEventId,
     matchEventId,
@@ -31,7 +32,7 @@ export async function deletePractiscoreImportForMatch(matchEventId: string): Pro
   await db.practiscoreMatchImports.where('matchEventId').equals(matchEventId).delete();
 }
 
-function createMatchEventFromSnapshot(snapshot: PractiscoreMatchSnapshot, id: string, now: string): MatchEvent {
+function createMatchEventFromSnapshot(snapshot: PractiscoreMatchSnapshot, id: string, now: string, ownerIdentifiers: string[]): MatchEvent {
   const roundsFired = snapshot.stages.reduce((total, stage) => total + (stage.minRounds ?? 0), 0);
   const sourceLabel = snapshot.practiscoreMatchId.startsWith('mare2:') ? 'Mare2 FITDS PDF' : 'PractiScore';
 
@@ -39,9 +40,9 @@ function createMatchEventFromSnapshot(snapshot: PractiscoreMatchSnapshot, id: st
     id,
     name: snapshot.match.name || `${sourceLabel} ${snapshot.practiscoreMatchId}`,
     date: snapshot.match.date || new Date().toISOString().slice(0, 10),
-    discipline: sourceLabel,
+    discipline: normalizeImportedDiscipline(snapshot),
+    divisionOrCategory: summarizeOwnerDivisionAndCategoryValue(snapshot, ownerIdentifiers) ?? summarizeSnapshotDivisionsAndCategoriesValue(snapshot),
     roundsFired,
-    registrationReference: snapshot.practiscoreMatchId,
     practiscoreMatchId: snapshot.practiscoreMatchId,
     practiscoreInternalMatchId: snapshot.match.internalMatchId,
     notes: `Imported from ${sourceLabel} ${snapshot.sourceFileName}`,
