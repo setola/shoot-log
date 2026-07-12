@@ -220,7 +220,10 @@
     "disconnectButton": "Disconnetti",
     "privacyTitle": "Privacy",
     "privacyDescription": "L’app richiede solo lo scope drive.appdata. Può accedere ai file creati da questa app nella cartella dati nascosta di Google Drive, non a tutto il tuo Drive.",
-    "errorTitle": "Errore sincronizzazione Google Drive"
+    "errorTitle": "Errore sincronizzazione Google Drive",
+    "storageUsage": "Spazio dati app su Drive: {{size}} in {{count}} file",
+    "storageUsageLoading": "Spazio dati app su Drive: controllo…",
+    "storageUsageDisconnected": "Spazio dati app su Drive: connetti Google Drive per verificare"
   },
   "paperwork": {
     "title": "Documenti",
@@ -383,7 +386,9 @@
       "hitFactorChartDescription": "Confronta l’hit factor per stage; valori più alti sono migliori.",
       "timeChartDescription": "Confronta il tempo grezzo dello stage; valori più bassi sono migliori.",
       "pointsChartDescription": "Confronta i punti ottenuti per stage.",
-      "ownerPill": "owner"
+      "ownerPill": "owner",
+      "chartValues": "Valori",
+      "chartGaps": "Gap"
     },
     "mare2": {
       "title": "Import PDF Mare2 FITDS",

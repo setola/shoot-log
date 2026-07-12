@@ -220,7 +220,10 @@
     "disconnectButton": "Disconnect",
     "privacyTitle": "Privacy",
     "privacyDescription": "The app requests only the drive.appdata scope. It can access files created by this app in the hidden Google Drive app data folder, not your full Drive.",
-    "errorTitle": "Google Drive sync error"
+    "errorTitle": "Google Drive sync error",
+    "storageUsage": "Drive app data used: {{size}} across {{count}} file(s)",
+    "storageUsageLoading": "Drive app data used: checking…",
+    "storageUsageDisconnected": "Drive app data used: connect Google Drive to check"
   },
   "paperwork": {
     "title": "Paperwork",
@@ -383,7 +386,9 @@
       "hitFactorChartDescription": "Compares per-stage hit factor; higher values are better.",
       "timeChartDescription": "Compares raw stage time; lower values are better.",
       "pointsChartDescription": "Compares scored points by stage.",
-      "ownerPill": "owner"
+      "ownerPill": "owner",
+      "chartValues": "Values",
+      "chartGaps": "Gaps"
     },
     "mare2": {
       "title": "Mare2 FITDS PDF import",
