@@ -315,6 +315,11 @@ export function MatchAnalysis() {
 											competitor: competitor.displayName,
 										})}
 										onClick={() => removeComparisonCompetitor(query)}
+										onPointerUp={(event) => {
+											event.preventDefault();
+											event.stopPropagation();
+											removeComparisonCompetitor(query);
+										}}
 									>
 										×
 									</button>
