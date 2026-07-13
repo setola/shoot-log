@@ -1924,8 +1924,15 @@ button:disabled {
 	background: var(--muted);
 }
 
-.competitor-hit-title {
+.competitor-hit-heading {
 	grid-column: 1 / -1;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem 0.6rem;
+	align-items: baseline;
+}
+
+.competitor-hit-title {
 	margin-bottom: 0;
 }
 
@@ -1935,6 +1942,76 @@ button:disabled {
 
 .competitor-hit-card-comparison .competitor-hit-title {
 	color: var(--comparison-color, #f97316);
+}
+
+.competitor-hit-footer {
+	grid-column: 1 / -1;
+	display: grid;
+	grid-template-columns: minmax(6.5rem, 8.5rem) 1fr;
+	gap: 0.65rem;
+	padding-top: 0.45rem;
+	border-top: 1px solid var(--border);
+	font-size: 0.78rem;
+	font-weight: 800;
+}
+
+.competitor-hit-footer-metrics {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.competitor-hit-footer-row {
+	display: grid;
+	grid-template-columns: 1fr auto;
+	gap: 0.35rem;
+	align-items: baseline;
+	padding: 0.32rem 0;
+	border-bottom: 1px solid var(--border);
+}
+
+.competitor-hit-footer-row:last-child {
+	border-bottom: 0;
+}
+
+.competitor-hit-footer-row span,
+.competitor-hit-footer-row em {
+	font-style: normal;
+}
+
+.competitor-hit-footer-row span {
+	display: inline-flex;
+	gap: 0.35rem;
+	align-items: center;
+}
+
+.competitor-hit-footer-row i {
+	width: 0.65rem;
+	height: 0.65rem;
+	border-radius: 999px;
+	background: currentColor;
+}
+
+.competitor-hit-footer-row-time i {
+	color: #06b6d4;
+}
+
+.competitor-hit-footer-row-points i {
+	color: #f59e0b;
+}
+
+.competitor-hit-footer-row span,
+.competitor-hit-footer-row strong,
+.competitor-hit-footer-row em {
+	color: var(--foreground);
+}
+
+.competitor-hit-footer-row span {
+	font-weight: 400;
+}
+
+.competitor-hit-footer-row strong,
+.competitor-hit-footer-row em {
+	font-weight: 850;
 }
 
 .competitor-hit-card .hit-pie-chart {

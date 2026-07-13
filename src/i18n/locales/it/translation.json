@@ -388,7 +388,9 @@
       "pointsChartDescription": "Confronta i punti ottenuti per stage.",
       "ownerPill": "owner",
       "chartValues": "Valori",
-      "chartGaps": "Gap"
+      "chartGaps": "Gap",
+      "totalTimeLabel": "Tempo",
+      "totalPointsLabel": "Punti"
     },
     "mare2": {
       "title": "Import PDF Mare2 FITDS",

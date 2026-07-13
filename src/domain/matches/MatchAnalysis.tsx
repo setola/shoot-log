@@ -338,6 +338,7 @@ export function MatchAnalysis() {
 												competitor={competitor}
 												breakdown={breakdown}
 												summary={summary}
+												baselineSummary={matchSummary}
 												tone="comparison"
 												color={color}
 											/>
@@ -644,12 +645,14 @@ function CompetitorHitBreakdown({
 	competitor,
 	breakdown,
 	summary,
+	baselineSummary,
 	tone,
 	color,
 }: {
 	competitor: PractiscoreCompetitor;
 	breakdown: { total: number; slices: HitSlice[] };
 	summary?: CompetitorMatchSummary;
+	baselineSummary?: CompetitorMatchSummary;
 	tone: "primary" | "comparison";
 	color?: string;
 }) {
@@ -662,10 +665,12 @@ function CompetitorHitBreakdown({
 				color ? ({ "--comparison-color": color } as CSSProperties) : undefined
 			}
 		>
-			<h4 className="competitor-hit-title">
-				{competitor.displayName}
-				{summary?.placement ? ` · #${summary.placement}` : ""}
-			</h4>
+			<div className="competitor-hit-heading">
+				<h4 className="competitor-hit-title">
+					{competitor.displayName}
+					{summary?.placement ? ` · #${summary.placement}` : ""}
+				</h4>
+			</div>
 			<HitPieChart slices={breakdown.slices} />
 			<div className="hit-legend">
 				{breakdown.slices.map((slice) => (
@@ -681,6 +686,66 @@ function CompetitorHitBreakdown({
 					</div>
 				))}
 			</div>
+			{summary ? (
+				<div className="competitor-hit-footer">
+					<div className="competitor-hit-footer-spacer" />
+					<div className="competitor-hit-footer-metrics">
+						<FooterMetric
+							tone="time"
+							label={t("matches.analysis.totalTimeLabel")}
+							value={`${formatNumber(summary.totalTime)}s`}
+							delta={
+								baselineSummary
+									? formatPercentDelta(
+											summary.totalTime,
+											baselineSummary.totalTime,
+										)
+									: undefined
+							}
+						/>
+						<FooterMetric
+							tone="points"
+							label={t("matches.analysis.totalPointsLabel")}
+							value={`${formatNumber(summary.totalPoints)} pts`}
+							delta={
+								baselineSummary
+									? formatPercentDelta(
+											summary.totalPoints,
+											baselineSummary.totalPoints,
+										)
+									: undefined
+							}
+						/>
+					</div>
+				</div>
+			) : null}
+		</div>
+	);
+}
+
+function FooterMetric({
+	tone,
+	label,
+	value,
+	delta,
+}: {
+	tone: "time" | "points";
+	label: string;
+	value: string;
+	delta?: string;
+}) {
+	return (
+		<div
+			className={`competitor-hit-footer-row competitor-hit-footer-row-${tone}`}
+		>
+			<span>
+				<i aria-hidden="true" />
+				{label}
+			</span>
+			<strong>
+				{value}
+				{delta ? <em> · {delta}</em> : null}
+			</strong>
 		</div>
 	);
 }
@@ -1580,4 +1645,13 @@ function formatNegativeGap(value: number | undefined): string {
 
 function formatPercent(value: number, total: number): string {
 	return `${Math.round((value / total) * 1000) / 10}%`;
+}
+
+function formatPercentDelta(value: number, baseline: number): string {
+	if (!baseline) return "—";
+	const delta = ((value - baseline) / baseline) * 100;
+	const formatted = new Intl.NumberFormat(undefined, {
+		maximumFractionDigits: 1,
+	}).format(delta);
+	return `${delta > 0 ? "+" : ""}${formatted}%`;
 }
