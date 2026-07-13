@@ -12,6 +12,7 @@ import {
 	type StageCompetitorDetail,
 	type StagePlacementPoint,
 } from "./practiscoreAnalysis";
+import type { MatchStageAsset } from "./stageAssets";
 import type {
 	PractiscoreCompetitor,
 	PractiscoreImportRecord,
@@ -68,6 +69,16 @@ export function MatchAnalysis() {
 				selectedAnalysisMatchId,
 			),
 		[practiscoreImports, selectedAnalysisMatchId],
+	);
+	const stageAssets = useLiveQuery(
+		() =>
+			selectedAnalysisImport
+				? db.matchStageAssets
+						.where("matchEventId")
+						.equals(selectedAnalysisImport.matchEventId)
+						.toArray()
+				: Promise.resolve([] as MatchStageAsset[]),
+		[selectedAnalysisImport?.matchEventId],
 	);
 	const ownerCompetitor = useMemo(
 		() =>
@@ -173,6 +184,13 @@ export function MatchAnalysis() {
 				color: COMPARISON_COLORS[index % COMPARISON_COLORS.length],
 			})),
 		[selectedAnalysisImport, comparisonCompetitors],
+	);
+	const stageAssetByStageId = useMemo(
+		() =>
+			new Map(
+				(stageAssets ?? []).map((asset) => [asset.internalStageId, asset]),
+			),
+		[stageAssets],
 	);
 
 	useEffect(() => {
@@ -416,6 +434,7 @@ export function MatchAnalysis() {
 										<StageDetailCard
 											key={detail.stageId}
 											detail={detail}
+											stageAsset={stageAssetByStageId.get(detail.stageId)}
 											primaryCompetitor={selectedCompetitor}
 											comparisonSeries={comparisonStageDetailSeries
 												.map((series) => ({
@@ -758,12 +777,33 @@ function isRemovedScore(score: {
 	);
 }
 
+function StageAssetThumbnail({ asset }: { asset: MatchStageAsset }) {
+	const url = useMemo(
+		() => URL.createObjectURL(asset.content),
+		[asset.content],
+	);
+
+	useEffect(() => {
+		return () => URL.revokeObjectURL(url);
+	}, [url]);
+
+	return (
+		<img
+			className="stage-asset-thumbnail"
+			src={url}
+			alt={`${asset.sourceFileName} page ${asset.sourcePageNumber}`}
+		/>
+	);
+}
+
 function StageDetailCard({
 	detail,
+	stageAsset,
 	primaryCompetitor,
 	comparisonSeries,
 }: {
 	detail: StageCompetitorDetail;
+	stageAsset?: MatchStageAsset;
 	primaryCompetitor: PractiscoreCompetitor;
 	comparisonSeries: Array<{
 		competitor: PractiscoreCompetitor;
@@ -771,16 +811,8 @@ function StageDetailCard({
 		detail: StageCompetitorDetail;
 	}>;
 }) {
-	return (
-		<article className="stage-detail-card">
-			<div className="stage-detail-header">
-				<h5>
-					{detail.stageName}{" "}
-					<small>
-						({detail.minRounds ?? "—"}/{detail.maxPoints ?? "—"})
-					</small>
-				</h5>
-			</div>
+	const metrics = (
+		<div className="stage-detail-metrics-stack">
 			<StageDetailMetrics
 				detail={detail}
 				tone="primary"
@@ -796,6 +828,33 @@ function StageDetailCard({
 					color={series.color}
 				/>
 			))}
+		</div>
+	);
+
+	return (
+		<article
+			className={
+				stageAsset
+					? "stage-detail-card stage-detail-card-with-image"
+					: "stage-detail-card"
+			}
+		>
+			<div className="stage-detail-header">
+				<h5>
+					{detail.stageName}{" "}
+					<small>
+						({detail.minRounds ?? "—"}/{detail.maxPoints ?? "—"})
+					</small>
+				</h5>
+			</div>
+			{stageAsset ? (
+				<div className="stage-detail-with-image-layout">
+					<StageAssetThumbnail asset={stageAsset} />
+					{metrics}
+				</div>
+			) : (
+				metrics
+			)}
 		</article>
 	);
 }

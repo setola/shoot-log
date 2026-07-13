@@ -1597,17 +1597,21 @@ button:disabled {
 
 .stage-details-grid {
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(13.5rem, 1fr));
-	gap: 0.75rem;
+	grid-template-columns: 1fr;
+	gap: 0;
+	border-top: 1px solid var(--border);
 }
 
 .stage-detail-card {
 	display: grid;
-	gap: 0.65rem;
-	padding: 0.8rem;
-	border: 1px solid var(--border);
-	border-radius: 0.85rem;
-	background: var(--muted);
+	gap: 0.75rem;
+	padding: 1rem 0;
+	border-bottom: 1px solid var(--border);
+	background: transparent;
+}
+
+.stage-detail-card:last-child {
+	border-bottom: 0;
 }
 
 .stage-detail-header,
@@ -1699,6 +1703,27 @@ button:disabled {
 	color: var(--muted-foreground);
 	font-size: 0.78rem;
 	font-weight: 700;
+}
+
+.stage-detail-with-image-layout {
+	display: grid;
+	grid-template-columns: minmax(18rem, 26rem) minmax(0, 1fr);
+	gap: 1rem;
+	align-items: start;
+}
+
+.stage-detail-metrics-stack {
+	display: grid;
+	gap: 0.65rem;
+}
+
+.stage-asset-thumbnail {
+	width: 100%;
+	max-height: 22rem;
+	object-fit: contain;
+	border: 1px solid var(--border);
+	border-radius: 0.7rem;
+	background: var(--card);
 }
 
 .stage-detail-metrics {
@@ -2080,6 +2105,103 @@ button:disabled {
 	.stage-placement-chart,
 	.stage-comparison-chart {
 		min-width: 0;
+	}
+}
+
+.briefing-dialog {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: 60;
+	width: min(58rem, calc(100vw - 2rem));
+	max-height: min(82vh, 52rem);
+	padding: 1.25rem;
+	overflow: auto;
+	transform: translate(-50%, -50%);
+}
+
+.briefing-mapping-list {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.briefing-mapping-row {
+	display: grid;
+	grid-template-columns: minmax(8rem, 0.7fr) minmax(14rem, 1.1fr) minmax(
+			18rem,
+			1.4fr
+		);
+	gap: 0.85rem;
+	align-items: start;
+	padding: 0.75rem;
+	border: 1px solid var(--border);
+	border-radius: 0.85rem;
+	background: var(--muted);
+}
+
+.briefing-mapping-row > div:first-child {
+	display: grid;
+	gap: 0.15rem;
+}
+
+.briefing-mapping-row > div:first-child span {
+	color: var(--muted-foreground);
+	font-size: 0.78rem;
+	font-weight: 700;
+}
+
+.briefing-thumbnail {
+	width: 100%;
+	max-height: 12rem;
+	object-fit: contain;
+	border: 1px solid var(--border);
+	border-radius: 0.65rem;
+	background: var(--card);
+}
+
+.briefing-thumbnail-picker {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(7rem, 1fr));
+	gap: 0.5rem;
+	align-items: start;
+}
+
+.briefing-thumbnail-option {
+	display: grid;
+	gap: 0.35rem;
+	padding: 0.35rem;
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	color: var(--foreground);
+	background: var(--card);
+	font-size: 0.72rem;
+	font-weight: 750;
+	text-align: left;
+}
+
+.briefing-thumbnail-option .briefing-thumbnail {
+	max-height: 5.75rem;
+}
+
+.briefing-thumbnail-option-selected {
+	border-color: var(--primary);
+	box-shadow: 0 0 0 2px color-mix(in srgb, var(--primary) 18%, transparent);
+}
+
+.briefing-thumbnail-option:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.briefing-confirm-button {
+	grid-column: 1 / -1;
+	justify-self: end;
+}
+
+@media (max-width: 720px) {
+	.briefing-mapping-row,
+	.stage-detail-with-image-layout {
+		grid-template-columns: 1fr;
 	}
 }
 

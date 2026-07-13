@@ -411,6 +411,24 @@
       "dropHint": "or click to choose it from this device",
       "selectedFile": "Selected file: {{fileName}}",
       "fromLabel": "Import from:"
+    },
+    "briefing": {
+      "action": "Import stage briefing",
+      "title": "Import stage briefing",
+      "description": "Attach stage diagrams to {{match}} from a Mare2 briefing PDF.",
+      "dropTitle": "Drop the Mare2 briefing PDF here",
+      "dropHint": "or click to choose the match booklet/briefing PDF",
+      "importError": "Unable to import the stage briefing PDF.",
+      "importing": "Saving...",
+      "save": "Save stage diagrams",
+      "importedSummary": "Imported {{count}} stage diagram(s).",
+      "stageImages": "{{count}} stage image(s)",
+      "stageMeta": "{{rounds}} rounds / {{points}} points",
+      "selectStageImage": "Select image for {{stage}}",
+      "pageOption": "Page {{page}} · {{rounds}}/{{points}}",
+      "noCompatibleImages": "No image with matching points/rounds",
+      "confirmImage": "Confirm image",
+      "confirmed": "Image confirmed"
     }
   },
   "ammunition": {

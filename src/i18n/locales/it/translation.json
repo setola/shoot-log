@@ -411,6 +411,24 @@
       "dropHint": "oppure clicca per sceglierlo da questo dispositivo",
       "selectedFile": "File selezionato: {{fileName}}",
       "fromLabel": "Importa da:"
+    },
+    "briefing": {
+      "action": "Importa locandina stage",
+      "title": "Importa locandina stage",
+      "description": "Associa a {{match}} i diagrammi stage da una locandina PDF Mare2.",
+      "dropTitle": "Trascina qui la locandina PDF Mare2",
+      "dropHint": "oppure clicca per scegliere il PDF della locandina/briefing",
+      "importError": "Impossibile importare la locandina stage.",
+      "importing": "Salvataggio...",
+      "save": "Salva diagrammi stage",
+      "importedSummary": "Importati {{count}} diagrammi stage.",
+      "stageImages": "{{count}} immagini stage",
+      "stageMeta": "{{rounds}} colpi / {{points}} punti",
+      "selectStageImage": "Seleziona immagine per {{stage}}",
+      "pageOption": "Pagina {{page}} · {{rounds}}/{{points}}",
+      "noCompatibleImages": "Nessuna immagine con punti/colpi corrispondenti",
+      "confirmImage": "Conferma immagine",
+      "confirmed": "Immagine confermata"
     }
   },
   "ammunition": {
