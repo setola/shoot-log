@@ -2087,8 +2087,9 @@ button:disabled {
 .comparison-pill {
 	display: inline-flex;
 	align-items: center;
-	gap: 0.3rem;
-	padding: 0.25rem 0.55rem;
+	gap: 0.25rem;
+	min-height: 2rem;
+	padding: 0.2rem 0.25rem 0.2rem 0.6rem;
 	border: 1px solid
 		color-mix(in srgb, var(--comparison-color, #f97316) 35%, var(--border));
 	border-radius: 999px;
@@ -2100,7 +2101,33 @@ button:disabled {
 	);
 	font-size: 0.74rem;
 	font-weight: 800;
+}
+
+.comparison-pill-label {
+	padding-block: 0.15rem;
+}
+
+.comparison-pill button {
+	display: inline-grid;
+	place-items: center;
+	width: 1.6rem;
+	height: 1.6rem;
+	border: 0;
+	border-radius: 999px;
+	color: currentColor;
+	background: transparent;
+	font: inherit;
+	line-height: 1;
 	cursor: pointer;
+}
+
+.comparison-pill button:hover,
+.comparison-pill button:focus-visible {
+	background: color-mix(
+		in srgb,
+		var(--comparison-color, #f97316) 18%,
+		transparent
+	);
 }
 
 .competitor-hit-card-primary {

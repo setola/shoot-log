@@ -300,16 +300,25 @@ export function MatchAnalysis() {
 						</datalist>
 						<div className="comparison-pill-row">
 							{comparisonPills.map(({ competitor, query, color, isOwner }) => (
-								<button
+								<span
 									className="comparison-pill"
 									style={{ "--comparison-color": color } as CSSProperties}
-									type="button"
 									key={competitor.internalMemberId}
-									onClick={() => removeComparisonCompetitor(query)}
 								>
-									{competitor.displayName}
-									{isOwner ? ` · ${t("matches.analysis.ownerPill")}` : ""} ×
-								</button>
+									<span className="comparison-pill-label">
+										{competitor.displayName}
+										{isOwner ? ` · ${t("matches.analysis.ownerPill")}` : ""}
+									</span>
+									<button
+										type="button"
+										aria-label={t("matches.analysis.removeCompetitor", {
+											competitor: competitor.displayName,
+										})}
+										onClick={() => removeComparisonCompetitor(query)}
+									>
+										×
+									</button>
+								</span>
 							))}
 						</div>
 					</div>

@@ -390,7 +390,8 @@
       "chartValues": "Values",
       "chartGaps": "Gaps",
       "totalTimeLabel": "Time",
-      "totalPointsLabel": "Points"
+      "totalPointsLabel": "Points",
+      "removeCompetitor": "Remove {{competitor}}"
     },
     "mare2": {
       "title": "Mare2 FITDS PDF import",
