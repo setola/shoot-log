@@ -11,3 +11,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 design
+.mare2-cache/
+tmp/
+public/mare2/

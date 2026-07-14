@@ -106,6 +106,8 @@ Current implementation notes:
 - PWA support: `vite-plugin-pwa`.
 - i18n: `i18next` + `react-i18next`.
 - PDF parsing: `pdfjs-dist` for local Mare2 FITDS score-verification imports.
+- Mare2 public catalog generation: Node CLI in `tools/mare2-importer`, publishing
+  static JSON/WebP assets to Cloudflare Pages via Wrangler.
 - Translation files live in `src/i18n/locales/{locale}/translation.json`.
 - Current locales: English (`en`) and Italian (`it`).
 - Styling: plain CSS in `src/styles/global.css` using CSS variables.
@@ -179,6 +181,8 @@ Implemented local-first modules:
 14. PractiScore CAB import for matches, storing a single local snapshot per match.
 15. Mare2 FITDS PDF import for score verification reports, reusing the same local analysis snapshot shape.
 16. Dedicated Analysis section for imported match score snapshots, including match selector, multi-competitor autocomplete comparison with device-owner auto-suggestion, comparative hit distribution pie charts, stage placement trend, comparative stage metric charts, and compact multi-competitor stage details.
+17. Mare2 public catalog CLI and Cloudflare Pages publishing flow for public match snapshots and stage-page images, with archive pagination, future-match skipping, request throttling, and `--since` incremental sync support.
+18. App-side import from the Mare2 public catalog with free-text match search; imported catalog data is stored locally in IndexedDB and included only in user-controlled exports/backups.
 
 Important limitations / follow-up work:
 
@@ -188,8 +192,9 @@ Important limitations / follow-up work:
 4. Dashboard summaries are present but should be expanded with more live computed data.
 5. PractiScore CAB parsing currently supports the uncompressed CAB export format observed in `test-data/match-imports/WinMSS.cab`; compressed CAB support is still pending.
 6. Mare2 PDF parsing targets the score-verification-by-competitor layout observed in `test-data/match-imports/6camp_dFWMLqQ4vR.pdf`; other Mare2 report layouts may need parser extensions.
-7. Reports, CSV/PDF export, and reminders are still pending.
-8. Attachment encryption and incremental sync are still pending.
+7. Mare2 catalog stage-page mapping is currently an MVP heuristic and should be improved with cropping/OCR or explicit metadata.
+8. Reports, CSV/PDF export, and reminders are still pending.
+9. Attachment encryption and incremental sync are still pending.
 
 ## Data handling rules
 
@@ -314,6 +319,7 @@ When editing:
 - Add tests for schema transforms, imports/exports, crypto helpers, and sync logic when practical.
 - Match import test fixtures live under `test-data/match-imports/`.
 - Browser/manual import smoke tests should use device-owner identifiers `IT027386` and `TESSORE, EMANUELE` in Settings.
+- Mare2 catalog generation must remain a static-public-data pipeline: no app-owned backend database, no private Mare2 credentials, no committed Cloudflare account IDs or API tokens.
 - Do not introduce backend dependencies without explicit approval.
 
 Before final response:

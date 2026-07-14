@@ -30,6 +30,7 @@ import { parsePractiscoreCabSnapshot } from "./practiscoreParser";
 import { importPractiscoreSnapshot } from "./practiscoreRepository";
 import type {
 	PractiscoreImportRecord,
+	PractiscoreMatchSnapshot,
 	PractiscoreStage,
 } from "./practiscoreTypes";
 import { DEFAULT_SETTINGS_ID } from "../settings/settingsRepository";
@@ -38,6 +39,39 @@ import {
 	summarizeOwnerDivisionAndCategoryValue,
 	summarizeSnapshotDivisionsAndCategoriesValue,
 } from "./snapshotSummary";
+
+const MARE2_PUBLIC_CATALOG_URL =
+	"https://shooting-logbook-mare2-data.pages.dev/manifest.json";
+
+interface Mare2PublicCatalogMatch {
+	mare2MatchId: string;
+	name: string;
+	dateFrom?: string;
+	dateTo?: string;
+	badges?: string[];
+	macroArea?: string;
+	matchUrl: string;
+	snapshotUrl: string;
+	pageCount?: number;
+	verifyPrintedAt?: string;
+	verifyPdfUrl?: string;
+}
+
+interface Mare2PublicCatalog {
+	format: string;
+	schemaVersion: number;
+	generatedAt: string;
+	matches: Mare2PublicCatalogMatch[];
+}
+
+interface Mare2PublicMatchFile {
+	pages?: Array<{
+		pageNumber: number;
+		url: string;
+		mimeType?: string;
+	}>;
+	stagePageMapping?: Record<string, number>;
+}
 
 export function MatchesCrud() {
 	const { t } = useTranslation();
@@ -90,6 +124,19 @@ export function MatchesCrud() {
 	const [importing, setImporting] = useState(false);
 	const [importMessage, setImportMessage] = useState<string | null>(null);
 	const [importError, setImportError] = useState<string | null>(null);
+	const [publicCatalogOpen, setPublicCatalogOpen] = useState(false);
+	const [publicCatalogLoading, setPublicCatalogLoading] = useState(false);
+	const [publicCatalogMatches, setPublicCatalogMatches] = useState<
+		Mare2PublicCatalogMatch[]
+	>([]);
+	const [selectedPublicMatchIds, setSelectedPublicMatchIds] = useState<
+		string[]
+	>([]);
+	const [publicCatalogSearch, setPublicCatalogSearch] = useState("");
+	const [publicCatalogImporting, setPublicCatalogImporting] = useState(false);
+	const [publicCatalogError, setPublicCatalogError] = useState<string | null>(
+		null,
+	);
 	const [briefingTarget, setBriefingTarget] = useState<{
 		match: MatchEvent;
 		importRecord: PractiscoreImportRecord;
@@ -106,6 +153,17 @@ export function MatchesCrud() {
 	>({});
 	const [briefingImporting, setBriefingImporting] = useState(false);
 	const [briefingError, setBriefingError] = useState<string | null>(null);
+	const filteredPublicCatalogMatches = useMemo(
+		() => filterPublicCatalogMatches(publicCatalogMatches, publicCatalogSearch),
+		[publicCatalogMatches, publicCatalogSearch],
+	);
+	const selectedPublicCatalogMatchIds = selectedPublicMatchIds.filter((id) =>
+		publicCatalogMatches.some((match) => match.mare2MatchId === id),
+	);
+	const selectedFilteredPublicCatalogMatchIds = selectedPublicMatchIds.filter(
+		(id) =>
+			filteredPublicCatalogMatches.some((match) => match.mare2MatchId === id),
+	);
 
 	function reset() {
 		setShowForm(false);
@@ -205,9 +263,8 @@ export function MatchesCrud() {
 			setImporting(true);
 			const snapshot = await parseMare2PdfSnapshot(file);
 			const ownerIdentifiers = settings?.ownerPractiscoreIdentifiers ?? [];
-			const matchEventId = await importPractiscoreSnapshot(
+			const matchEventId = await saveImportedSnapshot(
 				snapshot,
-				editingId ?? undefined,
 				ownerIdentifiers,
 			);
 			const summary = t("matches.mare2.importedSummary", {
@@ -218,25 +275,7 @@ export function MatchesCrud() {
 			setImportMessage(summary);
 			setMare2File(null);
 			setImportOverlay(null);
-			setEditingId(matchEventId);
-			setForm({
-				...createEmptyMatchForm(),
-				name: snapshot.match.name,
-				date: snapshot.match.date,
-				discipline: normalizeImportedDiscipline(snapshot),
-				roundsFired: String(
-					snapshot.stages.reduce(
-						(total, stage) => total + (stage.minRounds ?? 0),
-						0,
-					),
-				),
-				divisionOrCategory:
-					summarizeOwnerDivisionAndCategoryValue(snapshot, ownerIdentifiers) ??
-					summarizeSnapshotDivisionsAndCategoriesValue(snapshot) ??
-					"",
-				notes: `Imported from Mare2 PDF ${snapshot.sourceFileName}`,
-			});
-			setShowForm(true);
+			showImportedMatchForm(snapshot, ownerIdentifiers, matchEventId);
 		} catch (error) {
 			setImportError(
 				error instanceof Error ? error.message : t("matches.mare2.importError"),
@@ -244,6 +283,212 @@ export function MatchesCrud() {
 		} finally {
 			setImporting(false);
 		}
+	}
+
+	async function saveImportedSnapshot(
+		snapshot: PractiscoreMatchSnapshot,
+		ownerIdentifiers: string[],
+	): Promise<string> {
+		return importPractiscoreSnapshot(
+			snapshot,
+			editingId ?? undefined,
+			ownerIdentifiers,
+		);
+	}
+
+	function showImportedMatchForm(
+		snapshot: PractiscoreMatchSnapshot,
+		ownerIdentifiers: string[],
+		matchEventId: string,
+	) {
+		setEditingId(matchEventId);
+		setForm({
+			...createEmptyMatchForm(),
+			name: snapshot.match.name,
+			date: snapshot.match.date,
+			discipline: normalizeImportedDiscipline(snapshot),
+			roundsFired: String(
+				snapshot.stages.reduce(
+					(total, stage) => total + (stage.minRounds ?? 0),
+					0,
+				),
+			),
+			divisionOrCategory:
+				summarizeOwnerDivisionAndCategoryValue(snapshot, ownerIdentifiers) ??
+				summarizeSnapshotDivisionsAndCategoriesValue(snapshot) ??
+				"",
+			notes: `Imported from Mare2 ${snapshot.sourceFileName}`,
+		});
+		setShowForm(true);
+	}
+
+	async function openPublicCatalog() {
+		setImportMessage(null);
+		setPublicCatalogError(null);
+		setPublicCatalogOpen(true);
+		if (publicCatalogMatches.length > 0) return;
+
+		try {
+			setPublicCatalogLoading(true);
+			const catalog = await fetchJson<Mare2PublicCatalog>(
+				MARE2_PUBLIC_CATALOG_URL,
+			);
+			setPublicCatalogMatches(catalog.matches);
+			setSelectedPublicMatchIds([]);
+		} catch (error) {
+			setPublicCatalogError(
+				error instanceof Error
+					? error.message
+					: t("matches.publicCatalog.loadError"),
+			);
+		} finally {
+			setPublicCatalogLoading(false);
+		}
+	}
+
+	function closePublicCatalog() {
+		setPublicCatalogOpen(false);
+		setPublicCatalogError(null);
+	}
+
+	function togglePublicCatalogMatch(matchId: string) {
+		setSelectedPublicMatchIds((current) =>
+			current.includes(matchId)
+				? current.filter((id) => id !== matchId)
+				: [...current, matchId],
+		);
+	}
+
+	function selectAllFilteredPublicCatalogMatches() {
+		setSelectedPublicMatchIds((current) => [
+			...new Set([
+				...current,
+				...filteredPublicCatalogMatches.map((match) => match.mare2MatchId),
+			]),
+		]);
+	}
+
+	function clearFilteredPublicCatalogMatches() {
+		const filteredIds = new Set(
+			filteredPublicCatalogMatches.map((match) => match.mare2MatchId),
+		);
+		setSelectedPublicMatchIds((current) =>
+			current.filter((id) => !filteredIds.has(id)),
+		);
+	}
+
+	async function importSelectedPublicMatches() {
+		const catalogMatches = selectedPublicCatalogMatchIds.flatMap((matchId) => {
+			const match = publicCatalogMatches.find(
+				(candidate) => candidate.mare2MatchId === matchId,
+			);
+			return match ? [match] : [];
+		});
+		if (catalogMatches.length === 0) return;
+
+		setPublicCatalogError(null);
+		setPublicCatalogImporting(true);
+		try {
+			const ownerIdentifiers = settings?.ownerPractiscoreIdentifiers ?? [];
+			let lastImported:
+				| { snapshot: PractiscoreMatchSnapshot; matchEventId: string }
+				| undefined;
+
+			for (const catalogMatch of catalogMatches) {
+				lastImported = await importPublicCatalogMatch(
+					catalogMatch,
+					ownerIdentifiers,
+				);
+			}
+
+			setImportMessage(
+				t("matches.publicCatalog.bulkImportedSummary", {
+					count: catalogMatches.length,
+				}),
+			);
+			closePublicCatalog();
+			if (catalogMatches.length === 1 && lastImported) {
+				showImportedMatchForm(
+					lastImported.snapshot,
+					ownerIdentifiers,
+					lastImported.matchEventId,
+				);
+			}
+		} catch (error) {
+			setPublicCatalogError(
+				error instanceof Error
+					? error.message
+					: t("matches.publicCatalog.importError"),
+			);
+		} finally {
+			setPublicCatalogImporting(false);
+		}
+	}
+
+	async function importPublicCatalogMatch(
+		catalogMatch: Mare2PublicCatalogMatch,
+		ownerIdentifiers: string[],
+	): Promise<{ snapshot: PractiscoreMatchSnapshot; matchEventId: string }> {
+		const matchUrl = new URL(
+			catalogMatch.matchUrl,
+			MARE2_PUBLIC_CATALOG_URL,
+		).toString();
+		const snapshotUrl = new URL(
+			catalogMatch.snapshotUrl,
+			MARE2_PUBLIC_CATALOG_URL,
+		).toString();
+		const [matchFile, snapshot] = await Promise.all([
+			fetchJson<Mare2PublicMatchFile>(matchUrl),
+			fetchJson<PractiscoreMatchSnapshot>(snapshotUrl),
+		]);
+		const matchEventId = await importPractiscoreSnapshot(
+			snapshot,
+			undefined,
+			ownerIdentifiers,
+		);
+		await importPublicMatchPages(matchEventId, snapshot, matchFile, matchUrl);
+		return { snapshot, matchEventId };
+	}
+
+	async function importPublicMatchPages(
+		matchEventId: string,
+		snapshot: PractiscoreMatchSnapshot,
+		matchFile: Mare2PublicMatchFile,
+		matchFileUrl: string,
+	) {
+		const pages = matchFile.pages ?? [];
+		if (pages.length === 0) return;
+
+		const mappedStagePages = getMappedStagePages(snapshot, matchFile, pages);
+		const now = new Date().toISOString();
+		const assets = await Promise.all(
+			mappedStagePages.map(async ({ stage, page }) => {
+				const assetUrl = new URL(page.url, matchFileUrl).toString();
+				const content = await fetchBlob(assetUrl);
+				return {
+					id: `${matchEventId}:${stage.internalStageId}`,
+					matchEventId,
+					internalStageId: stage.internalStageId,
+					sourceFileName: assetUrl.split("/").pop() ?? "mare2-page.webp",
+					sourcePageNumber: page.pageNumber,
+					minRounds: stage.minRounds,
+					maxPoints: stage.maxPoints,
+					mimeType: content.type || page.mimeType || "image/webp",
+					size: content.size,
+					content,
+					createdAt: now,
+					updatedAt: now,
+				};
+			}),
+		);
+
+		await db.transaction("rw", db.matchStageAssets, async () => {
+			await db.matchStageAssets
+				.where("matchEventId")
+				.equals(matchEventId)
+				.delete();
+			await db.matchStageAssets.bulkPut(assets);
+		});
 	}
 
 	function openImportOverlay(type: "practiscore" | "mare2") {
@@ -358,6 +603,11 @@ export function MatchesCrud() {
 					.delete();
 				await db.matchStageAssets.bulkPut(assets);
 			});
+			downloadBriefingOverrideFile(
+				briefingTarget.match,
+				briefingTarget.importRecord,
+				briefingMapping,
+			);
 			setImportMessage(
 				t("matches.briefing.importedSummary", { count: assets.length }),
 			);
@@ -415,7 +665,7 @@ export function MatchesCrud() {
 					<span>{t("matches.import.fromLabel")}</span>
 					<div className="import-action-row">
 						<button
-							className="button import-button-practiscore"
+							className="button button-secondary import-button-practiscore"
 							type="button"
 							onClick={() => openImportOverlay("practiscore")}
 						>
@@ -423,12 +673,20 @@ export function MatchesCrud() {
 							PractiScore
 						</button>
 						<button
-							className="button import-button-mare2"
+							className="button button-secondary import-button-mare2"
 							type="button"
 							onClick={() => openImportOverlay("mare2")}
 						>
 							<FileUp size={16} />
-							Mare2
+							Mare2 PDF
+						</button>
+						<button
+							className="button"
+							type="button"
+							onClick={() => void openPublicCatalog()}
+						>
+							<FileImage size={16} />
+							{t("matches.publicCatalog.action")}
 						</button>
 					</div>
 				</div>
@@ -464,7 +722,7 @@ export function MatchesCrud() {
 								<span>{t("matches.import.fromLabel")}</span>
 								<div className="import-action-row">
 									<button
-										className="button import-button-practiscore"
+										className="button button-secondary import-button-practiscore"
 										type="button"
 										onClick={() => openImportOverlay("practiscore")}
 									>
@@ -472,12 +730,20 @@ export function MatchesCrud() {
 										PractiScore
 									</button>
 									<button
-										className="button import-button-mare2"
+										className="button button-secondary import-button-mare2"
 										type="button"
 										onClick={() => openImportOverlay("mare2")}
 									>
 										<FileUp size={16} />
-										Mare2
+										Mare2 PDF
+									</button>
+									<button
+										className="button"
+										type="button"
+										onClick={() => void openPublicCatalog()}
+									>
+										<FileImage size={16} />
+										{t("matches.publicCatalog.action")}
 									</button>
 								</div>
 							</div>
@@ -600,6 +866,153 @@ export function MatchesCrud() {
 					</div>
 				</div>
 			</div>
+			{publicCatalogOpen && (
+				<div className="dialog-backdrop" onMouseDown={closePublicCatalog}>
+					<div
+						className="panel form-grid import-dialog"
+						role="dialog"
+						aria-modal="true"
+						onMouseDown={(event) => event.stopPropagation()}
+					>
+						<div className="form-title-row import-dialog-heading">
+							<div>
+								<h3>{t("matches.publicCatalog.title")}</h3>
+								<p className="muted import-dialog-intro">
+									{t("matches.publicCatalog.description")}
+								</p>
+							</div>
+							<button
+								className="icon-button"
+								type="button"
+								aria-label={t("actions.close")}
+								onClick={closePublicCatalog}
+							>
+								<X size={16} />
+							</button>
+						</div>
+						{publicCatalogLoading ? (
+							<p className="muted">{t("matches.publicCatalog.loading")}</p>
+						) : publicCatalogMatches.length > 0 ? (
+							<>
+								<label>
+									<span>{t("matches.publicCatalog.search")}</span>
+									<input
+										value={publicCatalogSearch}
+										onChange={(event) =>
+											setPublicCatalogSearch(event.target.value)
+										}
+										placeholder={t("matches.publicCatalog.searchPlaceholder")}
+									/>
+								</label>
+								<p className="muted">
+									{t("matches.publicCatalog.resultCount", {
+										count: filteredPublicCatalogMatches.length,
+										total: publicCatalogMatches.length,
+									})}
+								</p>
+								<div className="import-action-row">
+									<button
+										className="button button-secondary"
+										type="button"
+										disabled={filteredPublicCatalogMatches.length === 0}
+										onClick={selectAllFilteredPublicCatalogMatches}
+									>
+										{t("matches.publicCatalog.selectAllFiltered")}
+									</button>
+									<button
+										className="button button-secondary"
+										type="button"
+										disabled={
+											selectedFilteredPublicCatalogMatchIds.length === 0
+										}
+										onClick={clearFilteredPublicCatalogMatches}
+									>
+										{t("matches.publicCatalog.clearFiltered")}
+									</button>
+								</div>
+								{filteredPublicCatalogMatches.length > 0 ? (
+									<div className="table-scroll">
+										<table className="data-table">
+											<thead>
+												<tr>
+													<th>{t("matches.publicCatalog.selected")}</th>
+													<th>{t("matches.publicCatalog.match")}</th>
+													<th>{t("matches.fields.date")}</th>
+												</tr>
+											</thead>
+											<tbody>
+												{filteredPublicCatalogMatches.map((match) => (
+													<tr key={match.mare2MatchId}>
+														<td>
+															<input
+																type="checkbox"
+																checked={selectedPublicMatchIds.includes(
+																	match.mare2MatchId,
+																)}
+																onChange={() =>
+																	togglePublicCatalogMatch(match.mare2MatchId)
+																}
+																aria-label={t(
+																	"matches.publicCatalog.toggleMatch",
+																	{
+																		match: match.name,
+																	},
+																)}
+															/>
+														</td>
+														<td>{match.name}</td>
+														<td>{match.dateFrom ?? "—"}</td>
+													</tr>
+												))}
+											</tbody>
+										</table>
+									</div>
+								) : (
+									<p className="muted">
+										{t("matches.publicCatalog.noSearchResults")}
+									</p>
+								)}
+							</>
+						) : (
+							<p className="muted">{t("matches.publicCatalog.empty")}</p>
+						)}
+						{publicCatalogError ? (
+							<StatusMessage
+								tone="error"
+								onDismiss={() => setPublicCatalogError(null)}
+							>
+								{publicCatalogError}
+							</StatusMessage>
+						) : null}
+						<div className="dialog-actions">
+							<button
+								className="button button-secondary"
+								type="button"
+								onClick={closePublicCatalog}
+							>
+								{t("actions.cancel")}
+							</button>
+							<button
+								className="button"
+								type="button"
+								disabled={
+									publicCatalogLoading ||
+									publicCatalogImporting ||
+									selectedPublicCatalogMatchIds.length === 0
+								}
+								onClick={() => void importSelectedPublicMatches()}
+							>
+								<FileImage size={16} />
+								{publicCatalogImporting
+									? t("matches.publicCatalog.importing")
+									: t("matches.publicCatalog.importAction", {
+											count: selectedPublicCatalogMatchIds.length,
+										})}
+							</button>
+						</div>
+					</div>
+				</div>
+			)}
 			{importOverlay && (
 				<div className="dialog-backdrop" onMouseDown={closeImportOverlay}>
 					<div
@@ -1083,6 +1496,121 @@ export function MatchesCrud() {
 			)}
 		</section>
 	);
+}
+
+function downloadBriefingOverrideFile(
+	match: MatchEvent,
+	importRecord: PractiscoreImportRecord,
+	stagePageMapping: Record<string, number>,
+) {
+	const mare2MatchId = extractMare2MatchId(importRecord.practiscoreMatchId);
+	const override = {
+		format: "shooting-logbook-mare2-stage-page-override",
+		schemaVersion: 1,
+		...(mare2MatchId ? { mare2MatchId } : {}),
+		matchName: match.name,
+		generatedAt: new Date().toISOString(),
+		stagePageMapping: Object.fromEntries(
+			Object.entries(stagePageMapping).sort(
+				([stageA], [stageB]) => Number(stageA) - Number(stageB),
+			),
+		),
+	};
+	const fileName = mare2MatchId
+		? `${mare2MatchId}.json`
+		: `mare2-override-${slugifyFileName(match.name)}.json`;
+	downloadJsonFile(fileName, override);
+}
+
+function extractMare2MatchId(practiscoreMatchId: string) {
+	return practiscoreMatchId.match(/^mare2:(\d+)$/)?.[1];
+}
+
+function downloadJsonFile(fileName: string, value: unknown) {
+	const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], {
+		type: "application/json",
+	});
+	const url = URL.createObjectURL(blob);
+	const link = document.createElement("a");
+	link.href = url;
+	link.download = fileName;
+	document.body.append(link);
+	link.click();
+	link.remove();
+	URL.revokeObjectURL(url);
+}
+
+function slugifyFileName(value: string) {
+	const slug = value
+		.toLowerCase()
+		.normalize("NFD")
+		.replace(/[\u0300-\u036f]/g, "")
+		.replace(/[^a-z0-9]+/g, "-")
+		.replace(/^-+|-+$/g, "")
+		.slice(0, 64);
+	return slug || "match";
+}
+
+function getMappedStagePages(
+	snapshot: PractiscoreMatchSnapshot,
+	matchFile: Mare2PublicMatchFile,
+	pages: NonNullable<Mare2PublicMatchFile["pages"]>,
+): Array<{
+	stage: PractiscoreStage;
+	page: NonNullable<Mare2PublicMatchFile["pages"]>[number];
+}> {
+	const pageByNumber = new Map(pages.map((page) => [page.pageNumber, page]));
+	const mapped = snapshot.stages.flatMap((stage) => {
+		const pageNumber = matchFile.stagePageMapping?.[stage.internalStageId];
+		const page = pageNumber ? pageByNumber.get(pageNumber) : undefined;
+		return page ? [{ stage, page }] : [];
+	});
+	if (mapped.length > 0) return mapped;
+
+	return pages.slice(-snapshot.stages.length).flatMap((page, index) => {
+		const stage = snapshot.stages[index];
+		return stage ? [{ stage, page }] : [];
+	});
+}
+
+function filterPublicCatalogMatches(
+	matches: Mare2PublicCatalogMatch[],
+	query: string,
+): Mare2PublicCatalogMatch[] {
+	const tokens = query
+		.toLowerCase()
+		.split(/\s+/)
+		.map((token) => token.trim())
+		.filter(Boolean);
+	if (tokens.length === 0) return matches;
+
+	return matches.filter((match) => {
+		const searchable = [
+			match.name,
+			match.mare2MatchId,
+			match.dateFrom,
+			match.dateTo,
+			match.macroArea ? `ma${match.macroArea}` : undefined,
+			...(match.badges ?? []),
+		]
+			.filter(Boolean)
+			.join(" ")
+			.toLowerCase();
+		return tokens.every((token) => searchable.includes(token));
+	});
+}
+
+async function fetchJson<T>(url: string): Promise<T> {
+	const response = await fetch(url, { cache: "no-store" });
+	if (!response.ok) throw new Error(`Request failed (${response.status})`);
+	return (await response.json()) as T;
+}
+
+async function fetchBlob(url: string): Promise<Blob> {
+	const response = await fetch(url, { cache: "no-store" });
+	if (!response.ok)
+		throw new Error(`Asset request failed (${response.status})`);
+	return response.blob();
 }
 
 function createBriefingMapping(

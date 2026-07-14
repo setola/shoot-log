@@ -1,0 +1,17 @@
+{
+  "format": "shooting-logbook-mare2-stage-page-override",
+  "schemaVersion": 1,
+  "mare2MatchId": "1616",
+  "matchName": "7^ PROVA CAMPIONATO FEDERALE - MA3",
+  "generatedAt": "2026-07-14T19:24:31.169Z",
+  "stagePageMapping": {
+    "1": 9,
+    "2": 11,
+    "3": 13,
+    "4": 7,
+    "5": 10,
+    "6": 12,
+    "7": 6,
+    "8": 8
+  }
+}

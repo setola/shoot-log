@@ -1,9 +1,17 @@
-import { useEffect, useMemo, useState, type CSSProperties } from "react";
+import {
+	useCallback,
+	useEffect,
+	useMemo,
+	useRef,
+	useState,
+	type CSSProperties,
+} from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useTranslation } from "react-i18next";
 import { BarChart2 } from "lucide-react";
 import { db } from "../../db/schema";
 import { DEFAULT_SETTINGS_ID } from "../settings/settingsRepository";
+import { importPractiscoreSnapshot } from "./practiscoreRepository";
 import {
 	calculateHitBreakdown,
 	calculateStageDetails,
@@ -16,10 +24,36 @@ import type { MatchStageAsset } from "./stageAssets";
 import type {
 	PractiscoreCompetitor,
 	PractiscoreImportRecord,
+	PractiscoreMatchSnapshot,
+	PractiscoreStage,
 } from "./practiscoreTypes";
 
 const ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY =
 	"shooting-logbook-analysis-compare-competitor";
+const ANALYSIS_PUBLIC_CATALOG_URL =
+	"https://shooting-logbook-mare2-data.pages.dev/manifest.json";
+const ANALYSIS_URL_MATCH_PARAMS = ["mare2", "mare2MatchId", "match"];
+const ANALYSIS_URL_COMPETITOR_PARAMS = ["competitors", "compare", "shooters"];
+
+interface AnalysisPublicCatalogMatch {
+	mare2MatchId: string;
+	name: string;
+	matchUrl: string;
+	snapshotUrl: string;
+}
+
+interface AnalysisPublicCatalog {
+	matches: AnalysisPublicCatalogMatch[];
+}
+
+interface AnalysisPublicMatchFile {
+	pages?: Array<{
+		pageNumber: number;
+		url: string;
+		mimeType?: string;
+	}>;
+	stagePageMapping?: Record<string, number>;
+}
 const COMPARISON_COLORS = [
 	"#f97316",
 	"#8b5cf6",
@@ -46,6 +80,15 @@ export function MatchAnalysis() {
 		useState(() =>
 			readStoredAnalysisList(ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY),
 		);
+	const [shareCopied, setShareCopied] = useState(false);
+	const [sharedAnalysisImportStatus, setSharedAnalysisImportStatus] = useState<
+		"idle" | "importing" | "error"
+	>("idle");
+	const [sharedAnalysisImportError, setSharedAnalysisImportError] = useState<
+		string | null
+	>(null);
+	const urlSelectionAppliedRef = useRef(false);
+	const sharedAnalysisImportInProgressRef = useRef(false);
 	const [dismissedOwnerCompetitorId, setDismissedOwnerCompetitorId] = useState<
 		string | null
 	>(null);
@@ -193,12 +236,89 @@ export function MatchAnalysis() {
 		[stageAssets],
 	);
 
+	const applySharedAnalysisSelection = useCallback(
+		(matchRecord: PractiscoreImportRecord, competitorIds: string[]) => {
+			urlSelectionAppliedRef.current = true;
+			queueMicrotask(() => {
+				setSelectedAnalysisMatchId(matchRecord.matchEventId);
+				if (competitorIds.length > 0) {
+					const competitors = competitorIds.flatMap((competitorId) => {
+						const competitor = findCompetitorByShareId(
+							matchRecord,
+							competitorId,
+						);
+						return competitor ? [competitorOptionValue(competitor)] : [];
+					});
+					setComparisonCompetitorQueries(competitors);
+					if (ownerCompetitor) {
+						setDismissedOwnerCompetitorId(ownerCompetitor.internalMemberId);
+					}
+				}
+			});
+		},
+		[ownerCompetitor],
+	);
+
+	useEffect(() => {
+		if (urlSelectionAppliedRef.current || !practiscoreImports) return;
+		const selection = readAnalysisSelectionFromUrl();
+		if (!selection) {
+			urlSelectionAppliedRef.current = true;
+			return;
+		}
+
+		const matchRecord = findAnalysisImportByUrlSelection(
+			practiscoreImports,
+			selection.matchId,
+		);
+		if (matchRecord) {
+			applySharedAnalysisSelection(matchRecord, selection.competitorIds);
+			return;
+		}
+
+		const mare2MatchId = selection.matchId.match(/^\d+$/)?.[0];
+		if (!mare2MatchId || sharedAnalysisImportInProgressRef.current) return;
+
+		sharedAnalysisImportInProgressRef.current = true;
+		setSharedAnalysisImportStatus("importing");
+		setSharedAnalysisImportError(null);
+		void importSharedAnalysisMare2Match(
+			mare2MatchId,
+			appSettings?.ownerPractiscoreIdentifiers ?? [],
+		)
+			.then((record) => {
+				applySharedAnalysisSelection(record, selection.competitorIds);
+				setSharedAnalysisImportStatus("idle");
+			})
+			.catch((error: unknown) => {
+				setSharedAnalysisImportError(
+					error instanceof Error ? error.message : String(error),
+				);
+				setSharedAnalysisImportStatus("error");
+				urlSelectionAppliedRef.current = true;
+			})
+			.finally(() => {
+				sharedAnalysisImportInProgressRef.current = false;
+			});
+	}, [appSettings, applySharedAnalysisSelection, practiscoreImports]);
+
 	useEffect(() => {
 		writeStoredAnalysisList(
 			ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY,
 			comparisonCompetitorQueries,
 		);
 	}, [comparisonCompetitorQueries]);
+
+	async function copyAnalysisShareLink() {
+		if (!selectedAnalysisImport || analysisCompetitors.length === 0) return;
+		const url = createAnalysisShareUrl(
+			selectedAnalysisImport,
+			analysisCompetitors,
+		);
+		await navigator.clipboard.writeText(url);
+		setShareCopied(true);
+		window.setTimeout(() => setShareCopied(false), 1800);
+	}
 
 	function addComparisonCompetitor(query: string) {
 		const competitor =
@@ -240,6 +360,26 @@ export function MatchAnalysis() {
 	}
 
 	if (!selectedAnalysisImport) {
+		if (sharedAnalysisImportStatus === "importing") {
+			return (
+				<section className="empty-state-card placeholder-screen">
+					<BarChart2 size={42} strokeWidth={1.4} />
+					<h2>{t("matches.analysis.sharedImportingTitle")}</h2>
+					<p>{t("matches.analysis.sharedImportingDescription")}</p>
+				</section>
+			);
+		}
+
+		if (sharedAnalysisImportStatus === "error") {
+			return (
+				<section className="empty-state-card placeholder-screen">
+					<BarChart2 size={42} strokeWidth={1.4} />
+					<h2>{t("matches.analysis.sharedImportErrorTitle")}</h2>
+					<p>{sharedAnalysisImportError}</p>
+				</section>
+			);
+		}
+
 		return (
 			<section className="empty-state-card placeholder-screen">
 				<BarChart2 size={42} strokeWidth={1.4} />
@@ -256,6 +396,16 @@ export function MatchAnalysis() {
 					<h2>{t("matches.analysis.title")}</h2>
 					<p>{t("matches.analysis.description")}</p>
 				</div>
+				<button
+					className="button button-secondary"
+					type="button"
+					disabled={!selectedAnalysisImport || analysisCompetitors.length === 0}
+					onClick={() => void copyAnalysisShareLink()}
+				>
+					{shareCopied
+						? t("matches.analysis.shareCopied")
+						: t("matches.analysis.shareLink")}
+				</button>
 			</div>
 			<div className="panel form-grid match-analysis-panel">
 				<div className="analysis-controls-grid analysis-controls-grid-compact">
@@ -485,6 +635,202 @@ export function MatchAnalysis() {
 			</div>
 		</section>
 	);
+}
+
+async function importSharedAnalysisMare2Match(
+	mare2MatchId: string,
+	ownerIdentifiers: string[],
+): Promise<PractiscoreImportRecord> {
+	const catalog = await fetchJson<AnalysisPublicCatalog>(
+		ANALYSIS_PUBLIC_CATALOG_URL,
+	);
+	const catalogMatch = catalog.matches.find(
+		(match) => match.mare2MatchId === mare2MatchId,
+	);
+	if (!catalogMatch) {
+		throw new Error(`Mare2 match ${mare2MatchId} not found in public catalog.`);
+	}
+
+	const matchUrl = new URL(
+		catalogMatch.matchUrl,
+		ANALYSIS_PUBLIC_CATALOG_URL,
+	).toString();
+	const snapshotUrl = new URL(
+		catalogMatch.snapshotUrl,
+		ANALYSIS_PUBLIC_CATALOG_URL,
+	).toString();
+	const [matchFile, snapshot] = await Promise.all([
+		fetchJson<AnalysisPublicMatchFile>(matchUrl),
+		fetchJson<PractiscoreMatchSnapshot>(snapshotUrl),
+	]);
+	const matchEventId = await importPractiscoreSnapshot(
+		snapshot,
+		undefined,
+		ownerIdentifiers,
+	);
+	await importSharedAnalysisMatchPages(
+		matchEventId,
+		snapshot,
+		matchFile,
+		matchUrl,
+	);
+
+	return {
+		id: matchEventId,
+		matchEventId,
+		practiscoreMatchId: snapshot.practiscoreMatchId,
+		sourceFileName: snapshot.sourceFileName,
+		importedAt: snapshot.importedAt,
+		createdAt: new Date().toISOString(),
+		updatedAt: new Date().toISOString(),
+		snapshot,
+	};
+}
+
+async function importSharedAnalysisMatchPages(
+	matchEventId: string,
+	snapshot: PractiscoreMatchSnapshot,
+	matchFile: AnalysisPublicMatchFile,
+	matchFileUrl: string,
+): Promise<void> {
+	const pages = matchFile.pages ?? [];
+	if (pages.length === 0) return;
+
+	const mappedStagePages = getSharedAnalysisMappedStagePages(
+		snapshot,
+		matchFile,
+		pages,
+	);
+	const now = new Date().toISOString();
+	const assets = await Promise.all(
+		mappedStagePages.map(async ({ stage, page }) => {
+			const assetUrl = new URL(page.url, matchFileUrl).toString();
+			const content = await fetchBlob(assetUrl);
+			return {
+				id: `${matchEventId}:${stage.internalStageId}`,
+				matchEventId,
+				internalStageId: stage.internalStageId,
+				sourceFileName: assetUrl.split("/").pop() ?? "mare2-page.webp",
+				sourcePageNumber: page.pageNumber,
+				minRounds: stage.minRounds,
+				maxPoints: stage.maxPoints,
+				mimeType: content.type || page.mimeType || "image/webp",
+				size: content.size,
+				content,
+				createdAt: now,
+				updatedAt: now,
+			};
+		}),
+	);
+
+	await db.transaction("rw", db.matchStageAssets, async () => {
+		await db.matchStageAssets
+			.where("matchEventId")
+			.equals(matchEventId)
+			.delete();
+		await db.matchStageAssets.bulkPut(assets);
+	});
+}
+
+function getSharedAnalysisMappedStagePages(
+	snapshot: PractiscoreMatchSnapshot,
+	matchFile: AnalysisPublicMatchFile,
+	pages: NonNullable<AnalysisPublicMatchFile["pages"]>,
+): Array<{
+	stage: PractiscoreStage;
+	page: NonNullable<AnalysisPublicMatchFile["pages"]>[number];
+}> {
+	const pageByNumber = new Map(pages.map((page) => [page.pageNumber, page]));
+	const mapped = snapshot.stages.flatMap((stage) => {
+		const pageNumber = matchFile.stagePageMapping?.[stage.internalStageId];
+		const page = pageNumber ? pageByNumber.get(pageNumber) : undefined;
+		return page ? [{ stage, page }] : [];
+	});
+	if (mapped.length > 0) return mapped;
+
+	return pages.slice(-snapshot.stages.length).flatMap((page, index) => {
+		const stage = snapshot.stages[index];
+		return stage ? [{ stage, page }] : [];
+	});
+}
+
+async function fetchJson<T>(url: string): Promise<T> {
+	const response = await fetch(url, { cache: "no-store" });
+	if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+	return (await response.json()) as T;
+}
+
+async function fetchBlob(url: string): Promise<Blob> {
+	const response = await fetch(url, { cache: "no-store" });
+	if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+	return response.blob();
+}
+
+function readAnalysisSelectionFromUrl():
+	| { matchId: string; competitorIds: string[] }
+	| undefined {
+	const params = new URLSearchParams(window.location.search);
+	const matchId = ANALYSIS_URL_MATCH_PARAMS.map((param) => params.get(param))
+		.find(Boolean)
+		?.trim();
+	if (!matchId) return undefined;
+
+	const competitorIds = ANALYSIS_URL_COMPETITOR_PARAMS.flatMap((param) =>
+		(params.get(param) ?? "")
+			.split(",")
+			.map((value) => value.trim())
+			.filter(Boolean),
+	);
+	return { matchId, competitorIds };
+}
+
+function createAnalysisShareUrl(
+	record: PractiscoreImportRecord,
+	competitors: PractiscoreCompetitor[],
+): string {
+	const url = new URL(window.location.href);
+	const mare2MatchId = extractMare2MatchId(record.practiscoreMatchId);
+	url.searchParams.set("section", "analysis");
+	url.searchParams.delete("mare2MatchId");
+	url.searchParams.delete("match");
+	url.searchParams.set("mare2", mare2MatchId ?? record.matchEventId);
+	url.searchParams.set(
+		"competitors",
+		competitors.map((competitor) => competitor.internalMemberId).join(","),
+	);
+	return url.toString();
+}
+
+function findAnalysisImportByUrlSelection(
+	imports: PractiscoreImportRecord[],
+	matchId: string,
+): PractiscoreImportRecord | undefined {
+	const normalizedMatchId = matchId.trim().toLowerCase();
+	return imports.find((record) => {
+		const mare2MatchId = extractMare2MatchId(record.practiscoreMatchId);
+		return (
+			record.matchEventId.toLowerCase() === normalizedMatchId ||
+			record.practiscoreMatchId.toLowerCase() === normalizedMatchId ||
+			mare2MatchId === normalizedMatchId
+		);
+	});
+}
+
+function findCompetitorByShareId(
+	record: PractiscoreImportRecord,
+	competitorId: string,
+): PractiscoreCompetitor | undefined {
+	const normalizedId = competitorId.trim().toLowerCase();
+	return record.snapshot.competitors.find(
+		(competitor) =>
+			competitor.internalMemberId.toLowerCase() === normalizedId ||
+			competitor.competitorNumber?.toLowerCase() === normalizedId ||
+			competitor.alias?.toLowerCase() === normalizedId,
+	);
+}
+
+function extractMare2MatchId(practiscoreMatchId: string): string | undefined {
+	return practiscoreMatchId.match(/^mare2:(\d+)$/)?.[1];
 }
 
 function readStoredAnalysisList(key: string): string[] {
@@ -857,21 +1203,50 @@ function isRemovedScore(score: {
 }
 
 function StageAssetThumbnail({ asset }: { asset: MatchStageAsset }) {
+	const [expanded, setExpanded] = useState(false);
 	const url = useMemo(
 		() => URL.createObjectURL(asset.content),
 		[asset.content],
 	);
+	const alt = `${asset.sourceFileName} page ${asset.sourcePageNumber}`;
 
 	useEffect(() => {
 		return () => URL.revokeObjectURL(url);
 	}, [url]);
 
 	return (
-		<img
-			className="stage-asset-thumbnail"
-			src={url}
-			alt={`${asset.sourceFileName} page ${asset.sourcePageNumber}`}
-		/>
+		<>
+			<button
+				className="stage-asset-thumbnail-button"
+				type="button"
+				onClick={() => setExpanded(true)}
+				aria-label={`Open ${alt}`}
+			>
+				<img className="stage-asset-thumbnail" src={url} alt={alt} />
+			</button>
+			{expanded ? (
+				<div
+					className="stage-asset-lightbox"
+					onMouseDown={() => setExpanded(false)}
+					role="presentation"
+				>
+					<div
+						className="stage-asset-lightbox-content"
+						onMouseDown={(event) => event.stopPropagation()}
+					>
+						<button
+							className="stage-asset-lightbox-close"
+							type="button"
+							onClick={() => setExpanded(false)}
+							aria-label="Close image preview"
+						>
+							×
+						</button>
+						<img src={url} alt={alt} />
+					</div>
+				</div>
+			) : null}
+		</>
 	);
 }
 

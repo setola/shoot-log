@@ -39,6 +39,9 @@ function getInitialTheme(): Theme {
 }
 
 function getInitialSection(): Section {
+	const sectionParam = new URLSearchParams(window.location.search).get(
+		"section",
+	);
 	const storedSection = window.localStorage.getItem(SECTION_STORAGE_KEY);
 	const sections: Section[] = [
 		"dashboard",
@@ -52,6 +55,8 @@ function getInitialSection(): Section {
 		"reports",
 		"settings",
 	];
+	if (sections.includes(sectionParam as Section))
+		return sectionParam as Section;
 	return sections.includes(storedSection as Section)
 		? (storedSection as Section)
 		: "dashboard";

@@ -8,7 +8,11 @@
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint": "eslint .",
-    "test": "vitest run"
+    "test": "vitest run",
+    "mare2": "node tools/mare2-importer/index.mjs",
+    "mare2:sync": "node tools/mare2-importer/index.mjs sync --out=public/mare2",
+    "mare2:deploy:cf": "sh -c 'set -a; [ -f .env ] && . ./.env; set +a; npx wrangler pages deploy public/mare2 --project-name shooting-logbook-mare2-data \"$@\"' --",
+    "mare2:publish:cf": "sh -c 'npm run mare2:sync -- \"$@\" && npm run mare2:deploy:cf' --"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

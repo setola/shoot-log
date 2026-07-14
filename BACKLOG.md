@@ -60,17 +60,42 @@ Planned improvements for ShootLog. Keep all features privacy-first, local-first,
 
 ## Import automation
 
-### 10. Mare2 PDF import automation
+### 10. Mare2 public catalog hardening
 
-- Add a workflow to reduce manual Mare2/FITDS PDF importing.
+- Current state:
+  - A local CLI in `tools/mare2-importer` discovers public Mare2 archive matches,
+    parses public VERIFY PDFs, generates static JSON/WebP assets, and publishes
+    them to Cloudflare Pages.
+  - The app imports selected catalog matches into local IndexedDB only.
+- Follow-up work:
+  - Persist a local/CI "last successful catalog sync" date and feed it into
+    `--since=YYYY-MM-DD` for cron-style incremental updates.
+  - Add stronger schema validation for catalog `manifest.json`, `match.json`, and
+    `snapshot.json` before importing into IndexedDB.
+  - Improve stage-page mapping. The MVP associates the last N catalog pages with
+    N stages; cropped or OCR-assisted per-stage mapping should replace this.
+  - Add catalog source configuration so the app can switch between pages.dev and
+    a future custom Cloudflare domain.
+  - Add duplicate/update UX when the imported catalog already exists locally.
+  - Consider a GitHub Actions or OCI cron job that runs the CLI with conservative
+    `--request-delay-ms` values.
+
+### 11. Local Mare2 PDF import automation
+
+- Keep the manual/local PDF path as a fallback for data not yet available in the
+  public catalog.
 - Possible approaches to evaluate:
   - A local multi-file import queue for dropping several Mare2 PDFs at once.
-  - Optional browser-side polling/import from a user-selected local folder when supported by the File System Access API.
-  - Optional Google Drive appData/import folder workflow where the user places PDFs in their own Drive-controlled area and the app imports them after explicit authorization.
+  - Optional browser-side polling/import from a user-selected local folder when
+    supported by the File System Access API.
+  - Optional Google Drive appData/import folder workflow where the user places
+    PDFs in their own Drive-controlled area and the app imports them after
+    explicit authorization.
 - Requirements:
-  - No app-owned backend.
-  - No scraping or credential sharing.
-  - User remains in control of source files.
+  - No app-owned backend database.
+  - No private Mare2 credentials in the app or catalog pipeline.
+  - User remains in control of local/private source files.
   - Imported PDFs are parsed locally in the browser.
   - Duplicate detection should avoid creating repeated match snapshots.
-  - Status should show imported, skipped duplicate, failed parse, and needs review.
+  - Status should show imported, skipped duplicate, failed parse, and needs
+    review.
