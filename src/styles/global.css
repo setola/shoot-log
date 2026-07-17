@@ -106,8 +106,8 @@ p {
 }
 
 .main-content {
-	width: min(960px, 100%);
-	margin: 0 auto;
+	width: 100%;
+	box-sizing: border-box;
 	padding: 2rem 2rem 6rem;
 }
 
@@ -258,6 +258,12 @@ p {
 	display: flex;
 	align-items: center;
 	gap: 0.65rem;
+}
+
+.record-actions {
+	justify-self: end;
+	align-self: start;
+	justify-content: flex-end;
 }
 
 .form-title-row,
@@ -741,6 +747,10 @@ textarea {
 }
 
 .record-title-row h4,
+.record-content {
+	min-width: 0;
+}
+
 .record-content p {
 	margin-bottom: 0.25rem;
 }
@@ -2467,7 +2477,63 @@ button:disabled {
 	text-transform: uppercase;
 }
 
+.tab-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+}
+
+.tab-button {
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	background: var(--card);
+	color: var(--muted-foreground);
+	padding: 0.55rem 0.85rem;
+	font-weight: 750;
+	cursor: pointer;
+}
+
+.tab-button-active {
+	border-color: var(--primary);
+	background: color-mix(in srgb, var(--primary) 12%, var(--card));
+	color: var(--primary);
+}
+
+.panel-stack {
+	display: grid;
+	gap: 1rem;
+}
+
+.metric-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.65rem;
+}
+
+.metric-card {
+	display: grid;
+	gap: 0.2rem;
+	padding: 0.75rem;
+	border: 1px solid var(--border);
+	border-radius: 0.85rem;
+	background: var(--muted);
+}
+
+.metric-card span {
+	color: var(--muted-foreground);
+	font-size: 0.78rem;
+	font-weight: 750;
+}
+
+.metric-card strong {
+	font-size: 1rem;
+}
+
 @media (max-width: 720px) {
+	.metric-grid {
+		grid-template-columns: 1fr;
+	}
+
 	.owner-add-row {
 		grid-template-columns: 1fr;
 	}

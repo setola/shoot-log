@@ -1,15 +1,12 @@
 import { DragEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useTranslation } from "react-i18next";
+import { FileImage, FileUp, Save, Trophy, X } from "lucide-react";
 import {
-	Edit3,
-	FileImage,
-	FileUp,
-	Save,
-	Trash2,
-	Trophy,
-	X,
-} from "lucide-react";
+	EntityActionPanel,
+	EntityPage,
+	RecordActionButtons,
+} from "../../components/EntityUi";
 import { StatusMessage } from "../../components/StatusMessage";
 import { db } from "../../db/schema";
 import type { MatchEvent } from "./types";
@@ -655,43 +652,38 @@ export function MatchesCrud() {
 	}
 
 	return (
-		<section className="screen-stack">
-			<div className="section-heading figma-heading">
-				<div>
-					<h2>{t("matches.title")}</h2>
-					<p>{t("matches.description")}</p>
-				</div>
-				<div className="panel import-card">
-					<span>{t("matches.import.fromLabel")}</span>
-					<div className="import-action-row">
-						<button
-							className="button button-secondary import-button-practiscore"
-							type="button"
-							onClick={() => openImportOverlay("practiscore")}
-						>
-							<FileUp size={16} />
-							PractiScore
-						</button>
-						<button
-							className="button button-secondary import-button-mare2"
-							type="button"
-							onClick={() => openImportOverlay("mare2")}
-						>
-							<FileUp size={16} />
-							Mare2 PDF
-						</button>
-						<button
-							className="button"
-							type="button"
-							onClick={() => void openPublicCatalog()}
-						>
-							<FileImage size={16} />
-							{t("matches.publicCatalog.action")}
-						</button>
-					</div>
-				</div>
-			</div>
-
+		<EntityPage
+			title={t("matches.title")}
+			description={t("matches.description")}
+			actions={
+				<EntityActionPanel label={t("matches.import.fromLabel")}>
+					<button
+						className="button button-secondary import-button-practiscore"
+						type="button"
+						onClick={() => openImportOverlay("practiscore")}
+					>
+						<FileUp size={16} />
+						PractiScore
+					</button>
+					<button
+						className="button button-secondary import-button-mare2"
+						type="button"
+						onClick={() => openImportOverlay("mare2")}
+					>
+						<FileUp size={16} />
+						Mare2 PDF
+					</button>
+					<button
+						className="button"
+						type="button"
+						onClick={() => void openPublicCatalog()}
+					>
+						<FileImage size={16} />
+						{t("matches.publicCatalog.action")}
+					</button>
+				</EntityActionPanel>
+			}
+		>
 			{importMessage && (
 				<StatusMessage tone="success" onDismiss={() => setImportMessage(null)}>
 					{importMessage}
@@ -718,35 +710,32 @@ export function MatchesCrud() {
 							<Trophy size={42} strokeWidth={1.4} />
 							<h3>{t("matches.emptyTitle")}</h3>
 							<p>{t("matches.empty")}</p>
-							<div className="panel import-card">
-								<span>{t("matches.import.fromLabel")}</span>
-								<div className="import-action-row">
-									<button
-										className="button button-secondary import-button-practiscore"
-										type="button"
-										onClick={() => openImportOverlay("practiscore")}
-									>
-										<FileUp size={16} />
-										PractiScore
-									</button>
-									<button
-										className="button button-secondary import-button-mare2"
-										type="button"
-										onClick={() => openImportOverlay("mare2")}
-									>
-										<FileUp size={16} />
-										Mare2 PDF
-									</button>
-									<button
-										className="button"
-										type="button"
-										onClick={() => void openPublicCatalog()}
-									>
-										<FileImage size={16} />
-										{t("matches.publicCatalog.action")}
-									</button>
-								</div>
-							</div>
+							<EntityActionPanel label={t("matches.import.fromLabel")}>
+								<button
+									className="button button-secondary import-button-practiscore"
+									type="button"
+									onClick={() => openImportOverlay("practiscore")}
+								>
+									<FileUp size={16} />
+									PractiScore
+								</button>
+								<button
+									className="button button-secondary import-button-mare2"
+									type="button"
+									onClick={() => openImportOverlay("mare2")}
+								>
+									<FileUp size={16} />
+									Mare2 PDF
+								</button>
+								<button
+									className="button"
+									type="button"
+									onClick={() => void openPublicCatalog()}
+								>
+									<FileImage size={16} />
+									{t("matches.publicCatalog.action")}
+								</button>
+							</EntityActionPanel>
 						</div>
 					)}
 					<div className="record-list">
@@ -833,10 +822,16 @@ export function MatchesCrud() {
 											</div>
 										)}
 									</div>
-									<div className="record-actions">
+									<RecordActionButtons
+										editLabel={t("actions.edit")}
+										deleteLabel={t("actions.delete")}
+										onEdit={() => edit(match)}
+										onDelete={() => setDeleteTarget(match)}
+									>
 										{practiscoreImport ? (
 											<button
 												className="icon-button"
+												type="button"
 												onClick={() =>
 													openBriefingImport(match, practiscoreImport)
 												}
@@ -845,21 +840,7 @@ export function MatchesCrud() {
 												<FileImage size={15} />
 											</button>
 										) : null}
-										<button
-											className="icon-button"
-											onClick={() => edit(match)}
-											aria-label={t("actions.edit")}
-										>
-											<Edit3 size={15} />
-										</button>
-										<button
-											className="icon-button danger"
-											onClick={() => setDeleteTarget(match)}
-											aria-label={t("actions.delete")}
-										>
-											<Trash2 size={15} />
-										</button>
-									</div>
+									</RecordActionButtons>
 								</article>
 							);
 						})}
@@ -1494,7 +1475,7 @@ export function MatchesCrud() {
 					</div>
 				</div>
 			)}
-		</section>
+		</EntityPage>
 	);
 }
 

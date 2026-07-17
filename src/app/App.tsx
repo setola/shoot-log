@@ -50,6 +50,9 @@ function getInitialSection(): Section {
 		"matches",
 		"analysis",
 		"ammunition",
+		"chrono",
+		"components",
+		"stock",
 		"maintenance",
 		"paperwork",
 		"reports",
@@ -251,6 +254,12 @@ export function App() {
 			matchStageAssets,
 			ammunitionBatches,
 			ammoTransactions,
+			reloadingBullets,
+			reloadingPowders,
+			reloadingPrimers,
+			reloadingBrass,
+			reloadingRecipes,
+			chronographSessions,
 			maintenanceEvents,
 			paperworkCredentials,
 			paperworkAttachments,
@@ -263,6 +272,12 @@ export function App() {
 			db.matchStageAssets.toArray(),
 			db.ammunitionBatches.toArray(),
 			db.ammoTransactions.toArray(),
+			db.reloadingBullets.toArray(),
+			db.reloadingPowders.toArray(),
+			db.reloadingPrimers.toArray(),
+			db.reloadingBrass.toArray(),
+			db.reloadingRecipes.toArray(),
+			db.chronographSessions.toArray(),
 			db.maintenanceEvents.toArray(),
 			db.paperworkCredentials.toArray(),
 			db.paperworkAttachments.toArray(),
@@ -291,6 +306,12 @@ export function App() {
 			matchStageAssets: serializedMatchStageAssets,
 			ammunitionBatches,
 			ammoTransactions,
+			reloadingBullets,
+			reloadingPowders,
+			reloadingPrimers,
+			reloadingBrass,
+			reloadingRecipes,
+			chronographSessions,
 			maintenanceEvents,
 			paperworkCredentials,
 			paperworkAttachments: serializedPaperworkAttachments,
@@ -342,6 +363,12 @@ export function App() {
 				db.matchStageAssets,
 				db.ammunitionBatches,
 				db.ammoTransactions,
+				db.reloadingBullets,
+				db.reloadingPowders,
+				db.reloadingPrimers,
+				db.reloadingBrass,
+				db.reloadingRecipes,
+				db.chronographSessions,
 				db.maintenanceEvents,
 				db.paperworkCredentials,
 				db.paperworkAttachments,
@@ -366,6 +393,18 @@ export function App() {
 					await db.ammunitionBatches.bulkPut(payload.ammunitionBatches);
 				if (Array.isArray(payload.ammoTransactions))
 					await db.ammoTransactions.bulkPut(payload.ammoTransactions);
+				if (Array.isArray(payload.reloadingBullets))
+					await db.reloadingBullets.bulkPut(payload.reloadingBullets);
+				if (Array.isArray(payload.reloadingPowders))
+					await db.reloadingPowders.bulkPut(payload.reloadingPowders);
+				if (Array.isArray(payload.reloadingPrimers))
+					await db.reloadingPrimers.bulkPut(payload.reloadingPrimers);
+				if (Array.isArray(payload.reloadingBrass))
+					await db.reloadingBrass.bulkPut(payload.reloadingBrass);
+				if (Array.isArray(payload.reloadingRecipes))
+					await db.reloadingRecipes.bulkPut(payload.reloadingRecipes);
+				if (Array.isArray(payload.chronographSessions))
+					await db.chronographSessions.bulkPut(payload.chronographSessions);
 				if (Array.isArray(payload.maintenanceEvents))
 					await db.maintenanceEvents.bulkPut(payload.maintenanceEvents);
 				if (Array.isArray(payload.paperworkCredentials))
@@ -402,6 +441,12 @@ export function App() {
 				db.matchStageAssets,
 				db.ammunitionBatches,
 				db.ammoTransactions,
+				db.reloadingBullets,
+				db.reloadingPowders,
+				db.reloadingPrimers,
+				db.reloadingBrass,
+				db.reloadingRecipes,
+				db.chronographSessions,
 				db.maintenanceEvents,
 				db.paperworkCredentials,
 				db.paperworkAttachments,
@@ -416,6 +461,12 @@ export function App() {
 					db.matchStageAssets.clear(),
 					db.ammunitionBatches.clear(),
 					db.ammoTransactions.clear(),
+					db.reloadingBullets.clear(),
+					db.reloadingPowders.clear(),
+					db.reloadingPrimers.clear(),
+					db.reloadingBrass.clear(),
+					db.reloadingRecipes.clear(),
+					db.chronographSessions.clear(),
 					db.maintenanceEvents.clear(),
 					db.paperworkCredentials.clear(),
 					db.paperworkAttachments.clear(),
@@ -438,7 +489,13 @@ export function App() {
 			case "analysis":
 				return <MatchAnalysis />;
 			case "ammunition":
-				return <AmmunitionCrud />;
+				return <AmmunitionCrud fixedTab="recipes" />;
+			case "chrono":
+				return <AmmunitionCrud fixedTab="chrono" />;
+			case "components":
+				return <AmmunitionCrud fixedTab="components" />;
+			case "stock":
+				return <AmmunitionCrud fixedTab="stock" />;
 			case "maintenance":
 				return <MaintenanceCrud />;
 			case "paperwork":

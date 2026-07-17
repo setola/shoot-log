@@ -15,7 +15,7 @@
     "firearms": "Firearms",
     "training": "Training",
     "matches": "Matches",
-    "ammunition": "Ammunition",
+    "ammunition": "Recipes",
     "maintenance": "Maintenance",
     "paperwork": "Paperwork",
     "reports": "Reports",
@@ -23,20 +23,26 @@
     "settings": "Settings",
     "sourceCode": "Source code",
     "sourceCommit": "Source {{commit}}",
-    "analysis": "Analysis"
+    "analysis": "Analysis",
+    "chrono": "Chrono",
+    "components": "Components",
+    "stock": "Stock"
   },
   "sections": {
     "dashboard": "Dashboard",
     "firearms": "Firearm Registry",
     "training": "Training Sessions",
     "matches": "Matches",
-    "ammunition": "Ammunition",
+    "ammunition": "Reloading recipes",
     "maintenance": "Maintenance",
     "paperwork": "Paperwork",
     "reports": "Reports",
     "sync": "Google Drive Sync",
     "settings": "Settings",
-    "analysis": "Analysis"
+    "analysis": "Analysis",
+    "chrono": "Chronograph",
+    "components": "Components",
+    "stock": "Ammunition stock"
   },
   "privacy": {
     "localDevice": "Your data stays on this device."
@@ -463,7 +469,7 @@
   },
   "ammunition": {
     "title": "Ammunition",
-    "description": "Track your ammunition stock.",
+    "description": "Manage reloading recipes, chronograph measurements and ammunition stock locally.",
     "summary": "{{entries}} entries · {{rounds}} rounds total",
     "new": "Add ammo",
     "createTitle": "Add ammo",
@@ -495,6 +501,101 @@
       "added": "Added",
       "used": "Used",
       "adjusted": "Adjusted"
+    },
+    "tabs": {
+      "recipes": "Recipes",
+      "chrono": "Chrono",
+      "components": "Components",
+      "stock": "Stock"
+    },
+    "stock": {
+      "title": "Ammunition stock"
+    },
+    "components": {
+      "bullet": "Bullet",
+      "powder": "Powder",
+      "bulletsTitle": "Bullets",
+      "powdersTitle": "Powders",
+      "fields": {
+        "bulletName": "Bullet name",
+        "powderName": "Powder name",
+        "weight": "Weight (gr)",
+        "diameter": "Diameter/caliber",
+        "profile": "Profile",
+        "primerName": "Primer name",
+        "primerType": "Primer type",
+        "brassName": "Brass name",
+        "timesFired": "Times fired"
+      },
+      "primer": "Primer",
+      "primersTitle": "Primers",
+      "brassTitle": "Brass",
+      "addComponent": "Add component",
+      "brass": "Brass",
+      "title": "Components",
+      "description": "Manage reusable bullets, powders, primers and brass for your recipes."
+    },
+    "recipes": {
+      "singular": "Recipe",
+      "createTitle": "Reloading recipe",
+      "editTitle": "Edit reloading recipe",
+      "emptyTitle": "No reloading recipes",
+      "empty": "Create a recipe by selecting one bullet, one powder and the powder charge.",
+      "fields": {
+        "name": "Recipe name",
+        "charge": "Powder charge (gr)",
+        "minimumPf": "Minimum PF",
+        "oal": "OAL (mm)",
+        "primer": "Primer",
+        "brass": "Brass"
+      },
+      "minimumPfTag": "Min PF {{pf}}",
+      "latestPf": "Last PF {{pf}} · {{fps}} fps · {{date}}",
+      "pfRange": "PF range {{min}}–{{max}}",
+      "noChrono": "No chronograph data yet."
+    },
+    "chrono": {
+      "createTitle": "Chronograph session",
+      "shortAction": "Chrono",
+      "save": "Save chrono",
+      "emptyTitle": "No chrono sessions",
+      "empty": "Record chrono readings for a recipe and firearm to calculate average velocity and power factor.",
+      "fields": {
+        "firearm": "Firearm",
+        "location": "Location",
+        "temperature": "Temperature (°C)",
+        "humidity": "Humidity (%)",
+        "pressure": "Pressure (hPa)",
+        "readings": "Velocity readings (fps)"
+      },
+      "readingsPlaceholder": "One or more readings, separated by spaces, commas or new lines\n1012\n1008\n1015",
+      "average": "Average",
+      "powerFactor": "Power factor",
+      "spread": "Extreme spread",
+      "editTitle": "Edit chronograph session"
+    },
+    "sections": {
+      "recipes": {
+        "title": "Reloading recipes",
+        "description": "Save load recipes with reusable bullets, powders, primers and brass."
+      },
+      "chrono": {
+        "title": "Chronograph",
+        "description": "Record velocity strings by recipe and firearm to calculate average speed and power factor."
+      },
+      "stock": {
+        "title": "Ammunition stock",
+        "description": "Track ammunition lots, movements and remaining rounds."
+      },
+      "components": {
+        "title": "Components",
+        "description": "Manage reusable bullets, powders, primers and brass for your recipes."
+      }
+    },
+    "actions": {
+      "recipes": "Recipe actions",
+      "chrono": "Chrono actions",
+      "stock": "Stock actions"
     }
   },
   "maintenance": {

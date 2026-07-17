@@ -9,6 +9,7 @@ import {
 import { useLiveQuery } from "dexie-react-hooks";
 import { useTranslation } from "react-i18next";
 import { BarChart2 } from "lucide-react";
+import { EntityPage } from "../../components/EntityUi";
 import { db } from "../../db/schema";
 import { DEFAULT_SETTINGS_ID } from "../settings/settingsRepository";
 import { importPractiscoreSnapshot } from "./practiscoreRepository";
@@ -390,12 +391,10 @@ export function MatchAnalysis() {
 	}
 
 	return (
-		<section className="screen-stack">
-			<div className="section-heading figma-heading">
-				<div>
-					<h2>{t("matches.analysis.title")}</h2>
-					<p>{t("matches.analysis.description")}</p>
-				</div>
+		<EntityPage
+			title={t("matches.analysis.title")}
+			description={t("matches.analysis.description")}
+			actions={
 				<button
 					className="button button-secondary"
 					type="button"
@@ -406,7 +405,8 @@ export function MatchAnalysis() {
 						? t("matches.analysis.shareCopied")
 						: t("matches.analysis.shareLink")}
 				</button>
-			</div>
+			}
+		>
 			<div className="panel form-grid match-analysis-panel">
 				<div className="analysis-controls-grid analysis-controls-grid-compact">
 					<label>
@@ -633,7 +633,7 @@ export function MatchAnalysis() {
 					</p>
 				)}
 			</div>
-		</section>
+		</EntityPage>
 	);
 }
 

@@ -15,7 +15,7 @@
     "firearms": "Armi",
     "training": "Allenamenti",
     "matches": "Gare",
-    "ammunition": "Munizioni",
+    "ammunition": "Ricette",
     "maintenance": "Manutenzione",
     "paperwork": "Documenti",
     "reports": "Report",
@@ -23,20 +23,26 @@
     "settings": "Impostazioni",
     "sourceCode": "Codice sorgente",
     "sourceCommit": "Sorgente {{commit}}",
-    "analysis": "Analisi"
+    "analysis": "Analisi",
+    "chrono": "Chrono",
+    "components": "Componenti",
+    "stock": "Stock"
   },
   "sections": {
     "dashboard": "Cruscotto",
     "firearms": "Registro armi",
     "training": "Sessioni di allenamento",
     "matches": "Gare",
-    "ammunition": "Munizioni",
+    "ammunition": "Ricette di ricarica",
     "maintenance": "Manutenzione",
     "paperwork": "Documenti",
     "reports": "Report",
     "sync": "Sincronizzazione Google Drive",
     "settings": "Impostazioni",
-    "analysis": "Analisi"
+    "analysis": "Analisi",
+    "chrono": "Chrono",
+    "components": "Componenti",
+    "stock": "Stock munizioni"
   },
   "privacy": {
     "localDevice": "I tuoi dati restano su questo dispositivo."
@@ -463,7 +469,7 @@
   },
   "ammunition": {
     "title": "Munizioni",
-    "description": "Traccia lo stock di munizioni.",
+    "description": "Gestisci ricette di ricarica, misurazioni chrono e stock munizioni in locale.",
     "summary": "{{entries}} voci · {{rounds}} colpi totali",
     "new": "Aggiungi munizioni",
     "createTitle": "Aggiungi munizioni",
@@ -495,6 +501,101 @@
       "added": "Aggiunti",
       "used": "Usati",
       "adjusted": "Rettifica"
+    },
+    "tabs": {
+      "recipes": "Ricette",
+      "chrono": "Chrono",
+      "components": "Componenti",
+      "stock": "Stock"
+    },
+    "stock": {
+      "title": "Stock munizioni"
+    },
+    "components": {
+      "bullet": "Palla",
+      "powder": "Polvere",
+      "bulletsTitle": "Palle",
+      "powdersTitle": "Polveri",
+      "fields": {
+        "bulletName": "Nome palla",
+        "powderName": "Nome polvere",
+        "weight": "Peso (gr)",
+        "diameter": "Diametro/calibro",
+        "profile": "Profilo",
+        "primerName": "Nome innesco",
+        "primerType": "Tipo innesco",
+        "brassName": "Nome bossolo",
+        "timesFired": "Spari precedenti"
+      },
+      "primer": "Innesco",
+      "primersTitle": "Inneschi",
+      "brassTitle": "Bossoli",
+      "addComponent": "Aggiungi componente",
+      "brass": "Bossolo",
+      "title": "Componenti",
+      "description": "Gestisci palle, polveri, inneschi e bossoli riutilizzabili nelle ricette."
+    },
+    "recipes": {
+      "singular": "Ricetta",
+      "createTitle": "Ricetta di ricarica",
+      "editTitle": "Modifica ricetta",
+      "emptyTitle": "Nessuna ricetta di ricarica",
+      "empty": "Crea una ricetta selezionando una palla, una polvere e la dose di polvere.",
+      "fields": {
+        "name": "Nome ricetta",
+        "charge": "Dose polvere (gr)",
+        "minimumPf": "PF minimo",
+        "oal": "OAL (mm)",
+        "primer": "Innesco",
+        "brass": "Bossolo"
+      },
+      "minimumPfTag": "Min PF {{pf}}",
+      "latestPf": "Ultimo PF {{pf}} · {{fps}} fps · {{date}}",
+      "pfRange": "Range PF {{min}}–{{max}}",
+      "noChrono": "Nessun dato chrono."
+    },
+    "chrono": {
+      "createTitle": "Cronografata",
+      "shortAction": "Chrono",
+      "save": "Salva chrono",
+      "emptyTitle": "Nessuna cronografata",
+      "empty": "Registra letture chrono per ricetta e arma per calcolare velocità media e power factor.",
+      "fields": {
+        "firearm": "Arma",
+        "location": "Luogo",
+        "temperature": "Temperatura (°C)",
+        "humidity": "Umidità (%)",
+        "pressure": "Pressione (hPa)",
+        "readings": "Letture velocità (fps)"
+      },
+      "readingsPlaceholder": "Una o più letture, separate da spazi, virgole o nuove righe\n1012\n1008\n1015",
+      "average": "Media",
+      "powerFactor": "Power factor",
+      "spread": "Extreme spread",
+      "editTitle": "Modifica cronografata"
+    },
+    "sections": {
+      "recipes": {
+        "title": "Ricette di ricarica",
+        "description": "Salva ricette con palle, polveri, inneschi e bossoli riutilizzabili."
+      },
+      "chrono": {
+        "title": "Chrono",
+        "description": "Registra stringhe di velocità per ricetta e arma per calcolare media e power factor."
+      },
+      "stock": {
+        "title": "Stock munizioni",
+        "description": "Traccia lotti, movimenti e colpi rimanenti."
+      },
+      "components": {
+        "title": "Componenti",
+        "description": "Gestisci palle, polveri, inneschi e bossoli riutilizzabili nelle ricette."
+      }
+    },
+    "actions": {
+      "recipes": "Azioni ricetta",
+      "chrono": "Azioni chrono",
+      "stock": "Azioni stock"
     }
   },
   "maintenance": {

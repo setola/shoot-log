@@ -171,7 +171,7 @@ Implemented local-first modules:
 4. Training sessions CRUD.
 5. Matches CRUD.
 6. Maintenance CRUD.
-7. Ammunition batches and stock movement basics.
+7. Ammunition/reloading area with recipe, chrono, component catalog, and stock movement basics.
 8. Paperwork/credentials CRUD.
 9. Paperwork attachments stored locally as IndexedDB `Blob`s.
 10. Settings panel with data actions, embedded Google Drive sync, about/privacy information, and pill-based local device-owner identifiers.
@@ -251,7 +251,10 @@ Prefer practical labels:
 - Firearms
 - Training
 - Matches
-- Ammunition
+- Recipes
+- Chrono
+- Components
+- Stock
 - Maintenance
 - Paperwork
 - Analysis
@@ -274,6 +277,13 @@ File upload UX:
 - Prefer a drag-and-drop file zone anywhere the user loads a local file.
 - The drop zone should also be clickable and use a hidden file input for accessibility/fallback.
 - Show the selected filename before the user confirms the operation.
+
+Entity CRUD layout:
+
+- Prefer a single visible CTA row/card for creating records at the top of each section or tab.
+- Show saved records below the CTA as cards/lists; avoid permanently visible create/edit forms next to the list.
+- Open create/edit forms in modal dialogs from the CTA or record edit action.
+- Use this pattern for new modules and future feature work unless a workflow explicitly needs inline editing.
 
 Modal actions:
 
