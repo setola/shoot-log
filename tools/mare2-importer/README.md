@@ -15,7 +15,7 @@ backend dependency.
   pagination;
 - skips future matches before opening their details page unless `--include-future`
   is passed;
-- supports date-window cron sync with `--since=YYYY-MM-DD`;
+- supports date-window cron sync with `--since=YYYY-MM-DD` or relative values like `--since="last week"`;
 - rate-limits Mare2 HTTP requests during `sync` via `--request-delay-ms`;
 - merges optional manual stage-to-page overrides from
   `tools/mare2-importer/overrides`;
@@ -42,7 +42,7 @@ Useful options:
 --year=<year>             Discover archive matches by year.
 --championship=<name>     Archive match type filter, e.g. federale, winter.
 --ma=<n>                  Macro-area/category filter, e.g. 3 for MA3.
---since=<YYYY-MM-DD>      Sync past matches whose end date is on/after this date.
+--since=<date>            Sync past matches whose end date is on/after this date. Accepts YYYY-MM-DD or relative values like "last week", "last month", "last 2 weeks".
 --include-future          Also inspect future matches. Default: skip them.
 --request-delay-ms=<n>    Delay between Mare2 HTTP requests. Default: 300.
 --max-pages=<n>           Stop archive discovery after n pages. Default: 100.
@@ -110,6 +110,14 @@ For a daily cron-style update after a known date:
 
 ```bash
 npm run mare2:publish:cf -- --year=2026 --since=2026-07-01 --request-delay-ms=1000
+```
+
+Relative windows are also supported. Quote values containing spaces:
+
+```bash
+npm run mare2:publish:cf -- --year=2026 --since="last week" --request-delay-ms=1000
+npm run mare2:publish:cf -- --year=2026 --since="last 2 weeks" --request-delay-ms=1000
+npm run mare2:publish:cf -- --year=2026 --since="last month" --request-delay-ms=1000
 ```
 
 ## Manual stage-page overrides

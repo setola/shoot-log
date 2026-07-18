@@ -159,6 +159,8 @@ Expected model areas:
 - Reminder
 - Attachment
 - AppSettings
+- RegularCompetitor
+- MatchAnalysisSelection
 - SyncMetadata
 
 ## Current feature status
@@ -171,18 +173,20 @@ Implemented local-first modules:
 4. Training sessions CRUD.
 5. Matches CRUD.
 6. Maintenance CRUD.
-7. Ammunition/reloading area with recipe, chrono, component catalog, and stock movement basics.
+7. Reloading area with tabs for recipes, chrono sessions, reusable component catalogs, and stock movements.
 8. Paperwork/credentials CRUD.
 9. Paperwork attachments stored locally as IndexedDB `Blob`s.
-10. Settings panel with data actions, embedded Google Drive sync, about/privacy information, and pill-based local device-owner identifiers.
+10. Settings panel with data actions, embedded Google Drive sync, about/privacy information, pill-based local device-owner identifiers, and regular competitor management for analysis auto-seeding.
 11. JSON export/import, including base64 serialization of paperwork attachments, score snapshots, and app settings; URL-driven import and bundled sample data import are supported.
 12. Google Drive connection and manual backup/restore to the user's `appDataFolder`, exposed inside Settings.
 13. Source commit link in the sidebar footer.
 14. PractiScore CAB import for matches, storing a single local snapshot per match.
 15. Mare2 FITDS PDF import for score verification reports, reusing the same local analysis snapshot shape.
-16. Dedicated Analysis section for imported match score snapshots, including match selector, multi-competitor autocomplete comparison with device-owner auto-suggestion, comparative hit distribution pie charts, stage placement trend, comparative stage metric charts, and compact multi-competitor stage details.
-17. Mare2 public catalog CLI and Cloudflare Pages publishing flow for public match snapshots and stage-page images, with archive pagination, future-match skipping, request throttling, and `--since` incremental sync support.
-18. App-side import from the Mare2 public catalog with free-text match search; imported catalog data is stored locally in IndexedDB and included only in user-controlled exports/backups.
+16. Match Analysis lives as a Matches tab for imported score snapshots, including match selector, multi-competitor autocomplete comparison with device-owner auto-suggestion, comparative hit distribution pie charts, stage placement trend, comparative stage metric charts, and compact multi-competitor stage details.
+17. Mare2 public catalog CLI and Cloudflare Pages publishing flow for public match snapshots and stage-page images, with archive pagination, future-match skipping, request throttling, location extraction, and `--since` incremental sync support using either ISO dates or relative windows such as `last week`.
+18. App-side import from the Mare2 public catalog with free-text match/location search; imported catalog data is stored locally in IndexedDB and included only in user-controlled exports/backups.
+19. Query-string routing for shareable pages and tabs, e.g. `?section=matches&tab=analysis` and `?section=ammunition&tab=chrono`, with legacy `?section=analysis` support.
+20. Match analysis comparison state is stored per match in IndexedDB. Regular competitors configured in Settings are auto-seeded invisibly only when a match analysis has no saved selection yet; user edits then persist for that match.
 
 Important limitations / follow-up work:
 
@@ -246,23 +250,25 @@ Visual style:
 - Avoid aggressive, militarized, or tactical aesthetics.
 - Keep forms calm and administrative in tone.
 
-Prefer practical labels:
+Prefer practical labels in the main navigation:
 
+- Dashboard
 - Firearms
 - Training
 - Matches
-- Recipes
-- Chrono
-- Components
-- Stock
+- Reloading
 - Maintenance
 - Paperwork
-- Analysis
-- Reports
 - Settings
 
-Navigation note:
+Navigation notes:
 
+- Keep the main menu limited to macro-areas; detailed workflows belong in page-level tabs.
+- Matches contains tabs for Registry and Analysis. Opening Matches from navigation should default to Registry.
+- Reloading contains tabs for Recipes, Chrono, Components, and Stock. Opening Reloading from navigation should default to Recipes.
+- Page-level tabs use horizontally scrollable pills directly under the top header for desktop, tablet, and mobile.
+- Use query-string routes for shareable app state (`section`, `tab`, and analysis match/competitor params); do not use hash anchors for app routing.
+- Settings can store regular competitors. Analysis should use them only as an invisible first-open default for matches without saved analysis selection; never override a user's per-match comparison choices.
 - Google Drive sync belongs inside Settings, not as a standalone navigation item.
 
 Use warnings sparingly but clearly for:
@@ -280,16 +286,18 @@ File upload UX:
 
 Entity CRUD layout:
 
-- Prefer a single visible CTA row/card for creating records at the top of each section or tab.
+- Prefer a single visible CTA row/card for creating records at the top of each section or tab, to the right of the description when space allows.
 - Show saved records below the CTA as cards/lists; avoid permanently visible create/edit forms next to the list.
 - Open create/edit forms in modal dialogs from the CTA or record edit action.
-- Use this pattern for new modules and future feature work unless a workflow explicitly needs inline editing.
+- The create/edit modal contains the final save CTA in its bottom action row.
+- Use this CTA → modal form → save CTA flow for every future entity-style implementation unless a workflow explicitly needs inline editing.
 
 Modal actions:
 
 - Every modal must have an X close button in the top-right corner.
 - Destructive/confirming actions belong in the bottom-right action row.
 - The cancel button sits immediately to the left of the confirming CTA.
+- If a modal has final CTA actions, keep that action row sticky/visible while the central content scrolls.
 
 ## Safety and legal boundaries
 

@@ -12,6 +12,8 @@ import { BarChart2 } from "lucide-react";
 import { EntityPage } from "../../components/EntityUi";
 import { db } from "../../db/schema";
 import { DEFAULT_SETTINGS_ID } from "../settings/settingsRepository";
+import type { RegularCompetitor } from "../settings/regularCompetitors";
+import { saveMatchAnalysisSelection } from "./analysisSelection";
 import { importPractiscoreSnapshot } from "./practiscoreRepository";
 import {
 	calculateHitBreakdown,
@@ -29,8 +31,6 @@ import type {
 	PractiscoreStage,
 } from "./practiscoreTypes";
 
-const ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY =
-	"shooting-logbook-analysis-compare-competitor";
 const ANALYSIS_PUBLIC_CATALOG_URL =
 	"https://shooting-logbook-mare2-data.pages.dev/manifest.json";
 const ANALYSIS_URL_MATCH_PARAMS = ["mare2", "mare2MatchId", "match"];
@@ -39,6 +39,7 @@ const ANALYSIS_URL_COMPETITOR_PARAMS = ["competitors", "compare", "shooters"];
 interface AnalysisPublicCatalogMatch {
 	mare2MatchId: string;
 	name: string;
+	location?: string;
 	matchUrl: string;
 	snapshotUrl: string;
 }
@@ -48,6 +49,7 @@ interface AnalysisPublicCatalog {
 }
 
 interface AnalysisPublicMatchFile {
+	location?: string;
 	pages?: Array<{
 		pageNumber: number;
 		url: string;
@@ -74,13 +76,16 @@ export function MatchAnalysis() {
 		() => db.appSettings.get(DEFAULT_SETTINGS_ID),
 		[],
 	);
+	const regularCompetitors = useLiveQuery(
+		() => db.regularCompetitors.toArray(),
+		[],
+	);
 	const [selectedAnalysisMatchId, setSelectedAnalysisMatchId] = useState("");
 	const [comparisonCompetitorDraft, setComparisonCompetitorDraft] =
 		useState("");
 	const [comparisonCompetitorQueries, setComparisonCompetitorQueries] =
-		useState(() =>
-			readStoredAnalysisList(ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY),
-		);
+		useState<string[]>([]);
+	const [loadedSelectionMatchId, setLoadedSelectionMatchId] = useState("");
 	const [shareCopied, setShareCopied] = useState(false);
 	const [sharedAnalysisImportStatus, setSharedAnalysisImportStatus] = useState<
 		"idle" | "importing" | "error"
@@ -242,6 +247,7 @@ export function MatchAnalysis() {
 			urlSelectionAppliedRef.current = true;
 			queueMicrotask(() => {
 				setSelectedAnalysisMatchId(matchRecord.matchEventId);
+				setLoadedSelectionMatchId(matchRecord.matchEventId);
 				if (competitorIds.length > 0) {
 					const competitors = competitorIds.flatMap((competitorId) => {
 						const competitor = findCompetitorByShareId(
@@ -251,6 +257,11 @@ export function MatchAnalysis() {
 						return competitor ? [competitorOptionValue(competitor)] : [];
 					});
 					setComparisonCompetitorQueries(competitors);
+					void saveMatchAnalysisSelection(
+						matchRecord.matchEventId,
+						competitors,
+						false,
+					);
 					if (ownerCompetitor) {
 						setDismissedOwnerCompetitorId(ownerCompetitor.internalMemberId);
 					}
@@ -304,11 +315,44 @@ export function MatchAnalysis() {
 	}, [appSettings, applySharedAnalysisSelection, practiscoreImports]);
 
 	useEffect(() => {
-		writeStoredAnalysisList(
-			ANALYSIS_COMPARE_COMPETITOR_STORAGE_KEY,
+		if (!selectedAnalysisImport || regularCompetitors === undefined) return;
+		let cancelled = false;
+		void (async () => {
+			const savedSelection = await db.matchAnalysisSelections.get(
+				selectedAnalysisImport.matchEventId,
+			);
+			if (cancelled) return;
+			if (savedSelection) {
+				setComparisonCompetitorQueries(savedSelection.competitorQueries);
+				setLoadedSelectionMatchId(selectedAnalysisImport.matchEventId);
+				return;
+			}
+
+			const seededQueries = seedRegularCompetitorQueries(
+				selectedAnalysisImport,
+				regularCompetitors,
+			);
+			setComparisonCompetitorQueries(seededQueries);
+			setLoadedSelectionMatchId(selectedAnalysisImport.matchEventId);
+		})();
+		return () => {
+			cancelled = true;
+		};
+	}, [regularCompetitors, selectedAnalysisImport]);
+
+	useEffect(() => {
+		if (!selectedAnalysisImport) return;
+		if (loadedSelectionMatchId !== selectedAnalysisImport.matchEventId) return;
+		void saveMatchAnalysisSelection(
+			selectedAnalysisImport.matchEventId,
 			comparisonCompetitorQueries,
+			true,
 		);
-	}, [comparisonCompetitorQueries]);
+	}, [
+		comparisonCompetitorQueries,
+		loadedSelectionMatchId,
+		selectedAnalysisImport,
+	]);
 
 	async function copyAnalysisShareLink() {
 		if (!selectedAnalysisImport || analysisCompetitors.length === 0) return;
@@ -668,6 +712,13 @@ async function importSharedAnalysisMare2Match(
 		undefined,
 		ownerIdentifiers,
 	);
+	const location = matchFile.location ?? catalogMatch.location;
+	if (location) {
+		await db.matchEvents.update(matchEventId, {
+			clubOrRange: location,
+			updatedAt: new Date().toISOString(),
+		});
+	}
 	await importSharedAnalysisMatchPages(
 		matchEventId,
 		snapshot,
@@ -790,7 +841,8 @@ function createAnalysisShareUrl(
 ): string {
 	const url = new URL(window.location.href);
 	const mare2MatchId = extractMare2MatchId(record.practiscoreMatchId);
-	url.searchParams.set("section", "analysis");
+	url.searchParams.set("section", "matches");
+	url.searchParams.set("tab", "analysis");
 	url.searchParams.delete("mare2MatchId");
 	url.searchParams.delete("match");
 	url.searchParams.set("mare2", mare2MatchId ?? record.matchEventId);
@@ -833,31 +885,6 @@ function extractMare2MatchId(practiscoreMatchId: string): string | undefined {
 	return practiscoreMatchId.match(/^mare2:(\d+)$/)?.[1];
 }
 
-function readStoredAnalysisList(key: string): string[] {
-	const value = window.localStorage.getItem(key);
-	if (!value) return [];
-	try {
-		const parsed = JSON.parse(value) as unknown;
-		if (Array.isArray(parsed))
-			return parsed.filter(
-				(item): item is string =>
-					typeof item === "string" && item.trim().length > 0,
-			);
-	} catch {
-		return value.trim() ? [value] : [];
-	}
-	return [];
-}
-
-function writeStoredAnalysisList(key: string, values: string[]): void {
-	const normalizedValues = values.map((value) => value.trim()).filter(Boolean);
-	if (normalizedValues.length) {
-		window.localStorage.setItem(key, JSON.stringify(normalizedValues));
-	} else {
-		window.localStorage.removeItem(key);
-	}
-}
-
 function findSelectedAnalysisImport(
 	imports: PractiscoreImportRecord[],
 	selectedMatchEventId: string,
@@ -880,6 +907,24 @@ function findOwnerCompetitor(
 	}
 
 	return undefined;
+}
+
+function seedRegularCompetitorQueries(
+	record: PractiscoreImportRecord,
+	regularCompetitors: RegularCompetitor[],
+): string[] {
+	const queries = regularCompetitors.flatMap((regularCompetitor) => {
+		const identifiers = [
+			regularCompetitor.displayName,
+			...regularCompetitor.identifiers,
+		];
+		const competitor = identifiers.flatMap((identifier) => {
+			const match = findSelectedCompetitor(record, identifier);
+			return match ? [match] : [];
+		})[0];
+		return competitor ? [competitorOptionValue(competitor)] : [];
+	});
+	return [...new Set(queries)];
 }
 
 function findSelectedCompetitor(

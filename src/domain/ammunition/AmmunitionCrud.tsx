@@ -131,7 +131,7 @@ const COMMON_BULLET_PROFILES = [
 	"SWC",
 ];
 
-type AmmunitionTab = "recipes" | "components" | "chrono" | "stock";
+export type AmmunitionTab = "recipes" | "components" | "chrono" | "stock";
 type ComponentDialogType = "bullet" | "powder" | "primer" | "brass";
 type DeleteTarget =
 	| { type: "batch"; id: string }
@@ -145,8 +145,12 @@ type DeleteTarget =
 
 export function AmmunitionCrud({
 	fixedTab,
+	tab,
+	onTabChange,
 }: {
 	fixedTab?: AmmunitionTab;
+	tab?: AmmunitionTab;
+	onTabChange?: (tab: AmmunitionTab) => void;
 } = {}) {
 	const { t } = useTranslation();
 	const batches = useLiveQuery(
@@ -187,9 +191,13 @@ export function AmmunitionCrud({
 	);
 
 	const [selectedTab, setSelectedTab] = useState<AmmunitionTab>(
-		fixedTab ?? "recipes",
+		fixedTab ?? tab ?? "recipes",
 	);
-	const activeTab = fixedTab ?? selectedTab;
+	const activeTab = fixedTab ?? tab ?? selectedTab;
+	function selectTab(nextTab: AmmunitionTab) {
+		setSelectedTab(nextTab);
+		onTabChange?.(nextTab);
+	}
 	const [showRecipeForm, setShowRecipeForm] = useState(false);
 	const [showChronoForm, setShowChronoForm] = useState(false);
 	const [componentDialog, setComponentDialog] =
@@ -448,39 +456,9 @@ export function AmmunitionCrud({
 		);
 
 	return (
-		<EntityPage
-			title={t(`ammunition.sections.${activeTab}.title`)}
-			description={pageDescription}
-			actions={pageActions}
-		>
-			<datalist id="ammo-caliber-options">
-				{COMMON_CALIBERS.map((value) => (
-					<option key={value} value={value} />
-				))}
-			</datalist>
-			<datalist id="reloading-brand-options">
-				{COMMON_RELOADING_BRANDS.map((value) => (
-					<option key={value} value={value} />
-				))}
-			</datalist>
-			<datalist id="powder-name-options">
-				{COMMON_POWDER_NAMES.map((value) => (
-					<option key={value} value={value} />
-				))}
-			</datalist>
-			<datalist id="primer-type-options">
-				{COMMON_PRIMER_TYPES.map((value) => (
-					<option key={value} value={value} />
-				))}
-			</datalist>
-			<datalist id="bullet-profile-options">
-				{COMMON_BULLET_PROFILES.map((value) => (
-					<option key={value} value={value} />
-				))}
-			</datalist>
-
+		<div className="screen-stack">
 			{fixedTab ? null : (
-				<div className="tab-row">
+				<div className="tab-row" aria-label={t("sections.ammunition")}>
 					{(
 						["recipes", "chrono", "components", "stock"] as AmmunitionTab[]
 					).map((tab) => (
@@ -492,7 +470,7 @@ export function AmmunitionCrud({
 									? "tab-button tab-button-active"
 									: "tab-button"
 							}
-							onClick={() => setSelectedTab(tab)}
+							onClick={() => selectTab(tab)}
 						>
 							{t(`ammunition.tabs.${tab}`)}
 						</button>
@@ -500,954 +478,999 @@ export function AmmunitionCrud({
 				</div>
 			)}
 
-			{activeTab === "recipes" && (
-				<div className="screen-stack">
-					{showRecipeForm && (
-						<div className="dialog-backdrop" onMouseDown={closeRecipeForm}>
-							<form
-								className="panel form-grid entity-form-dialog"
-								role="dialog"
-								aria-modal="true"
-								onMouseDown={(event) => event.stopPropagation()}
-								onSubmit={submitRecipe}
-							>
-								<div className="form-title-row">
-									<h3>
-										{editingRecipeId
-											? t("ammunition.recipes.editTitle")
-											: t("ammunition.recipes.createTitle")}
-									</h3>
-									<button
-										className="icon-button"
-										type="button"
-										aria-label={t("actions.close")}
-										onClick={closeRecipeForm}
-									>
-										<X size={16} />
-									</button>
-								</div>
-								<div className="two-columns">
-									<label>
-										<span>{t("ammunition.recipes.fields.name")} *</span>
-										<input
-											required
-											value={recipeForm.name}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													name: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.fields.caliber")} *</span>
-										<input
-											required
-											value={recipeForm.caliber}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													caliber: event.target.value,
-												})
-											}
-											placeholder={t("ammunition.placeholders.caliber")}
-											list="ammo-caliber-options"
-										/>
-									</label>
-								</div>
-								<div className="two-columns">
-									<label>
-										<span>{t("ammunition.components.bullet")} *</span>
-										<select
-											required
-											value={recipeForm.bulletId}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													bulletId: event.target.value,
-												})
-											}
-										>
-											<option value="">{t("common.none")}</option>
-											{(bullets ?? []).map((bullet) => (
-												<option key={bullet.id} value={bullet.id}>
-													{formatBullet(bullet)}
-												</option>
-											))}
-										</select>
-									</label>
-									<label>
-										<span>{t("ammunition.components.powder")} *</span>
-										<select
-											required
-											value={recipeForm.powderId}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													powderId: event.target.value,
-												})
-											}
-										>
-											<option value="">{t("common.none")}</option>
-											{(powders ?? []).map((powder) => (
-												<option key={powder.id} value={powder.id}>
-													{formatPowder(powder)}
-												</option>
-											))}
-										</select>
-									</label>
-								</div>
-								<div className="three-columns">
-									<label>
-										<span>{t("ammunition.recipes.fields.charge")} *</span>
-										<input
-											required
-											type="number"
-											step="0.01"
-											min="0"
-											value={recipeForm.powderChargeGrains}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													powderChargeGrains: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.recipes.fields.minimumPf")}</span>
-										<input
-											type="number"
-											step="0.1"
-											min="0"
-											value={recipeForm.minimumPowerFactor}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													minimumPowerFactor: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.recipes.fields.oal")}</span>
-										<input
-											type="number"
-											step="0.01"
-											min="0"
-											value={recipeForm.oalMm}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													oalMm: event.target.value,
-												})
-											}
-										/>
-									</label>
-								</div>
-								<div className="two-columns">
-									<label>
-										<span>{t("ammunition.recipes.fields.primer")}</span>
-										<select
-											value={recipeForm.primerId}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													primerId: event.target.value,
-												})
-											}
-										>
-											<option value="">{t("common.none")}</option>
-											{(primers ?? []).map((primer) => (
-												<option key={primer.id} value={primer.id}>
-													{formatPrimer(primer)}
-												</option>
-											))}
-										</select>
-									</label>
-									<label>
-										<span>{t("ammunition.recipes.fields.brass")}</span>
-										<select
-											value={recipeForm.brassId}
-											onChange={(event) =>
-												setRecipeForm({
-													...recipeForm,
-													brassId: event.target.value,
-												})
-											}
-										>
-											<option value="">{t("common.none")}</option>
-											{(brassItems ?? []).map((brass) => (
-												<option key={brass.id} value={brass.id}>
-													{formatBrass(brass)}
-												</option>
-											))}
-										</select>
-									</label>
-								</div>
-								<label>
-									<span>{t("ammunition.fields.notes")}</span>
-									<textarea
-										rows={3}
-										value={recipeForm.notes}
-										onChange={(event) =>
-											setRecipeForm({
-												...recipeForm,
-												notes: event.target.value,
-											})
-										}
-									/>
-								</label>
-								<div className="dialog-actions">
-									<button
-										className="button button-secondary"
-										type="button"
-										onClick={closeRecipeForm}
-									>
-										{t("actions.cancel")}
-									</button>
-									<button className="button" type="submit">
-										<Save size={16} />
-										{t("actions.save")}
-									</button>
-								</div>
-							</form>
-						</div>
-					)}
-					<div className="list-panel-clean">
-						<div className="record-list">
-							{(recipes ?? []).map((recipe) => (
-								<RecipeCard
-									key={recipe.id}
-									recipe={recipe}
-									bullet={bulletById.get(recipe.bulletId)}
-									powder={powderById.get(recipe.powderId)}
-									primer={
-										recipe.primerId
-											? primerById.get(recipe.primerId)
-											: undefined
-									}
-									brass={
-										recipe.brassId ? brassById.get(recipe.brassId) : undefined
-									}
-									chronoSessions={chronoByRecipe.get(recipe.id) ?? []}
-									onChrono={() => {
-										setSelectedTab("chrono");
-										setChronoForm(createEmptyChronographForm(recipe.id));
-										setShowChronoForm(true);
-									}}
-									onEdit={() => {
-										setEditingRecipeId(recipe.id);
-										setRecipeForm(recipeToFormValues(recipe));
-										setShowRecipeForm(true);
-									}}
-									onDelete={() =>
-										setDeleteTarget({ type: "recipe", id: recipe.id })
-									}
-								/>
-							))}
-						</div>
-						{recipes?.length === 0 && (
-							<EmptyCard
-								icon={<FlaskConical size={42} strokeWidth={1.4} />}
-								title={t("ammunition.recipes.emptyTitle")}
-								body={t("ammunition.recipes.empty")}
-							/>
-						)}
-					</div>
-				</div>
-			)}
+			<EntityPage
+				title={t(`ammunition.sections.${activeTab}.title`)}
+				description={pageDescription}
+				actions={pageActions}
+			>
+				<datalist id="ammo-caliber-options">
+					{COMMON_CALIBERS.map((value) => (
+						<option key={value} value={value} />
+					))}
+				</datalist>
+				<datalist id="reloading-brand-options">
+					{COMMON_RELOADING_BRANDS.map((value) => (
+						<option key={value} value={value} />
+					))}
+				</datalist>
+				<datalist id="powder-name-options">
+					{COMMON_POWDER_NAMES.map((value) => (
+						<option key={value} value={value} />
+					))}
+				</datalist>
+				<datalist id="primer-type-options">
+					{COMMON_PRIMER_TYPES.map((value) => (
+						<option key={value} value={value} />
+					))}
+				</datalist>
+				<datalist id="bullet-profile-options">
+					{COMMON_BULLET_PROFILES.map((value) => (
+						<option key={value} value={value} />
+					))}
+				</datalist>
 
-			{activeTab === "chrono" && (
-				<div className="screen-stack">
-					{showChronoForm && (
-						<div className="dialog-backdrop" onMouseDown={closeChronoForm}>
-							<form
-								className="panel form-grid entity-form-dialog"
-								role="dialog"
-								aria-modal="true"
-								onMouseDown={(event) => event.stopPropagation()}
-								onSubmit={submitChrono}
-							>
-								<div className="form-title-row">
-									<h3>
-										{editingChronoId
-											? t("ammunition.chrono.editTitle")
-											: t("ammunition.chrono.createTitle")}
-									</h3>
-									<button
-										className="icon-button"
-										type="button"
-										aria-label={t("actions.close")}
-										onClick={closeChronoForm}
-									>
-										<X size={16} />
-									</button>
-								</div>
-								<label>
-									<span>{t("ammunition.recipes.singular")} *</span>
-									<select
-										required
-										value={chronoForm.recipeId}
-										onChange={(event) =>
-											setChronoForm({
-												...chronoForm,
-												recipeId: event.target.value,
-											})
-										}
-									>
-										<option value="">{t("common.none")}</option>
-										{(recipes ?? []).map((recipe) => (
-											<option key={recipe.id} value={recipe.id}>
-												{recipe.name}
-											</option>
-										))}
-									</select>
-								</label>
-								<div className="two-columns">
-									<label>
-										<span>{t("ammunition.chrono.fields.firearm")}</span>
-										<select
-											value={chronoForm.firearmId}
-											onChange={(event) =>
-												setChronoForm({
-													...chronoForm,
-													firearmId: event.target.value,
-												})
-											}
+				{activeTab === "recipes" && (
+					<div className="screen-stack">
+						{showRecipeForm && (
+							<div className="dialog-backdrop" onMouseDown={closeRecipeForm}>
+								<form
+									className="panel form-grid entity-form-dialog"
+									role="dialog"
+									aria-modal="true"
+									onMouseDown={(event) => event.stopPropagation()}
+									onSubmit={submitRecipe}
+								>
+									<div className="form-title-row">
+										<h3>
+											{editingRecipeId
+												? t("ammunition.recipes.editTitle")
+												: t("ammunition.recipes.createTitle")}
+										</h3>
+										<button
+											className="icon-button"
+											type="button"
+											aria-label={t("actions.close")}
+											onClick={closeRecipeForm}
 										>
-											<option value="">{t("common.none")}</option>
-											{(firearms ?? []).map((firearm) => (
-												<option key={firearm.id} value={firearm.id}>
-													{firearm.nickname}
-												</option>
-											))}
-										</select>
-									</label>
-									<label>
-										<span>{t("ammunition.fields.date")}</span>
-										<input
-											type="date"
-											value={chronoForm.date}
-											onChange={(event) =>
-												setChronoForm({
-													...chronoForm,
-													date: event.target.value,
-												})
-											}
-										/>
-									</label>
-								</div>
-								<label>
-									<span>{t("ammunition.chrono.fields.location")}</span>
-									<input
-										value={chronoForm.location}
-										onChange={(event) =>
-											setChronoForm({
-												...chronoForm,
-												location: event.target.value,
-											})
-										}
-									/>
-								</label>
-								<div className="three-columns">
-									<label>
-										<span>{t("ammunition.chrono.fields.temperature")}</span>
-										<input
-											type="number"
-											step="0.1"
-											value={chronoForm.temperatureC}
-											onChange={(event) =>
-												setChronoForm({
-													...chronoForm,
-													temperatureC: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.chrono.fields.humidity")}</span>
-										<input
-											type="number"
-											step="1"
-											min="0"
-											max="100"
-											value={chronoForm.humidityPercent}
-											onChange={(event) =>
-												setChronoForm({
-													...chronoForm,
-													humidityPercent: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.chrono.fields.pressure")}</span>
-										<input
-											type="number"
-											step="1"
-											value={chronoForm.pressureHpa}
-											onChange={(event) =>
-												setChronoForm({
-													...chronoForm,
-													pressureHpa: event.target.value,
-												})
-											}
-										/>
-									</label>
-								</div>
-								<label>
-									<span>{t("ammunition.chrono.fields.readings")} *</span>
-									<textarea
-										required
-										rows={5}
-										value={chronoForm.readings}
-										onChange={(event) =>
-											setChronoForm({
-												...chronoForm,
-												readings: event.target.value,
-											})
-										}
-										placeholder={t("ammunition.chrono.readingsPlaceholder")}
-									/>
-								</label>
-								{chronoPreview && (
-									<div className="metric-grid">
-										<Metric
-											label={t("ammunition.chrono.average")}
-											value={`${chronoPreview.averageFps.toFixed(1)} fps`}
-										/>
-										<Metric
-											label={t("ammunition.chrono.powerFactor")}
-											value={chronoPreview.powerFactor.toFixed(1)}
-										/>
-										<Metric
-											label={t("ammunition.chrono.spread")}
-											value={`${chronoPreview.extremeSpreadFps.toFixed(0)} fps`}
-										/>
+											<X size={16} />
+										</button>
 									</div>
-								)}
-								{chronoError && (
-									<p className="status-message status-error">{chronoError}</p>
-								)}
-								<label>
-									<span>{t("ammunition.fields.notes")}</span>
-									<textarea
-										rows={2}
-										value={chronoForm.notes}
-										onChange={(event) =>
-											setChronoForm({
-												...chronoForm,
-												notes: event.target.value,
-											})
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.recipes.fields.name")} *</span>
+											<input
+												required
+												value={recipeForm.name}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														name: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>{t("ammunition.fields.caliber")} *</span>
+											<input
+												required
+												value={recipeForm.caliber}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														caliber: event.target.value,
+													})
+												}
+												placeholder={t("ammunition.placeholders.caliber")}
+												list="ammo-caliber-options"
+											/>
+										</label>
+									</div>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.components.bullet")} *</span>
+											<select
+												required
+												value={recipeForm.bulletId}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														bulletId: event.target.value,
+													})
+												}
+											>
+												<option value="">{t("common.none")}</option>
+												{(bullets ?? []).map((bullet) => (
+													<option key={bullet.id} value={bullet.id}>
+														{formatBullet(bullet)}
+													</option>
+												))}
+											</select>
+										</label>
+										<label>
+											<span>{t("ammunition.components.powder")} *</span>
+											<select
+												required
+												value={recipeForm.powderId}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														powderId: event.target.value,
+													})
+												}
+											>
+												<option value="">{t("common.none")}</option>
+												{(powders ?? []).map((powder) => (
+													<option key={powder.id} value={powder.id}>
+														{formatPowder(powder)}
+													</option>
+												))}
+											</select>
+										</label>
+									</div>
+									<div className="three-columns">
+										<label>
+											<span>{t("ammunition.recipes.fields.charge")} *</span>
+											<input
+												required
+												type="number"
+												step="0.01"
+												min="0"
+												value={recipeForm.powderChargeGrains}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														powderChargeGrains: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>{t("ammunition.recipes.fields.minimumPf")}</span>
+											<input
+												type="number"
+												step="0.1"
+												min="0"
+												value={recipeForm.minimumPowerFactor}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														minimumPowerFactor: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>{t("ammunition.recipes.fields.oal")}</span>
+											<input
+												type="number"
+												step="0.01"
+												min="0"
+												value={recipeForm.oalMm}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														oalMm: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.recipes.fields.primer")}</span>
+											<select
+												value={recipeForm.primerId}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														primerId: event.target.value,
+													})
+												}
+											>
+												<option value="">{t("common.none")}</option>
+												{(primers ?? []).map((primer) => (
+													<option key={primer.id} value={primer.id}>
+														{formatPrimer(primer)}
+													</option>
+												))}
+											</select>
+										</label>
+										<label>
+											<span>{t("ammunition.recipes.fields.brass")}</span>
+											<select
+												value={recipeForm.brassId}
+												onChange={(event) =>
+													setRecipeForm({
+														...recipeForm,
+														brassId: event.target.value,
+													})
+												}
+											>
+												<option value="">{t("common.none")}</option>
+												{(brassItems ?? []).map((brass) => (
+													<option key={brass.id} value={brass.id}>
+														{formatBrass(brass)}
+													</option>
+												))}
+											</select>
+										</label>
+									</div>
+									<label>
+										<span>{t("ammunition.fields.notes")}</span>
+										<textarea
+											rows={3}
+											value={recipeForm.notes}
+											onChange={(event) =>
+												setRecipeForm({
+													...recipeForm,
+													notes: event.target.value,
+												})
+											}
+										/>
+									</label>
+									<div className="dialog-actions">
+										<button
+											className="button button-secondary"
+											type="button"
+											onClick={closeRecipeForm}
+										>
+											{t("actions.cancel")}
+										</button>
+										<button className="button" type="submit">
+											<Save size={16} />
+											{t("actions.save")}
+										</button>
+									</div>
+								</form>
+							</div>
+						)}
+						<div className="list-panel-clean">
+							<div className="record-list">
+								{(recipes ?? []).map((recipe) => (
+									<RecipeCard
+										key={recipe.id}
+										recipe={recipe}
+										bullet={bulletById.get(recipe.bulletId)}
+										powder={powderById.get(recipe.powderId)}
+										primer={
+											recipe.primerId
+												? primerById.get(recipe.primerId)
+												: undefined
+										}
+										brass={
+											recipe.brassId ? brassById.get(recipe.brassId) : undefined
+										}
+										chronoSessions={chronoByRecipe.get(recipe.id) ?? []}
+										onChrono={() => {
+											selectTab("chrono");
+											setChronoForm(createEmptyChronographForm(recipe.id));
+											setShowChronoForm(true);
+										}}
+										onEdit={() => {
+											setEditingRecipeId(recipe.id);
+											setRecipeForm(recipeToFormValues(recipe));
+											setShowRecipeForm(true);
+										}}
+										onDelete={() =>
+											setDeleteTarget({ type: "recipe", id: recipe.id })
 										}
 									/>
-								</label>
-								<div className="dialog-actions">
-									<button
-										className="button button-secondary"
-										type="button"
-										onClick={closeChronoForm}
-									>
-										{t("actions.cancel")}
-									</button>
-									<button className="button" type="submit">
-										<Gauge size={16} />
-										{t("ammunition.chrono.save")}
-									</button>
-								</div>
-							</form>
+								))}
+							</div>
+							{recipes?.length === 0 && (
+								<EmptyCard
+									icon={<FlaskConical size={42} strokeWidth={1.4} />}
+									title={t("ammunition.recipes.emptyTitle")}
+									body={t("ammunition.recipes.empty")}
+								/>
+							)}
 						</div>
-					)}
-					<div className="list-panel-clean">
-						<div className="record-list">
-							{(chronoSessions ?? []).map((session) => (
-								<ChronoCard
-									key={session.id}
-									session={session}
-									recipe={(recipes ?? []).find(
-										(recipe) => recipe.id === session.recipeId,
+					</div>
+				)}
+
+				{activeTab === "chrono" && (
+					<div className="screen-stack">
+						{showChronoForm && (
+							<div className="dialog-backdrop" onMouseDown={closeChronoForm}>
+								<form
+									className="panel form-grid entity-form-dialog"
+									role="dialog"
+									aria-modal="true"
+									onMouseDown={(event) => event.stopPropagation()}
+									onSubmit={submitChrono}
+								>
+									<div className="form-title-row">
+										<h3>
+											{editingChronoId
+												? t("ammunition.chrono.editTitle")
+												: t("ammunition.chrono.createTitle")}
+										</h3>
+										<button
+											className="icon-button"
+											type="button"
+											aria-label={t("actions.close")}
+											onClick={closeChronoForm}
+										>
+											<X size={16} />
+										</button>
+									</div>
+									<label>
+										<span>{t("ammunition.recipes.singular")} *</span>
+										<select
+											required
+											value={chronoForm.recipeId}
+											onChange={(event) =>
+												setChronoForm({
+													...chronoForm,
+													recipeId: event.target.value,
+												})
+											}
+										>
+											<option value="">{t("common.none")}</option>
+											{(recipes ?? []).map((recipe) => (
+												<option key={recipe.id} value={recipe.id}>
+													{recipe.name}
+												</option>
+											))}
+										</select>
+									</label>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.chrono.fields.firearm")}</span>
+											<select
+												value={chronoForm.firearmId}
+												onChange={(event) =>
+													setChronoForm({
+														...chronoForm,
+														firearmId: event.target.value,
+													})
+												}
+											>
+												<option value="">{t("common.none")}</option>
+												{(firearms ?? []).map((firearm) => (
+													<option key={firearm.id} value={firearm.id}>
+														{firearm.nickname}
+													</option>
+												))}
+											</select>
+										</label>
+										<label>
+											<span>{t("ammunition.fields.date")}</span>
+											<input
+												type="date"
+												value={chronoForm.date}
+												onChange={(event) =>
+													setChronoForm({
+														...chronoForm,
+														date: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
+									<label>
+										<span>{t("ammunition.chrono.fields.location")}</span>
+										<input
+											value={chronoForm.location}
+											onChange={(event) =>
+												setChronoForm({
+													...chronoForm,
+													location: event.target.value,
+												})
+											}
+										/>
+									</label>
+									<div className="three-columns">
+										<label>
+											<span>{t("ammunition.chrono.fields.temperature")}</span>
+											<input
+												type="number"
+												step="0.1"
+												value={chronoForm.temperatureC}
+												onChange={(event) =>
+													setChronoForm({
+														...chronoForm,
+														temperatureC: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>{t("ammunition.chrono.fields.humidity")}</span>
+											<input
+												type="number"
+												step="1"
+												min="0"
+												max="100"
+												value={chronoForm.humidityPercent}
+												onChange={(event) =>
+													setChronoForm({
+														...chronoForm,
+														humidityPercent: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>{t("ammunition.chrono.fields.pressure")}</span>
+											<input
+												type="number"
+												step="1"
+												value={chronoForm.pressureHpa}
+												onChange={(event) =>
+													setChronoForm({
+														...chronoForm,
+														pressureHpa: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
+									<label>
+										<span>{t("ammunition.chrono.fields.readings")} *</span>
+										<textarea
+											required
+											rows={5}
+											value={chronoForm.readings}
+											onChange={(event) =>
+												setChronoForm({
+													...chronoForm,
+													readings: event.target.value,
+												})
+											}
+											placeholder={t("ammunition.chrono.readingsPlaceholder")}
+										/>
+									</label>
+									{chronoPreview && (
+										<div className="metric-grid">
+											<Metric
+												label={t("ammunition.chrono.average")}
+												value={`${chronoPreview.averageFps.toFixed(1)} fps`}
+											/>
+											<Metric
+												label={t("ammunition.chrono.powerFactor")}
+												value={chronoPreview.powerFactor.toFixed(1)}
+											/>
+											<Metric
+												label={t("ammunition.chrono.spread")}
+												value={`${chronoPreview.extremeSpreadFps.toFixed(0)} fps`}
+											/>
+										</div>
 									)}
-									firearmName={
-										session.firearmId
-											? firearmById.get(session.firearmId)?.nickname
-											: undefined
-									}
-									onEdit={() => {
-										setEditingChronoId(session.id);
-										setChronoForm(chronographSessionToFormValues(session));
-										setShowChronoForm(true);
-									}}
-									onDelete={() =>
-										setDeleteTarget({ type: "chrono", id: session.id })
-									}
-								/>
-							))}
-						</div>
-						{chronoSessions?.length === 0 && (
-							<EmptyCard
-								icon={<Gauge size={42} strokeWidth={1.4} />}
-								title={t("ammunition.chrono.emptyTitle")}
-								body={t("ammunition.chrono.empty")}
-							/>
+									{chronoError && (
+										<p className="status-message status-error">{chronoError}</p>
+									)}
+									<label>
+										<span>{t("ammunition.fields.notes")}</span>
+										<textarea
+											rows={2}
+											value={chronoForm.notes}
+											onChange={(event) =>
+												setChronoForm({
+													...chronoForm,
+													notes: event.target.value,
+												})
+											}
+										/>
+									</label>
+									<div className="dialog-actions">
+										<button
+											className="button button-secondary"
+											type="button"
+											onClick={closeChronoForm}
+										>
+											{t("actions.cancel")}
+										</button>
+										<button className="button" type="submit">
+											<Gauge size={16} />
+											{t("ammunition.chrono.save")}
+										</button>
+									</div>
+								</form>
+							</div>
 						)}
-					</div>
-				</div>
-			)}
-
-			{activeTab === "components" && (
-				<div className="screen-stack">
-					<div className="list-panel-clean">
-						<h3>{t("ammunition.components.bulletsTitle")}</h3>
-						<div className="record-list">
-							{(bullets ?? []).map((bullet) => (
-								<ComponentCard
-									key={bullet.id}
-									title={formatBullet(bullet)}
-									body={bullet.notes}
-									onEdit={() => {
-										setEditingBulletId(bullet.id);
-										setBulletForm(bulletToFormValues(bullet));
-										setComponentDialog("bullet");
-									}}
-									onDelete={() =>
-										setDeleteTarget({ type: "bullet", id: bullet.id })
-									}
+						<div className="list-panel-clean">
+							<div className="record-list">
+								{(chronoSessions ?? []).map((session) => (
+									<ChronoCard
+										key={session.id}
+										session={session}
+										recipe={(recipes ?? []).find(
+											(recipe) => recipe.id === session.recipeId,
+										)}
+										firearmName={
+											session.firearmId
+												? firearmById.get(session.firearmId)?.nickname
+												: undefined
+										}
+										onEdit={() => {
+											setEditingChronoId(session.id);
+											setChronoForm(chronographSessionToFormValues(session));
+											setShowChronoForm(true);
+										}}
+										onDelete={() =>
+											setDeleteTarget({ type: "chrono", id: session.id })
+										}
+									/>
+								))}
+							</div>
+							{chronoSessions?.length === 0 && (
+								<EmptyCard
+									icon={<Gauge size={42} strokeWidth={1.4} />}
+									title={t("ammunition.chrono.emptyTitle")}
+									body={t("ammunition.chrono.empty")}
 								/>
-							))}
-						</div>
-						<h3>{t("ammunition.components.powdersTitle")}</h3>
-						<div className="record-list">
-							{(powders ?? []).map((powder) => (
-								<ComponentCard
-									key={powder.id}
-									title={formatPowder(powder)}
-									body={powder.notes}
-									onEdit={() => {
-										setEditingPowderId(powder.id);
-										setPowderForm(powderToFormValues(powder));
-										setComponentDialog("powder");
-									}}
-									onDelete={() =>
-										setDeleteTarget({ type: "powder", id: powder.id })
-									}
-								/>
-							))}
-						</div>
-						<h3>{t("ammunition.components.primersTitle")}</h3>
-						<div className="record-list">
-							{(primers ?? []).map((primer) => (
-								<ComponentCard
-									key={primer.id}
-									title={formatPrimer(primer)}
-									body={primer.notes}
-									onEdit={() => {
-										setEditingPrimerId(primer.id);
-										setPrimerForm(primerToFormValues(primer));
-										setComponentDialog("primer");
-									}}
-									onDelete={() =>
-										setDeleteTarget({ type: "primer", id: primer.id })
-									}
-								/>
-							))}
-						</div>
-						<h3>{t("ammunition.components.brassTitle")}</h3>
-						<div className="record-list">
-							{(brassItems ?? []).map((brass) => (
-								<ComponentCard
-									key={brass.id}
-									title={formatBrass(brass)}
-									body={brass.notes}
-									onEdit={() => {
-										setEditingBrassId(brass.id);
-										setBrassForm(brassToFormValues(brass));
-										setComponentDialog("brass");
-									}}
-									onDelete={() =>
-										setDeleteTarget({ type: "brass", id: brass.id })
-									}
-								/>
-							))}
+							)}
 						</div>
 					</div>
-				</div>
-			)}
+				)}
 
-			{componentDialog && (
-				<div className="dialog-backdrop" onMouseDown={closeComponentDialog}>
-					<form
-						className="panel form-grid entity-form-dialog"
-						role="dialog"
-						aria-modal="true"
-						onMouseDown={(event) => event.stopPropagation()}
-						onSubmit={
-							componentDialog === "bullet"
-								? submitBullet
-								: componentDialog === "powder"
-									? submitPowder
-									: componentDialog === "primer"
-										? submitPrimer
-										: submitBrass
-						}
-					>
-						<div className="form-title-row">
-							<h3>
-								{componentDialog === "bullet"
-									? t("ammunition.components.bulletsTitle")
+				{activeTab === "components" && (
+					<div className="screen-stack">
+						<div className="list-panel-clean">
+							<h3>{t("ammunition.components.bulletsTitle")}</h3>
+							<div className="record-list">
+								{(bullets ?? []).map((bullet) => (
+									<ComponentCard
+										key={bullet.id}
+										title={formatBullet(bullet)}
+										body={bullet.notes}
+										onEdit={() => {
+											setEditingBulletId(bullet.id);
+											setBulletForm(bulletToFormValues(bullet));
+											setComponentDialog("bullet");
+										}}
+										onDelete={() =>
+											setDeleteTarget({ type: "bullet", id: bullet.id })
+										}
+									/>
+								))}
+							</div>
+							<h3>{t("ammunition.components.powdersTitle")}</h3>
+							<div className="record-list">
+								{(powders ?? []).map((powder) => (
+									<ComponentCard
+										key={powder.id}
+										title={formatPowder(powder)}
+										body={powder.notes}
+										onEdit={() => {
+											setEditingPowderId(powder.id);
+											setPowderForm(powderToFormValues(powder));
+											setComponentDialog("powder");
+										}}
+										onDelete={() =>
+											setDeleteTarget({ type: "powder", id: powder.id })
+										}
+									/>
+								))}
+							</div>
+							<h3>{t("ammunition.components.primersTitle")}</h3>
+							<div className="record-list">
+								{(primers ?? []).map((primer) => (
+									<ComponentCard
+										key={primer.id}
+										title={formatPrimer(primer)}
+										body={primer.notes}
+										onEdit={() => {
+											setEditingPrimerId(primer.id);
+											setPrimerForm(primerToFormValues(primer));
+											setComponentDialog("primer");
+										}}
+										onDelete={() =>
+											setDeleteTarget({ type: "primer", id: primer.id })
+										}
+									/>
+								))}
+							</div>
+							<h3>{t("ammunition.components.brassTitle")}</h3>
+							<div className="record-list">
+								{(brassItems ?? []).map((brass) => (
+									<ComponentCard
+										key={brass.id}
+										title={formatBrass(brass)}
+										body={brass.notes}
+										onEdit={() => {
+											setEditingBrassId(brass.id);
+											setBrassForm(brassToFormValues(brass));
+											setComponentDialog("brass");
+										}}
+										onDelete={() =>
+											setDeleteTarget({ type: "brass", id: brass.id })
+										}
+									/>
+								))}
+							</div>
+						</div>
+					</div>
+				)}
+
+				{componentDialog && (
+					<div className="dialog-backdrop" onMouseDown={closeComponentDialog}>
+						<form
+							className="panel form-grid entity-form-dialog"
+							role="dialog"
+							aria-modal="true"
+							onMouseDown={(event) => event.stopPropagation()}
+							onSubmit={
+								componentDialog === "bullet"
+									? submitBullet
 									: componentDialog === "powder"
-										? t("ammunition.components.powdersTitle")
+										? submitPowder
 										: componentDialog === "primer"
-											? t("ammunition.components.primersTitle")
-											: t("ammunition.components.brassTitle")}
-							</h3>
-							<button
-								className="icon-button"
-								type="button"
-								aria-label={t("actions.close")}
-								onClick={closeComponentDialog}
-							>
-								<X size={16} />
-							</button>
-						</div>
-						{componentDialog === "bullet" && (
-							<>
-								<div className="two-columns">
+											? submitPrimer
+											: submitBrass
+							}
+						>
+							<div className="form-title-row">
+								<h3>
+									{componentDialog === "bullet"
+										? t("ammunition.components.bulletsTitle")
+										: componentDialog === "powder"
+											? t("ammunition.components.powdersTitle")
+											: componentDialog === "primer"
+												? t("ammunition.components.primersTitle")
+												: t("ammunition.components.brassTitle")}
+								</h3>
+								<button
+									className="icon-button"
+									type="button"
+									aria-label={t("actions.close")}
+									onClick={closeComponentDialog}
+								>
+									<X size={16} />
+								</button>
+							</div>
+							{componentDialog === "bullet" && (
+								<>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.fields.brand")}</span>
+											<input
+												list="reloading-brand-options"
+												value={bulletForm.brand}
+												onChange={(event) =>
+													setBulletForm({
+														...bulletForm,
+														brand: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>
+												{t("ammunition.components.fields.bulletName")} *
+											</span>
+											<input
+												required
+												value={bulletForm.name}
+												onChange={(event) =>
+													setBulletForm({
+														...bulletForm,
+														name: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
+									<div className="three-columns">
+										<label>
+											<span>{t("ammunition.components.fields.weight")} *</span>
+											<input
+												required
+												type="number"
+												step="0.1"
+												min="0"
+												value={bulletForm.weightGrains}
+												onChange={(event) =>
+													setBulletForm({
+														...bulletForm,
+														weightGrains: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>{t("ammunition.components.fields.diameter")}</span>
+											<input
+												value={bulletForm.diameter}
+												onChange={(event) =>
+													setBulletForm({
+														...bulletForm,
+														diameter: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>{t("ammunition.components.fields.profile")}</span>
+											<input
+												list="bullet-profile-options"
+												value={bulletForm.profile}
+												onChange={(event) =>
+													setBulletForm({
+														...bulletForm,
+														profile: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
 									<label>
-										<span>{t("ammunition.fields.brand")}</span>
-										<input
-											list="reloading-brand-options"
-											value={bulletForm.brand}
+										<span>{t("ammunition.fields.notes")}</span>
+										<textarea
+											rows={2}
+											value={bulletForm.notes}
 											onChange={(event) =>
 												setBulletForm({
 													...bulletForm,
-													brand: event.target.value,
+													notes: event.target.value,
 												})
 											}
 										/>
 									</label>
+								</>
+							)}
+							{componentDialog === "powder" && (
+								<>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.fields.brand")}</span>
+											<input
+												list="reloading-brand-options"
+												value={powderForm.brand}
+												onChange={(event) =>
+													setPowderForm({
+														...powderForm,
+														brand: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>
+												{t("ammunition.components.fields.powderName")} *
+											</span>
+											<input
+												required
+												list="powder-name-options"
+												value={powderForm.name}
+												onChange={(event) =>
+													setPowderForm({
+														...powderForm,
+														name: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
 									<label>
-										<span>
-											{t("ammunition.components.fields.bulletName")} *
-										</span>
-										<input
-											required
-											value={bulletForm.name}
-											onChange={(event) =>
-												setBulletForm({
-													...bulletForm,
-													name: event.target.value,
-												})
-											}
-										/>
-									</label>
-								</div>
-								<div className="three-columns">
-									<label>
-										<span>{t("ammunition.components.fields.weight")} *</span>
-										<input
-											required
-											type="number"
-											step="0.1"
-											min="0"
-											value={bulletForm.weightGrains}
-											onChange={(event) =>
-												setBulletForm({
-													...bulletForm,
-													weightGrains: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.components.fields.diameter")}</span>
-										<input
-											value={bulletForm.diameter}
-											onChange={(event) =>
-												setBulletForm({
-													...bulletForm,
-													diameter: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.components.fields.profile")}</span>
-										<input
-											list="bullet-profile-options"
-											value={bulletForm.profile}
-											onChange={(event) =>
-												setBulletForm({
-													...bulletForm,
-													profile: event.target.value,
-												})
-											}
-										/>
-									</label>
-								</div>
-								<label>
-									<span>{t("ammunition.fields.notes")}</span>
-									<textarea
-										rows={2}
-										value={bulletForm.notes}
-										onChange={(event) =>
-											setBulletForm({
-												...bulletForm,
-												notes: event.target.value,
-											})
-										}
-									/>
-								</label>
-							</>
-						)}
-						{componentDialog === "powder" && (
-							<>
-								<div className="two-columns">
-									<label>
-										<span>{t("ammunition.fields.brand")}</span>
-										<input
-											list="reloading-brand-options"
-											value={powderForm.brand}
+										<span>{t("ammunition.fields.notes")}</span>
+										<textarea
+											rows={2}
+											value={powderForm.notes}
 											onChange={(event) =>
 												setPowderForm({
 													...powderForm,
-													brand: event.target.value,
+													notes: event.target.value,
 												})
 											}
 										/>
 									</label>
+								</>
+							)}
+							{componentDialog === "primer" && (
+								<>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.fields.brand")}</span>
+											<input
+												list="reloading-brand-options"
+												value={primerForm.brand}
+												onChange={(event) =>
+													setPrimerForm({
+														...primerForm,
+														brand: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>
+												{t("ammunition.components.fields.primerName")} *
+											</span>
+											<input
+												required
+												value={primerForm.name}
+												onChange={(event) =>
+													setPrimerForm({
+														...primerForm,
+														name: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
 									<label>
-										<span>
-											{t("ammunition.components.fields.powderName")} *
-										</span>
+										<span>{t("ammunition.components.fields.primerType")}</span>
 										<input
-											required
-											list="powder-name-options"
-											value={powderForm.name}
-											onChange={(event) =>
-												setPowderForm({
-													...powderForm,
-													name: event.target.value,
-												})
-											}
-										/>
-									</label>
-								</div>
-								<label>
-									<span>{t("ammunition.fields.notes")}</span>
-									<textarea
-										rows={2}
-										value={powderForm.notes}
-										onChange={(event) =>
-											setPowderForm({
-												...powderForm,
-												notes: event.target.value,
-											})
-										}
-									/>
-								</label>
-							</>
-						)}
-						{componentDialog === "primer" && (
-							<>
-								<div className="two-columns">
-									<label>
-										<span>{t("ammunition.fields.brand")}</span>
-										<input
-											list="reloading-brand-options"
-											value={primerForm.brand}
-											onChange={(event) =>
-												setPrimerForm({
-													...primerForm,
-													brand: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>
-											{t("ammunition.components.fields.primerName")} *
-										</span>
-										<input
-											required
-											value={primerForm.name}
+											list="primer-type-options"
+											value={primerForm.type}
 											onChange={(event) =>
 												setPrimerForm({
 													...primerForm,
-													name: event.target.value,
+													type: event.target.value,
 												})
 											}
 										/>
 									</label>
-								</div>
-								<label>
-									<span>{t("ammunition.components.fields.primerType")}</span>
-									<input
-										list="primer-type-options"
-										value={primerForm.type}
-										onChange={(event) =>
-											setPrimerForm({ ...primerForm, type: event.target.value })
-										}
-									/>
-								</label>
-								<label>
-									<span>{t("ammunition.fields.notes")}</span>
-									<textarea
-										rows={2}
-										value={primerForm.notes}
-										onChange={(event) =>
-											setPrimerForm({
-												...primerForm,
-												notes: event.target.value,
-											})
-										}
-									/>
-								</label>
-							</>
-						)}
-						{componentDialog === "brass" && (
-							<>
-								<div className="two-columns">
 									<label>
-										<span>{t("ammunition.fields.brand")}</span>
-										<input
-											list="reloading-brand-options"
-											value={brassForm.brand}
+										<span>{t("ammunition.fields.notes")}</span>
+										<textarea
+											rows={2}
+											value={primerForm.notes}
+											onChange={(event) =>
+												setPrimerForm({
+													...primerForm,
+													notes: event.target.value,
+												})
+											}
+										/>
+									</label>
+								</>
+							)}
+							{componentDialog === "brass" && (
+								<>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.fields.brand")}</span>
+											<input
+												list="reloading-brand-options"
+												value={brassForm.brand}
+												onChange={(event) =>
+													setBrassForm({
+														...brassForm,
+														brand: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>
+												{t("ammunition.components.fields.brassName")} *
+											</span>
+											<input
+												required
+												value={brassForm.name}
+												onChange={(event) =>
+													setBrassForm({
+														...brassForm,
+														name: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
+									<div className="two-columns">
+										<label>
+											<span>{t("ammunition.fields.caliber")}</span>
+											<input
+												list="ammo-caliber-options"
+												value={brassForm.caliber}
+												onChange={(event) =>
+													setBrassForm({
+														...brassForm,
+														caliber: event.target.value,
+													})
+												}
+											/>
+										</label>
+										<label>
+											<span>
+												{t("ammunition.components.fields.timesFired")}
+											</span>
+											<input
+												type="number"
+												min="0"
+												value={brassForm.timesFired}
+												onChange={(event) =>
+													setBrassForm({
+														...brassForm,
+														timesFired: event.target.value,
+													})
+												}
+											/>
+										</label>
+									</div>
+									<label>
+										<span>{t("ammunition.fields.notes")}</span>
+										<textarea
+											rows={2}
+											value={brassForm.notes}
 											onChange={(event) =>
 												setBrassForm({
 													...brassForm,
-													brand: event.target.value,
+													notes: event.target.value,
 												})
 											}
 										/>
 									</label>
-									<label>
-										<span>{t("ammunition.components.fields.brassName")} *</span>
-										<input
-											required
-											value={brassForm.name}
-											onChange={(event) =>
-												setBrassForm({ ...brassForm, name: event.target.value })
-											}
-										/>
-									</label>
-								</div>
-								<div className="two-columns">
-									<label>
-										<span>{t("ammunition.fields.caliber")}</span>
-										<input
-											list="ammo-caliber-options"
-											value={brassForm.caliber}
-											onChange={(event) =>
-												setBrassForm({
-													...brassForm,
-													caliber: event.target.value,
-												})
-											}
-										/>
-									</label>
-									<label>
-										<span>{t("ammunition.components.fields.timesFired")}</span>
-										<input
-											type="number"
-											min="0"
-											value={brassForm.timesFired}
-											onChange={(event) =>
-												setBrassForm({
-													...brassForm,
-													timesFired: event.target.value,
-												})
-											}
-										/>
-									</label>
-								</div>
-								<label>
-									<span>{t("ammunition.fields.notes")}</span>
-									<textarea
-										rows={2}
-										value={brassForm.notes}
-										onChange={(event) =>
-											setBrassForm({ ...brassForm, notes: event.target.value })
-										}
-									/>
-								</label>
-							</>
-						)}
-						<div className="dialog-actions">
-							<button
-								className="button button-secondary"
-								type="button"
-								onClick={closeComponentDialog}
-							>
-								{t("actions.cancel")}
-							</button>
-							<button className="button" type="submit">
-								<Save size={16} />
-								{t("actions.save")}
-							</button>
-						</div>
-					</form>
-				</div>
-			)}
+								</>
+							)}
+							<div className="dialog-actions">
+								<button
+									className="button button-secondary"
+									type="button"
+									onClick={closeComponentDialog}
+								>
+									{t("actions.cancel")}
+								</button>
+								<button className="button" type="submit">
+									<Save size={16} />
+									{t("actions.save")}
+								</button>
+							</div>
+						</form>
+					</div>
+				)}
 
-			{activeTab === "stock" && (
-				<StockPanel
-					batches={batches ?? []}
-					transactions={transactions ?? []}
-					showForm={showStockForm}
-					editingBatchId={editingBatchId}
-					form={stockForm}
-					txForm={txForm}
-					onSubmitStock={(event) => void submitStock(event)}
-					onCancelStock={resetStockForm}
-					onFormChange={setStockForm}
-					onTxFormChange={setTxForm}
-					onSubmitTx={(event) => void submitTransaction(event)}
-					onEditBatch={editBatch}
-					onDelete={setDeleteTarget}
-				/>
-			)}
+				{activeTab === "stock" && (
+					<StockPanel
+						batches={batches ?? []}
+						transactions={transactions ?? []}
+						showForm={showStockForm}
+						editingBatchId={editingBatchId}
+						form={stockForm}
+						txForm={txForm}
+						onSubmitStock={(event) => void submitStock(event)}
+						onCancelStock={resetStockForm}
+						onFormChange={setStockForm}
+						onTxFormChange={setTxForm}
+						onSubmitTx={(event) => void submitTransaction(event)}
+						onEditBatch={editBatch}
+						onDelete={setDeleteTarget}
+					/>
+				)}
 
-			{deleteTarget && (
-				<div
-					className="dialog-backdrop"
-					onMouseDown={() => setDeleteTarget(null)}
-				>
+				{deleteTarget && (
 					<div
-						className="dialog"
-						role="dialog"
-						aria-modal="true"
-						onMouseDown={(event) => event.stopPropagation()}
+						className="dialog-backdrop"
+						onMouseDown={() => setDeleteTarget(null)}
 					>
-						<div className="dialog-title-row">
-							<h3>{t("ammunition.deleteTitle")}</h3>
-							<button
-								className="icon-button"
-								onClick={() => setDeleteTarget(null)}
-							>
-								<X size={16} />
-							</button>
-						</div>
-						<p>{t("ammunition.deleteConfirm")}</p>
-						<div className="dialog-actions">
-							<button
-								className="button button-secondary"
-								onClick={() => setDeleteTarget(null)}
-							>
-								{t("actions.cancel")}
-							</button>
-							<button
-								className="button button-danger"
-								onClick={() => void confirmDelete()}
-							>
-								{t("actions.delete")}
-							</button>
+						<div
+							className="dialog"
+							role="dialog"
+							aria-modal="true"
+							onMouseDown={(event) => event.stopPropagation()}
+						>
+							<div className="dialog-title-row">
+								<h3>{t("ammunition.deleteTitle")}</h3>
+								<button
+									className="icon-button"
+									onClick={() => setDeleteTarget(null)}
+								>
+									<X size={16} />
+								</button>
+							</div>
+							<p>{t("ammunition.deleteConfirm")}</p>
+							<div className="dialog-actions">
+								<button
+									className="button button-secondary"
+									onClick={() => setDeleteTarget(null)}
+								>
+									{t("actions.cancel")}
+								</button>
+								<button
+									className="button button-danger"
+									onClick={() => void confirmDelete()}
+								>
+									{t("actions.delete")}
+								</button>
+							</div>
 						</div>
 					</div>
-				</div>
-			)}
-		</EntityPage>
+				)}
+			</EntityPage>
+		</div>
 	);
 }
 

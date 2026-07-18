@@ -6,11 +6,15 @@ import { BottomNav, Header, Sidebar } from "../components/Navigation";
 import { SettingsPanel } from "../components/SettingsPanel";
 import { StatusMessage } from "../components/StatusMessage";
 import { db } from "../db/schema";
-import { AmmunitionCrud } from "../domain/ammunition/AmmunitionCrud";
+import {
+	AmmunitionCrud,
+	type AmmunitionTab,
+} from "../domain/ammunition/AmmunitionCrud";
 import { FirearmsCrud } from "../domain/firearms/FirearmsCrud";
 import { MaintenanceCrud } from "../domain/maintenance/MaintenanceCrud";
 import { MatchAnalysis } from "../domain/matches/MatchAnalysis";
 import { MatchesCrud } from "../domain/matches/MatchesCrud";
+import type { MatchEvent } from "../domain/matches/types";
 import { PaperworkCrud } from "../domain/paperwork/PaperworkCrud";
 import { TrainingCrud } from "../domain/training/TrainingCrud";
 import type { MatchStageAsset } from "../domain/matches/stageAssets";
@@ -38,31 +42,76 @@ function getInitialTheme(): Theme {
 		: "light";
 }
 
-function getInitialSection(): Section {
-	const sectionParam = new URLSearchParams(window.location.search).get(
-		"section",
-	);
+type MatchesTab = "registry" | "analysis";
+
+interface AppRoute {
+	section: Section;
+	matchesTab: MatchesTab;
+	ammunitionTab: AmmunitionTab;
+}
+
+const SECTIONS: Section[] = [
+	"dashboard",
+	"firearms",
+	"training",
+	"matches",
+	"ammunition",
+	"maintenance",
+	"paperwork",
+	"settings",
+];
+
+function readRouteFromLocation(): AppRoute {
+	const params = new URLSearchParams(window.location.search);
+	const sectionParam = params.get("section");
+	const tabParam = params.get("tab");
 	const storedSection = window.localStorage.getItem(SECTION_STORAGE_KEY);
-	const sections: Section[] = [
-		"dashboard",
-		"firearms",
-		"training",
-		"matches",
-		"analysis",
-		"ammunition",
-		"chrono",
-		"components",
-		"stock",
-		"maintenance",
-		"paperwork",
-		"reports",
-		"settings",
-	];
-	if (sections.includes(sectionParam as Section))
-		return sectionParam as Section;
-	return sections.includes(storedSection as Section)
-		? (storedSection as Section)
-		: "dashboard";
+	const section =
+		sectionParam === "analysis"
+			? "matches"
+			: SECTIONS.includes(sectionParam as Section)
+				? (sectionParam as Section)
+				: SECTIONS.includes(storedSection as Section)
+					? (storedSection as Section)
+					: "dashboard";
+
+	return {
+		section,
+		matchesTab:
+			sectionParam === "analysis" || tabParam === "analysis"
+				? "analysis"
+				: "registry",
+		ammunitionTab: isAmmunitionTab(tabParam) ? tabParam : "recipes",
+	};
+}
+
+function isAmmunitionTab(value: string | null): value is AmmunitionTab {
+	return ["recipes", "chrono", "components", "stock"].includes(value ?? "");
+}
+
+function writeRouteToLocation(
+	section: Section,
+	options: { matchesTab?: MatchesTab; ammunitionTab?: AmmunitionTab } = {},
+	mode: "push" | "replace" = "push",
+) {
+	const url = new URL(window.location.href);
+	url.searchParams.set("section", section);
+	url.searchParams.delete("tab");
+	if (section === "matches" && options.matchesTab === "analysis") {
+		url.searchParams.set("tab", "analysis");
+	} else {
+		url.searchParams.delete("match");
+		url.searchParams.delete("mare2");
+		url.searchParams.delete("mare2MatchId");
+		url.searchParams.delete("competitors");
+		url.searchParams.delete("compare");
+		url.searchParams.delete("shooters");
+	}
+	if (section === "ammunition") {
+		url.searchParams.set("tab", options.ammunitionTab ?? "recipes");
+	}
+	if (mode === "replace") window.history.replaceState(null, "", url.toString());
+	else window.history.pushState(null, "", url.toString());
 }
 
 async function blobToBase64(blob: Blob): Promise<string> {
@@ -183,8 +232,10 @@ function removeAutoImportParamsFromLocation(): void {
 export function App() {
 	const { i18n, t } = useTranslation();
 	const [theme, setTheme] = useState<Theme>(getInitialTheme);
-	const [activeSection, setActiveSection] =
-		useState<Section>(getInitialSection);
+	const [route, setRoute] = useState<AppRoute>(readRouteFromLocation);
+	const activeSection = route.section;
+	const matchesTab = route.matchesTab;
+	const ammunitionTab = route.ammunitionTab;
 	const [lastDriveSyncedAt, setLastDriveSyncedAt] = useState<string | null>(
 		() => window.localStorage.getItem(LAST_DRIVE_SYNC_STORAGE_KEY),
 	);
@@ -203,6 +254,24 @@ export function App() {
 	useEffect(() => {
 		window.localStorage.setItem(SECTION_STORAGE_KEY, activeSection);
 	}, [activeSection]);
+
+	useEffect(() => {
+		writeRouteToLocation(
+			activeSection,
+			{ matchesTab, ammunitionTab },
+			"replace",
+		);
+		// Normalize the initial URL once so the currently visible page is shareable.
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	useEffect(() => {
+		function handlePopState() {
+			setRoute(readRouteFromLocation());
+		}
+		window.addEventListener("popstate", handlePopState);
+		return () => window.removeEventListener("popstate", handlePopState);
+	}, []);
 
 	useEffect(() => {
 		let autoImportUrl: URL | null;
@@ -264,6 +333,8 @@ export function App() {
 			paperworkCredentials,
 			paperworkAttachments,
 			appSettings,
+			regularCompetitors,
+			matchAnalysisSelections,
 		] = await Promise.all([
 			db.firearms.toArray(),
 			db.trainingSessions.toArray(),
@@ -282,6 +353,8 @@ export function App() {
 			db.paperworkCredentials.toArray(),
 			db.paperworkAttachments.toArray(),
 			db.appSettings.toArray(),
+			db.regularCompetitors.toArray(),
+			db.matchAnalysisSelections.toArray(),
 		]);
 
 		const serializedMatchStageAssets = await Promise.all(
@@ -316,6 +389,8 @@ export function App() {
 			paperworkCredentials,
 			paperworkAttachments: serializedPaperworkAttachments,
 			appSettings,
+			regularCompetitors,
+			matchAnalysisSelections,
 		};
 	}
 
@@ -373,6 +448,8 @@ export function App() {
 				db.paperworkCredentials,
 				db.paperworkAttachments,
 				db.appSettings,
+				db.regularCompetitors,
+				db.matchAnalysisSelections,
 			],
 			async () => {
 				if (Array.isArray(payload.firearms))
@@ -416,6 +493,12 @@ export function App() {
 				}
 				if (Array.isArray(payload.appSettings))
 					await db.appSettings.bulkPut(payload.appSettings);
+				if (Array.isArray(payload.regularCompetitors))
+					await db.regularCompetitors.bulkPut(payload.regularCompetitors);
+				if (Array.isArray(payload.matchAnalysisSelections))
+					await db.matchAnalysisSelections.bulkPut(
+						payload.matchAnalysisSelections,
+					);
 			},
 		);
 	}
@@ -451,6 +534,8 @@ export function App() {
 				db.paperworkCredentials,
 				db.paperworkAttachments,
 				db.appSettings,
+				db.regularCompetitors,
+				db.matchAnalysisSelections,
 			],
 			async () => {
 				await Promise.all([
@@ -471,31 +556,110 @@ export function App() {
 					db.paperworkCredentials.clear(),
 					db.paperworkAttachments.clear(),
 					db.appSettings.clear(),
+					db.regularCompetitors.clear(),
+					db.matchAnalysisSelections.clear(),
 				]);
 			},
+		);
+	}
+
+	function navigateToSection(section: Section) {
+		const nextRoute: AppRoute = {
+			section,
+			matchesTab: "registry",
+			ammunitionTab: "recipes",
+		};
+		writeRouteToLocation(section, nextRoute);
+		setRoute(nextRoute);
+	}
+
+	function navigateToMatchesTab(nextTab: MatchesTab) {
+		const nextRoute = {
+			...route,
+			section: "matches" as const,
+			matchesTab: nextTab,
+		};
+		writeRouteToLocation("matches", { matchesTab: nextTab });
+		setRoute(nextRoute);
+	}
+
+	function navigateToAmmunitionTab(nextTab: AmmunitionTab) {
+		const nextRoute = {
+			...route,
+			section: "ammunition" as const,
+			ammunitionTab: nextTab,
+		};
+		writeRouteToLocation("ammunition", { ammunitionTab: nextTab });
+		setRoute(nextRoute);
+	}
+
+	function openMatchAnalysis(match: MatchEvent) {
+		const url = new URL(window.location.href);
+		url.searchParams.set("section", "matches");
+		url.searchParams.set("tab", "analysis");
+		url.searchParams.delete("mare2");
+		url.searchParams.delete("mare2MatchId");
+		url.searchParams.set("match", match.practiscoreMatchId ?? match.id);
+		url.searchParams.delete("competitors");
+		url.searchParams.delete("compare");
+		url.searchParams.delete("shooters");
+		window.history.pushState(null, "", url.toString());
+		setRoute({ ...route, section: "matches", matchesTab: "analysis" });
+	}
+
+	function renderMatchesSection() {
+		return (
+			<div className="screen-stack">
+				<div className="tab-row">
+					<button
+						type="button"
+						className={
+							matchesTab === "registry"
+								? "tab-button tab-button-active"
+								: "tab-button"
+						}
+						onClick={() => navigateToMatchesTab("registry")}
+					>
+						{t("matches.tabs.registry")}
+					</button>
+					<button
+						type="button"
+						className={
+							matchesTab === "analysis"
+								? "tab-button tab-button-active"
+								: "tab-button"
+						}
+						onClick={() => navigateToMatchesTab("analysis")}
+					>
+						{t("matches.tabs.analysis")}
+					</button>
+				</div>
+				{matchesTab === "registry" ? (
+					<MatchesCrud onAnalyzeMatch={openMatchAnalysis} />
+				) : (
+					<MatchAnalysis />
+				)}
+			</div>
 		);
 	}
 
 	function renderSection() {
 		switch (activeSection) {
 			case "dashboard":
-				return <Dashboard onNavigate={setActiveSection} />;
+				return <Dashboard onNavigate={navigateToSection} />;
 			case "firearms":
 				return <FirearmsCrud />;
 			case "training":
 				return <TrainingCrud />;
 			case "matches":
-				return <MatchesCrud />;
-			case "analysis":
-				return <MatchAnalysis />;
+				return renderMatchesSection();
 			case "ammunition":
-				return <AmmunitionCrud fixedTab="recipes" />;
-			case "chrono":
-				return <AmmunitionCrud fixedTab="chrono" />;
-			case "components":
-				return <AmmunitionCrud fixedTab="components" />;
-			case "stock":
-				return <AmmunitionCrud fixedTab="stock" />;
+				return (
+					<AmmunitionCrud
+						tab={ammunitionTab}
+						onTabChange={navigateToAmmunitionTab}
+					/>
+				);
 			case "maintenance":
 				return <MaintenanceCrud />;
 			case "paperwork":
@@ -518,12 +682,7 @@ export function App() {
 					/>
 				);
 			default:
-				return (
-					<section className="empty-state-card placeholder-screen">
-						<h2>{t(`sections.${activeSection}`)}</h2>
-						<p>{t("common.comingSoon")}</p>
-					</section>
-				);
+				return null;
 		}
 	}
 
@@ -532,7 +691,7 @@ export function App() {
 			<Sidebar
 				active={activeSection}
 				mobileOpen={mobileMenuOpen}
-				onNavigate={setActiveSection}
+				onNavigate={navigateToSection}
 				onMobileClose={() => setMobileMenuOpen(false)}
 			/>
 			<div className="main-column">
@@ -559,7 +718,7 @@ export function App() {
 					{renderSection()}
 				</main>
 			</div>
-			<BottomNav active={activeSection} onNavigate={setActiveSection} />
+			<BottomNav active={activeSection} onNavigate={navigateToSection} />
 		</div>
 	);
 }

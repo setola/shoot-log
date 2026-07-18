@@ -69,9 +69,10 @@ Planned improvements for ShootLog. Keep all features privacy-first, local-first,
   - The app imports selected catalog matches into local IndexedDB only.
 - Follow-up work:
   - Persist a local/CI "last successful catalog sync" date and feed it into
-    `--since=YYYY-MM-DD` for cron-style incremental updates.
+    `--since` for cron-style incremental updates. The CLI already accepts ISO
+    dates and relative windows such as `last week` or `last 2 weeks`.
   - Add stronger schema validation for catalog `manifest.json`, `match.json`, and
-    `snapshot.json` before importing into IndexedDB.
+    `snapshot.json`, including optional location fields, before importing into IndexedDB.
   - Improve stage-page mapping. The MVP associates the last N catalog pages with
     N stages; cropped or OCR-assisted per-stage mapping should replace this.
   - Add catalog source configuration so the app can switch between pages.dev and

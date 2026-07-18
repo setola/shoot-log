@@ -4,7 +4,7 @@
     "shortTitle": "ShootLog",
     "privateLogbook": "Private logbook",
     "tagline": "Privacy-first sport shooting records",
-    "description": "Track training, matches, firearms, ammunition, maintenance and paperwork locally, with optional Google Drive backup."
+    "description": "Track training, matches, firearms, reloading, ammunition stock, maintenance and paperwork locally, with optional Google Drive backup."
   },
   "navigation": {
     "primary": "Primary navigation",
@@ -15,34 +15,24 @@
     "firearms": "Firearms",
     "training": "Training",
     "matches": "Matches",
-    "ammunition": "Recipes",
+    "ammunition": "Reloading",
     "maintenance": "Maintenance",
     "paperwork": "Paperwork",
-    "reports": "Reports",
     "sync": "Drive Sync",
     "settings": "Settings",
     "sourceCode": "Source code",
-    "sourceCommit": "Source {{commit}}",
-    "analysis": "Analysis",
-    "chrono": "Chrono",
-    "components": "Components",
-    "stock": "Stock"
+    "sourceCommit": "Source {{commit}}"
   },
   "sections": {
     "dashboard": "Dashboard",
     "firearms": "Firearm Registry",
     "training": "Training Sessions",
     "matches": "Matches",
-    "ammunition": "Reloading recipes",
+    "ammunition": "Reloading",
     "maintenance": "Maintenance",
     "paperwork": "Paperwork",
-    "reports": "Reports",
     "sync": "Google Drive Sync",
-    "settings": "Settings",
-    "analysis": "Analysis",
-    "chrono": "Chronograph",
-    "components": "Components",
-    "stock": "Ammunition stock"
+    "settings": "Settings"
   },
   "privacy": {
     "localDevice": "Your data stays on this device."
@@ -54,7 +44,7 @@
     "welcomeDescription": "Your data stays on this device. Back up to Google Drive when sync is enabled.",
     "firearmsSummary": "Create firearm profiles and track total round counts.",
     "trainingSummary": "Record training sessions, drills, scores and notes.",
-    "matchesSummary": "Keep match participation and results ready for reporting.",
+    "matchesSummary": "Keep match participation, imports and analysis ready for reporting.",
     "syncSummary": "Back up data to the user's own Google Drive app data folder.",
     "stats": {
       "firearms": "Registered firearms",
@@ -63,8 +53,8 @@
       "roundsFired": "{{count}} rounds fired",
       "matches": "Total matches",
       "allTime": "All time",
-      "ammo": "Ammo records",
-      "inventory": "Track your stock",
+      "ammo": "Reloading records",
+      "inventory": "Recipes, chrono and stock",
       "maintenance": "Maintenance",
       "reminders": "No pending reminders",
       "drive": "Drive backup",
@@ -187,12 +177,25 @@
     "owner": {
       "title": "Device owner",
       "identifiersLabel": "PractiScore identifiers / names",
-      "identifiersPlaceholder": "Identifier, alias, or full name",
+      "identifiersPlaceholder": "Identifier, alias, full name, or comma-containing value",
       "description": "Add one identifier or name at a time. Analysis will use these aliases or names to preselect your competitor when a match is opened.",
       "addLabel": "Add identifier or name",
       "addButton": "Add",
       "empty": "No owner identifiers yet.",
       "removeIdentifier": "Remove {{identifier}}"
+    },
+    "regularCompetitors": {
+      "title": "Regular competitors",
+      "description": "Save the shooters you usually compare with. When a newly imported match is opened in Analysis for the first time, matching competitors are preselected automatically.",
+      "empty": "No regular competitors yet.",
+      "createTitle": "Add regular competitor",
+      "editTitle": "Edit regular competitor",
+      "name": "Display name",
+      "namePlaceholder": "Name or nickname",
+      "identifiers": "Identifiers",
+      "identifiersPlaceholder": "One per line: full name, alias, competitor number. Commas are preserved.",
+      "notes": "Notes",
+      "addButton": "Add competitor"
     }
   },
   "sync": {
@@ -316,7 +319,7 @@
   },
   "matches": {
     "title": "Matches",
-    "description": "Track competition results and placements.",
+    "description": "Log match results, import public Mare2/PractiScore data, and open match analysis from the internal tabs.",
     "new": "Add match",
     "createTitle": "Add match",
     "editTitle": "Edit match",
@@ -359,7 +362,7 @@
     },
     "analysis": {
       "title": "Match analysis",
-      "description": "Select an imported match, including Mare2 matches, and compare one or more competitors across hits, times, points and stage trends.",
+      "description": "Review imported match snapshots, compare competitors and inspect stage trends. Open this tab from Matches or from a shared analysis link.",
       "match": "Match",
       "competitor": "Analyze competitor",
       "competitorPlaceholder": "Search by name, alias or number",
@@ -378,7 +381,7 @@
       "stageDetailsTitle": "Stage details",
       "stageDetailsDescription": "Compact per-stage view of course info, hits, penalties, time and hit factor.",
       "emptyTitle": "No imported match data yet",
-      "emptyDescription": "Import a match from Mare2, Mare2 PDF or PractiScore in Matches, or open a shared Mare2 analysis link.",
+      "emptyDescription": "Import a match from the Mare2 catalog, Mare2 PDF or PractiScore in Matches, then open the Analysis tab.",
       "sharedImportingTitle": "Importing Mare2 match...",
       "sharedImportingDescription": "Downloading the public match from the Mare2 catalog and storing it only on this device to open the shared analysis.",
       "sharedImportErrorTitle": "Shared analysis unavailable",
@@ -400,9 +403,10 @@
       "chartGaps": "Gaps",
       "totalTimeLabel": "Time",
       "totalPointsLabel": "Points",
-      "shareLink": "Copy shareable link",
+      "shareLink": "Copy analysis link",
       "shareCopied": "Link copied",
-      "removeCompetitor": "Remove {{competitor}}"
+      "removeCompetitor": "Remove {{competitor}}",
+      "openMatch": "Open analysis for {{match}}"
     },
     "mare2": {
       "title": "Mare2 FITDS PDF import",
@@ -447,7 +451,7 @@
     "publicCatalog": {
       "action": "Mare2",
       "title": "Import from Mare2",
-      "description": "Search and import one or more prepared public matches. Data will be stored only locally on this device.",
+      "description": "Search the public Mare2 catalog, select matches and import them to this device. Imported data remains local unless you include it in your own backup.",
       "loading": "Loading catalog...",
       "empty": "No matches are available in the public catalog.",
       "match": "Match",
@@ -457,28 +461,31 @@
       "importError": "Unable to import the match from the Mare2 catalog.",
       "importedSummary": "Imported {{match}}: {{stages}} stages · {{competitors}} competitors.",
       "search": "Search catalog",
-      "searchPlaceholder": "Free text: federal ma3, winter, uboldo, 1616...",
+      "searchPlaceholder": "Search by name, ID, location, MA or championship...",
       "resultCount": "{{count}} of {{total}} matches found",
       "noSearchResults": "No matches match this search.",
       "bulkImportedSummary": "Imported {{count}} matches from Mare2.",
       "selected": "Select",
-      "selectAllFiltered": "Select filtered results",
-      "clearFiltered": "Clear filtered results",
-      "toggleMatch": "Select {{match}}"
+      "toggleMatch": "Select {{match}}",
+      "location": "Location"
+    },
+    "tabs": {
+      "registry": "Registry",
+      "analysis": "Analysis"
     }
   },
   "ammunition": {
-    "title": "Ammunition",
-    "description": "Manage reloading recipes, chronograph measurements and ammunition stock locally.",
+    "title": "Reloading",
+    "description": "Manage local reloading recipes, chronograph sessions, reusable components and ammunition stock from the tabs below.",
     "summary": "{{entries}} entries · {{rounds}} rounds total",
-    "new": "Add ammo",
-    "createTitle": "Add ammo",
+    "new": "Add batch",
+    "createTitle": "Add ammunition batch",
     "editTitle": "Edit batch",
-    "createAction": "Add ammo",
-    "emptyTitle": "No ammunition entries",
-    "empty": "Track your stock, purchases and remaining rounds.",
-    "deleteTitle": "Delete entry?",
-    "deleteConfirm": "This will permanently remove this ammunition entry.",
+    "createAction": "Add batch",
+    "emptyTitle": "No stock batches yet",
+    "empty": "Add ammunition lots and record stock movements to track remaining rounds.",
+    "deleteTitle": "Delete stock entry?",
+    "deleteConfirm": "This will permanently remove this ammunition stock entry.",
     "transactionTitle": "Quick stock movement",
     "addTransaction": "Add movement",
     "rounds": "{{count}} rounds",
@@ -577,11 +584,11 @@
     "sections": {
       "recipes": {
         "title": "Reloading recipes",
-        "description": "Save load recipes with reusable bullets, powders, primers and brass."
+        "description": "Save load recipes using reusable bullets, powders, primers and brass. Use Chrono to validate velocity and power factor."
       },
       "chrono": {
         "title": "Chronograph",
-        "description": "Record velocity strings by recipe and firearm to calculate average speed and power factor."
+        "description": "Record velocity strings by recipe and firearm to calculate average speed, spread and power factor."
       },
       "stock": {
         "title": "Ammunition stock",
@@ -589,7 +596,7 @@
       },
       "components": {
         "title": "Components",
-        "description": "Manage reusable bullets, powders, primers and brass for your recipes."
+        "description": "Maintain reusable component catalogs for recipes: bullets, powders, primers and brass."
       }
     },
     "actions": {

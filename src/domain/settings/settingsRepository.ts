@@ -1,22 +1,32 @@
-import { db } from '../../db/schema';
-import { nowIso } from '../../utils/time';
-import type { AppSettings } from './types';
+import { db } from "../../db/schema";
+import { nowIso } from "../../utils/time";
+import type { AppSettings } from "./types";
 
-export const DEFAULT_SETTINGS_ID = 'default';
+export const DEFAULT_SETTINGS_ID = "default";
 
-export async function updateOwnerPractiscoreIdentifiers(identifiers: string[]): Promise<void> {
-  const now = nowIso();
-  const existing = await db.appSettings.get(DEFAULT_SETTINGS_ID);
-  const record: AppSettings = {
-    id: DEFAULT_SETTINGS_ID,
-    ownerPractiscoreIdentifiers: normalizeIdentifiers(identifiers),
-    createdAt: existing?.createdAt ?? now,
-    updatedAt: now
-  };
+export async function updateOwnerPractiscoreIdentifiers(
+	identifiers: string[],
+): Promise<void> {
+	const now = nowIso();
+	const existing = await db.appSettings.get(DEFAULT_SETTINGS_ID);
+	const record: AppSettings = {
+		id: DEFAULT_SETTINGS_ID,
+		ownerPractiscoreIdentifiers: normalizeIdentifiers(identifiers),
+		createdAt: existing?.createdAt ?? now,
+		updatedAt: now,
+	};
 
-  await db.appSettings.put(record);
+	await db.appSettings.put(record);
+}
+
+export function parseIdentifierText(value: string): string[] {
+	return value.split(/\r?\n/);
 }
 
 export function normalizeIdentifiers(identifiers: string[]): string[] {
-  return [...new Set(identifiers.map((identifier) => identifier.trim()).filter(Boolean))];
+	return [
+		...new Set(
+			identifiers.map((identifier) => identifier.trim()).filter(Boolean),
+		),
+	];
 }

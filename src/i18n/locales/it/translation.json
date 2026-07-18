@@ -4,7 +4,7 @@
     "shortTitle": "ShootLog",
     "privateLogbook": "Registro privato",
     "tagline": "Registro privacy-first per il tiro sportivo",
-    "description": "Tieni traccia di allenamenti, gare, armi, munizioni, manutenzione e documenti in locale, con backup opzionale su Google Drive."
+    "description": "Traccia allenamenti, gare, armi, ricarica, stock munizioni, manutenzione e documenti in locale, con backup opzionale su Google Drive."
   },
   "navigation": {
     "primary": "Navigazione principale",
@@ -15,34 +15,24 @@
     "firearms": "Armi",
     "training": "Allenamenti",
     "matches": "Gare",
-    "ammunition": "Ricette",
+    "ammunition": "Ricarica",
     "maintenance": "Manutenzione",
     "paperwork": "Documenti",
-    "reports": "Report",
     "sync": "Drive Sync",
     "settings": "Impostazioni",
     "sourceCode": "Codice sorgente",
-    "sourceCommit": "Sorgente {{commit}}",
-    "analysis": "Analisi",
-    "chrono": "Chrono",
-    "components": "Componenti",
-    "stock": "Stock"
+    "sourceCommit": "Sorgente {{commit}}"
   },
   "sections": {
     "dashboard": "Cruscotto",
     "firearms": "Registro armi",
     "training": "Sessioni di allenamento",
     "matches": "Gare",
-    "ammunition": "Ricette di ricarica",
+    "ammunition": "Ricarica",
     "maintenance": "Manutenzione",
     "paperwork": "Documenti",
-    "reports": "Report",
     "sync": "Sincronizzazione Google Drive",
-    "settings": "Impostazioni",
-    "analysis": "Analisi",
-    "chrono": "Chrono",
-    "components": "Componenti",
-    "stock": "Stock munizioni"
+    "settings": "Impostazioni"
   },
   "privacy": {
     "localDevice": "I tuoi dati restano su questo dispositivo."
@@ -54,7 +44,7 @@
     "welcomeDescription": "I tuoi dati restano su questo dispositivo. Potrai salvarli su Google Drive quando la sincronizzazione sarà abilitata.",
     "firearmsSummary": "Crea profili delle armi e traccia il conteggio totale dei colpi.",
     "trainingSummary": "Registra sessioni di allenamento, esercizi, punteggi e note.",
-    "matchesSummary": "Conserva partecipazioni e risultati di gara per i report.",
+    "matchesSummary": "Mantieni partecipazioni, importazioni e analisi gara pronte per consultazione e report.",
     "syncSummary": "Esegui il backup dei dati nella cartella app del Google Drive dell'utente.",
     "stats": {
       "firearms": "Armi registrate",
@@ -63,8 +53,8 @@
       "roundsFired": "{{count}} colpi sparati",
       "matches": "Gare totali",
       "allTime": "Da sempre",
-      "ammo": "Movimenti munizioni",
-      "inventory": "Traccia le scorte",
+      "ammo": "Dati ricarica",
+      "inventory": "Ricette, chrono e stock",
       "maintenance": "Manutenzione",
       "reminders": "Nessun promemoria attivo",
       "drive": "Backup Drive",
@@ -187,12 +177,25 @@
     "owner": {
       "title": "Proprietario dispositivo",
       "identifiersLabel": "Identificativi PractiScore / nomi",
-      "identifiersPlaceholder": "Identificativo, alias o nome completo",
+      "identifiersPlaceholder": "Identificativo, alias, nome completo o valore con virgola",
       "description": "Aggiungi un identificativo o nome alla volta. Analisi userà questi alias o nomi per preselezionare il tuo tiratore quando viene aperta una gara.",
       "addLabel": "Aggiungi identificativo o nome",
       "addButton": "Aggiungi",
       "empty": "Nessun identificativo proprietario.",
       "removeIdentifier": "Rimuovi {{identifier}}"
+    },
+    "regularCompetitors": {
+      "title": "Competitor abituali",
+      "description": "Salva i tiratori con cui ti confronti spesso. Quando apri per la prima volta l’analisi di una gara appena importata, i competitor corrispondenti vengono preselezionati automaticamente.",
+      "empty": "Nessun competitor abituale configurato.",
+      "createTitle": "Aggiungi competitor abituale",
+      "editTitle": "Modifica competitor abituale",
+      "name": "Nome visualizzato",
+      "namePlaceholder": "Nome o soprannome",
+      "identifiers": "Identificativi",
+      "identifiersPlaceholder": "Uno per riga: nome completo, alias, numero competitor. Le virgole vengono conservate.",
+      "notes": "Note",
+      "addButton": "Aggiungi competitor"
     }
   },
   "sync": {
@@ -316,7 +319,7 @@
   },
   "matches": {
     "title": "Gare",
-    "description": "Traccia risultati e piazzamenti delle competizioni.",
+    "description": "Registra risultati gara, importa dati pubblici Mare2/PractiScore e apri l’analisi dalle schede interne.",
     "new": "Aggiungi gara",
     "createTitle": "Aggiungi gara",
     "editTitle": "Modifica gara",
@@ -359,7 +362,7 @@
     },
     "analysis": {
       "title": "Analisi gara",
-      "description": "Seleziona una gara importata, anche da Mare2, e confronta uno o più tiratori su colpi, tempi, punti e andamento stage.",
+      "description": "Analizza snapshot gara importati, confronta tiratori e consulta trend per stage. Apri questa scheda da Gare o da un link condiviso.",
       "match": "Gara",
       "competitor": "Tiratore da analizzare",
       "competitorPlaceholder": "Cerca per nome, alias o numero",
@@ -378,7 +381,7 @@
       "stageDetailsTitle": "Dettaglio stage",
       "stageDetailsDescription": "Vista compatta per stage con informazioni esercizio, colpi, penalità, tempo e hit factor.",
       "emptyTitle": "Nessun dato gara importato",
-      "emptyDescription": "Importa una gara da Mare2, Mare2 PDF o PractiScore dalla sezione Gare, oppure apri un link di analisi condivisa Mare2.",
+      "emptyDescription": "Importa una gara dal catalogo Mare2, da PDF Mare2 o da PractiScore nella sezione Gare, poi apri la scheda Analisi.",
       "sharedImportingTitle": "Importazione gara Mare2...",
       "sharedImportingDescription": "Sto scaricando la gara pubblica dal catalogo Mare2 e la salvo solo in locale su questo dispositivo per aprire l’analisi condivisa.",
       "sharedImportErrorTitle": "Analisi condivisa non disponibile",
@@ -400,9 +403,10 @@
       "chartGaps": "Gap",
       "totalTimeLabel": "Tempo",
       "totalPointsLabel": "Punti",
-      "shareLink": "Copia link condivisibile",
+      "shareLink": "Copia link analisi",
       "shareCopied": "Link copiato",
-      "removeCompetitor": "Rimuovi {{competitor}}"
+      "removeCompetitor": "Rimuovi {{competitor}}",
+      "openMatch": "Apri analisi per {{match}}"
     },
     "mare2": {
       "title": "Import PDF Mare2 FITDS",
@@ -447,7 +451,7 @@
     "publicCatalog": {
       "action": "Mare2",
       "title": "Importa da Mare2",
-      "description": "Cerca e importa una o più gare pubbliche già preparate. I dati saranno salvati solo in locale su questo dispositivo.",
+      "description": "Cerca nel catalogo Mare2 pubblico, seleziona le gare e importale su questo dispositivo. I dati importati restano locali salvo tuo backup.",
       "loading": "Caricamento catalogo...",
       "empty": "Nessuna gara disponibile nel catalogo pubblico.",
       "match": "Gara",
@@ -457,28 +461,31 @@
       "importError": "Impossibile importare la gara dal catalogo Mare2.",
       "importedSummary": "Importata {{match}}: {{stages}} stage · {{competitors}} tiratori.",
       "search": "Cerca nel catalogo",
-      "searchPlaceholder": "Testo libero: federale ma3, winter, uboldo, 1616...",
+      "searchPlaceholder": "Cerca per nome, ID, luogo, MA o campionato...",
       "resultCount": "{{count}} di {{total}} gare trovate",
       "noSearchResults": "Nessuna gara corrisponde alla ricerca.",
       "bulkImportedSummary": "Importate {{count}} gare da Mare2.",
       "selected": "Seleziona",
-      "selectAllFiltered": "Seleziona risultati filtrati",
-      "clearFiltered": "Deseleziona risultati filtrati",
-      "toggleMatch": "Seleziona {{match}}"
+      "toggleMatch": "Seleziona {{match}}",
+      "location": "Luogo"
+    },
+    "tabs": {
+      "registry": "Registro",
+      "analysis": "Analisi"
     }
   },
   "ammunition": {
-    "title": "Munizioni",
-    "description": "Gestisci ricette di ricarica, misurazioni chrono e stock munizioni in locale.",
+    "title": "Ricarica",
+    "description": "Gestisci in locale ricette di ricarica, sessioni chrono, componenti riutilizzabili e stock munizioni dalle schede sotto.",
     "summary": "{{entries}} voci · {{rounds}} colpi totali",
-    "new": "Aggiungi munizioni",
-    "createTitle": "Aggiungi munizioni",
+    "new": "Aggiungi lotto",
+    "createTitle": "Aggiungi lotto munizioni",
     "editTitle": "Modifica lotto",
-    "createAction": "Aggiungi munizioni",
-    "emptyTitle": "Nessuna munizione",
-    "empty": "Traccia stock, acquisti e colpi rimanenti.",
-    "deleteTitle": "Eliminare voce?",
-    "deleteConfirm": "Questa voce munizioni sarà rimossa definitivamente.",
+    "createAction": "Aggiungi lotto",
+    "emptyTitle": "Nessun lotto stock",
+    "empty": "Aggiungi lotti munizioni e registra movimenti per tracciare i colpi rimanenti.",
+    "deleteTitle": "Eliminare voce stock?",
+    "deleteConfirm": "Questo rimuoverà definitivamente questa voce di stock munizioni.",
     "transactionTitle": "Movimento rapido stock",
     "addTransaction": "Aggiungi movimento",
     "rounds": "{{count}} colpi",
@@ -577,11 +584,11 @@
     "sections": {
       "recipes": {
         "title": "Ricette di ricarica",
-        "description": "Salva ricette con palle, polveri, inneschi e bossoli riutilizzabili."
+        "description": "Salva ricette usando palle, polveri, inneschi e bossoli riutilizzabili. Usa Chrono per verificare velocità e power factor."
       },
       "chrono": {
         "title": "Chrono",
-        "description": "Registra stringhe di velocità per ricetta e arma per calcolare media e power factor."
+        "description": "Registra stringhe di velocità per ricetta e arma per calcolare media, spread e power factor."
       },
       "stock": {
         "title": "Stock munizioni",
@@ -589,7 +596,7 @@
       },
       "components": {
         "title": "Componenti",
-        "description": "Gestisci palle, polveri, inneschi e bossoli riutilizzabili nelle ricette."
+        "description": "Mantieni cataloghi riutilizzabili per le ricette: palle, polveri, inneschi e bossoli."
       }
     },
     "actions": {

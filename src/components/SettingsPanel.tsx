@@ -1,8 +1,10 @@
 import {
 	Download,
+	Edit3,
 	FileUp,
 	Info,
 	Plus,
+	Save,
 	Shield,
 	Trash2,
 	Upload,
@@ -14,8 +16,18 @@ import { useTranslation } from "react-i18next";
 import { db } from "../db/schema";
 import {
 	DEFAULT_SETTINGS_ID,
+	normalizeIdentifiers,
+	parseIdentifierText,
 	updateOwnerPractiscoreIdentifiers,
 } from "../domain/settings/settingsRepository";
+import {
+	createEmptyRegularCompetitorForm,
+	deleteRegularCompetitor,
+	regularCompetitorToFormValues,
+	saveRegularCompetitor,
+	type RegularCompetitor,
+	type RegularCompetitorFormValues,
+} from "../domain/settings/regularCompetitors";
 
 interface SettingsPanelProps {
 	driveSyncContent: ReactNode;
@@ -33,6 +45,10 @@ export function SettingsPanel({
 	const { t } = useTranslation();
 	const appSettings = useLiveQuery(
 		() => db.appSettings.get(DEFAULT_SETTINGS_ID),
+		[],
+	);
+	const regularCompetitors = useLiveQuery(
+		() => db.regularCompetitors.orderBy("displayName").toArray(),
 		[],
 	);
 	const [confirmClearOpen, setConfirmClearOpen] = useState(false);
@@ -82,6 +98,16 @@ export function SettingsPanel({
 					key={appSettings?.updatedAt ?? "empty-owner-identifiers"}
 					identifiers={appSettings?.ownerPractiscoreIdentifiers ?? []}
 				/>
+			</article>
+
+			<article className="settings-card">
+				<div>
+					<h3>{t("settingsPage.regularCompetitors.title")}</h3>
+					<p className="muted settings-card-description">
+						{t("settingsPage.regularCompetitors.description")}
+					</p>
+				</div>
+				<RegularCompetitorsEditor competitors={regularCompetitors ?? []} />
 			</article>
 
 			<article className="settings-card">
@@ -274,18 +300,16 @@ function OwnerIdentifiersEditor({ identifiers }: { identifiers: string[] }) {
 	const [draft, setDraft] = useState("");
 
 	async function updateItems(nextItems: string[]) {
-		const normalizedItems = [
-			...new Set(nextItems.map((item) => item.trim()).filter(Boolean)),
-		];
+		const normalizedItems = normalizeIdentifiers(nextItems);
 		setItems(normalizedItems);
 		await updateOwnerPractiscoreIdentifiers(normalizedItems);
 	}
 
 	async function addDraft() {
-		const newItem = draft.trim();
-		if (!newItem) return;
+		const newItems = parseIdentifierText(draft);
+		if (normalizeIdentifiers(newItems).length === 0) return;
 		setDraft("");
-		await updateItems([...items, newItem]);
+		await updateItems([...items, ...newItems]);
 	}
 
 	return (
@@ -341,6 +365,169 @@ function OwnerIdentifiersEditor({ identifiers }: { identifiers: string[] }) {
 					</button>
 				</div>
 			</label>
+		</div>
+	);
+}
+
+function RegularCompetitorsEditor({
+	competitors,
+}: {
+	competitors: RegularCompetitor[];
+}) {
+	const { t } = useTranslation();
+	const [editingId, setEditingId] = useState<string | null>(null);
+	const [formOpen, setFormOpen] = useState(false);
+	const [form, setForm] = useState<RegularCompetitorFormValues>(
+		createEmptyRegularCompetitorForm,
+	);
+
+	function startCreate() {
+		setEditingId(null);
+		setForm(createEmptyRegularCompetitorForm());
+		setFormOpen(true);
+	}
+
+	function closeForm() {
+		setEditingId(null);
+		setForm(createEmptyRegularCompetitorForm());
+		setFormOpen(false);
+	}
+
+	function startEdit(competitor: RegularCompetitor) {
+		setEditingId(competitor.id);
+		setForm(regularCompetitorToFormValues(competitor));
+		setFormOpen(true);
+	}
+
+	async function save() {
+		if (!form.displayName.trim()) return;
+		await saveRegularCompetitor(form, editingId ?? undefined);
+		closeForm();
+	}
+
+	return (
+		<div className="settings-group settings-group-compact">
+			<div className="form-actions form-actions-end">
+				<button className="button" type="button" onClick={startCreate}>
+					<Plus size={16} />
+					{t("settingsPage.regularCompetitors.addButton")}
+				</button>
+			</div>
+			{competitors.length ? (
+				<div className="record-list">
+					{competitors.map((competitor) => (
+						<article className="record-card compact-card" key={competitor.id}>
+							<div className="record-content">
+								<h4>{competitor.displayName}</h4>
+								<p>{competitor.identifiers.join(" · ")}</p>
+								{competitor.notes ? <p>{competitor.notes}</p> : null}
+							</div>
+							<div className="record-actions">
+								<button
+									className="icon-button"
+									type="button"
+									onClick={() => startEdit(competitor)}
+									aria-label={t("actions.edit")}
+								>
+									<Edit3 size={15} />
+								</button>
+								<button
+									className="icon-button danger"
+									type="button"
+									onClick={() => void deleteRegularCompetitor(competitor.id)}
+									aria-label={t("actions.delete")}
+								>
+									<Trash2 size={15} />
+								</button>
+							</div>
+						</article>
+					))}
+				</div>
+			) : (
+				<p className="muted">{t("settingsPage.regularCompetitors.empty")}</p>
+			)}
+			{formOpen ? (
+				<div
+					className="dialog-backdrop"
+					role="presentation"
+					onMouseDown={closeForm}
+				>
+					<div
+						className="panel form-grid entity-form-dialog"
+						role="dialog"
+						aria-modal="true"
+						onMouseDown={(event) => event.stopPropagation()}
+					>
+						<div className="form-title-row">
+							<h3>
+								{editingId
+									? t("settingsPage.regularCompetitors.editTitle")
+									: t("settingsPage.regularCompetitors.createTitle")}
+							</h3>
+							<button
+								className="icon-button"
+								type="button"
+								aria-label={t("actions.close")}
+								onClick={closeForm}
+							>
+								<X size={16} />
+							</button>
+						</div>
+						<label>
+							<span>{t("settingsPage.regularCompetitors.name")}</span>
+							<input
+								value={form.displayName}
+								onChange={(event) =>
+									setForm({ ...form, displayName: event.target.value })
+								}
+								placeholder={t(
+									"settingsPage.regularCompetitors.namePlaceholder",
+								)}
+							/>
+						</label>
+						<label>
+							<span>{t("settingsPage.regularCompetitors.identifiers")}</span>
+							<textarea
+								rows={3}
+								value={form.identifiersText}
+								onChange={(event) =>
+									setForm({ ...form, identifiersText: event.target.value })
+								}
+								placeholder={t(
+									"settingsPage.regularCompetitors.identifiersPlaceholder",
+								)}
+							/>
+						</label>
+						<label>
+							<span>{t("settingsPage.regularCompetitors.notes")}</span>
+							<textarea
+								rows={2}
+								value={form.notes}
+								onChange={(event) =>
+									setForm({ ...form, notes: event.target.value })
+								}
+							/>
+						</label>
+						<div className="dialog-actions">
+							<button
+								className="button button-secondary"
+								type="button"
+								onClick={closeForm}
+							>
+								{t("actions.cancel")}
+							</button>
+							<button
+								className="button"
+								type="button"
+								onClick={() => void save()}
+							>
+								<Save size={16} />
+								{t("actions.save")}
+							</button>
+						</div>
+					</div>
+				</div>
+			) : null}
 		</div>
 	);
 }

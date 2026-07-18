@@ -1,7 +1,7 @@
 import { DragEvent, FormEvent, useEffect, useMemo, useState } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useTranslation } from "react-i18next";
-import { FileImage, FileUp, Save, Trophy, X } from "lucide-react";
+import { BarChart2, FileImage, FileUp, Save, Trophy, X } from "lucide-react";
 import {
 	EntityActionPanel,
 	EntityPage,
@@ -45,6 +45,7 @@ interface Mare2PublicCatalogMatch {
 	name: string;
 	dateFrom?: string;
 	dateTo?: string;
+	location?: string;
 	badges?: string[];
 	macroArea?: string;
 	matchUrl: string;
@@ -62,6 +63,7 @@ interface Mare2PublicCatalog {
 }
 
 interface Mare2PublicMatchFile {
+	location?: string;
 	pages?: Array<{
 		pageNumber: number;
 		url: string;
@@ -70,7 +72,11 @@ interface Mare2PublicMatchFile {
 	stagePageMapping?: Record<string, number>;
 }
 
-export function MatchesCrud() {
+export function MatchesCrud({
+	onAnalyzeMatch,
+}: {
+	onAnalyzeMatch?: (match: MatchEvent) => void;
+} = {}) {
 	const { t } = useTranslation();
 	const matches = useLiveQuery(
 		() => db.matchEvents.orderBy("date").reverse().toArray(),
@@ -187,6 +193,7 @@ export function MatchesCrud() {
 	async function remove() {
 		if (!deleteTarget) return;
 		await deleteMatchEvent(deleteTarget.id);
+		await db.matchAnalysisSelections.delete(deleteTarget.id);
 		setDeleteTarget(null);
 		if (editingId === deleteTarget.id) reset();
 	}
@@ -443,6 +450,13 @@ export function MatchesCrud() {
 			undefined,
 			ownerIdentifiers,
 		);
+		const location = matchFile.location ?? catalogMatch.location;
+		if (location) {
+			await db.matchEvents.update(matchEventId, {
+				clubOrRange: location,
+				updatedAt: new Date().toISOString(),
+			});
+		}
 		await importPublicMatchPages(matchEventId, snapshot, matchFile, matchUrl);
 		return { snapshot, matchEventId };
 	}
@@ -828,6 +842,18 @@ export function MatchesCrud() {
 										onEdit={() => edit(match)}
 										onDelete={() => setDeleteTarget(match)}
 									>
+										{practiscoreImport && onAnalyzeMatch ? (
+											<button
+												className="icon-button"
+												type="button"
+												onClick={() => onAnalyzeMatch(match)}
+												aria-label={t("matches.analysis.openMatch", {
+													match: match.name,
+												})}
+											>
+												<BarChart2 size={15} />
+											</button>
+										) : null}
 										{practiscoreImport ? (
 											<button
 												className="icon-button"
@@ -875,49 +901,53 @@ export function MatchesCrud() {
 							<p className="muted">{t("matches.publicCatalog.loading")}</p>
 						) : publicCatalogMatches.length > 0 ? (
 							<>
-								<label>
-									<span>{t("matches.publicCatalog.search")}</span>
-									<input
-										value={publicCatalogSearch}
-										onChange={(event) =>
-											setPublicCatalogSearch(event.target.value)
-										}
-										placeholder={t("matches.publicCatalog.searchPlaceholder")}
-									/>
-								</label>
-								<p className="muted">
-									{t("matches.publicCatalog.resultCount", {
-										count: filteredPublicCatalogMatches.length,
-										total: publicCatalogMatches.length,
-									})}
-								</p>
-								<div className="import-action-row">
-									<button
-										className="button button-secondary"
-										type="button"
-										disabled={filteredPublicCatalogMatches.length === 0}
-										onClick={selectAllFilteredPublicCatalogMatches}
+								<div className="catalog-search-row">
+									<label>
+										<span>{t("matches.publicCatalog.search")}</span>
+										<input
+											value={publicCatalogSearch}
+											onChange={(event) =>
+												setPublicCatalogSearch(event.target.value)
+											}
+											placeholder={t("matches.publicCatalog.searchPlaceholder")}
+										/>
+									</label>
+									<span
+										className="catalog-result-count"
+										aria-label={t("matches.publicCatalog.resultCount", {
+											count: filteredPublicCatalogMatches.length,
+											total: publicCatalogMatches.length,
+										})}
 									>
-										{t("matches.publicCatalog.selectAllFiltered")}
-									</button>
-									<button
-										className="button button-secondary"
-										type="button"
-										disabled={
-											selectedFilteredPublicCatalogMatchIds.length === 0
-										}
-										onClick={clearFilteredPublicCatalogMatches}
-									>
-										{t("matches.publicCatalog.clearFiltered")}
-									</button>
+										{filteredPublicCatalogMatches.length}/
+										{publicCatalogMatches.length}
+									</span>
 								</div>
 								{filteredPublicCatalogMatches.length > 0 ? (
 									<div className="table-scroll">
 										<table className="data-table">
 											<thead>
 												<tr>
-													<th>{t("matches.publicCatalog.selected")}</th>
+													<th>
+														<input
+															type="checkbox"
+															checked={
+																filteredPublicCatalogMatches.length > 0 &&
+																selectedFilteredPublicCatalogMatchIds.length ===
+																	filteredPublicCatalogMatches.length
+															}
+															onChange={(event) => {
+																if (event.target.checked) {
+																	selectAllFilteredPublicCatalogMatches();
+																} else {
+																	clearFilteredPublicCatalogMatches();
+																}
+															}}
+															aria-label={t("matches.publicCatalog.selected")}
+														/>
+													</th>
 													<th>{t("matches.publicCatalog.match")}</th>
+													<th>{t("matches.publicCatalog.location")}</th>
 													<th>{t("matches.fields.date")}</th>
 												</tr>
 											</thead>
@@ -942,6 +972,7 @@ export function MatchesCrud() {
 															/>
 														</td>
 														<td>{match.name}</td>
+														<td>{match.location ?? "—"}</td>
 														<td>{match.dateFrom ?? "—"}</td>
 													</tr>
 												))}
@@ -1571,6 +1602,7 @@ function filterPublicCatalogMatches(
 			match.mare2MatchId,
 			match.dateFrom,
 			match.dateTo,
+			match.location,
 			match.macroArea ? `ma${match.macroArea}` : undefined,
 			...(match.badges ?? []),
 		]

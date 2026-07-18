@@ -1158,7 +1158,7 @@ button:disabled {
 	top: 50%;
 	left: 50%;
 	z-index: 60;
-	width: min(24rem, calc(100% - 2rem));
+	width: min(32rem, calc(100vw - 2rem));
 	padding: 1.25rem;
 	transform: translate(-50%, -50%);
 }
@@ -1166,15 +1166,23 @@ button:disabled {
 .match-form-dialog,
 .entity-form-dialog,
 .import-dialog {
-	width: min(42rem, calc(100% - 2rem));
-	max-height: min(48rem, calc(100dvh - 1rem));
+	width: min(56rem, calc(100vw - 2rem));
+	max-height: min(54rem, calc(100dvh - 1rem));
 	overflow-y: auto;
+	overscroll-behavior: contain;
 }
 
 .match-form-dialog .dialog-actions,
 .entity-form-dialog .dialog-actions,
-.import-dialog .dialog-actions {
-	margin-top: 0.75rem;
+.import-dialog .dialog-actions,
+.briefing-dialog .dialog-actions {
+	position: sticky;
+	bottom: -1.25rem;
+	z-index: 2;
+	margin: 0.75rem -1.25rem -1.25rem;
+	padding: 0.9rem 1.25rem 1.25rem;
+	border-top: 1px solid var(--border);
+	background: var(--card);
 }
 
 .import-card {
@@ -2283,10 +2291,11 @@ button:disabled {
 	top: 50%;
 	left: 50%;
 	z-index: 60;
-	width: min(58rem, calc(100vw - 2rem));
-	max-height: min(82vh, 52rem);
+	width: min(72rem, calc(100vw - 2rem));
+	max-height: min(54rem, calc(100dvh - 1rem));
 	padding: 1.25rem;
 	overflow: auto;
+	overscroll-behavior: contain;
 	transform: translate(-50%, -50%);
 }
 
@@ -2445,6 +2454,29 @@ button:disabled {
 	margin: 0.85rem 0;
 }
 
+.catalog-search-row {
+	display: flex;
+	gap: 0.75rem;
+	align-items: end;
+}
+
+.catalog-search-row label {
+	flex: 1;
+}
+
+.catalog-result-count {
+	min-width: 4.5rem;
+	padding: 0.7rem 0.8rem;
+	border: 1px solid var(--border);
+	border-radius: 0.75rem;
+	color: var(--muted-foreground);
+	background: var(--muted);
+	font-size: 0.9rem;
+	font-weight: 700;
+	line-height: 1;
+	text-align: center;
+}
+
 .table-scroll {
 	max-height: min(52vh, 34rem);
 	overflow: auto;
@@ -2479,11 +2511,21 @@ button:disabled {
 
 .tab-row {
 	display: flex;
-	flex-wrap: wrap;
 	gap: 0.5rem;
+	overflow-x: auto;
+	overflow-y: hidden;
+	padding-bottom: 0.15rem;
+	scrollbar-width: thin;
+	-webkit-overflow-scrolling: touch;
+}
+
+.tab-row::after {
+	content: "";
+	flex: 0 0 0.25rem;
 }
 
 .tab-button {
+	flex: 0 0 auto;
 	border: 1px solid var(--border);
 	border-radius: 999px;
 	background: var(--card);

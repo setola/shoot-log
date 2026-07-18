@@ -18,7 +18,7 @@ const DEFAULT_CACHE_DIR = ".mare2-cache";
 let requestDelayMs = 0;
 let lastRequestAt = 0;
 
-/** @typedef {{ matchId: string, matchUrl: string, title: string, dateFrom?: string, dateTo?: string, rankingUrl?: string, verifyPdfUrl?: string, imageUrls: string[], sourceLinks: Record<string, string>, fetchedAt: string }} Mare2MatchDetails */
+/** @typedef {{ matchId: string, matchUrl: string, title: string, dateFrom?: string, dateTo?: string, location?: string, rankingUrl?: string, verifyPdfUrl?: string, imageUrls: string[], sourceLinks: Record<string, string>, fetchedAt: string }} Mare2MatchDetails */
 
 async function main() {
 	const { command, options } = parseArgs(process.argv.slice(2));
@@ -83,7 +83,7 @@ function printHelp() {
   --overrides-dir=<dir>
                      JSON override directory. Default: tools/mare2-importer/overrides.
   --year=<year>      Sync only matches starting in this year.\n  --min-level=<n>    Sync only matches with a discipline level >= n.\n  --championship=<s> Case-insensitive title/badge filter.\n  --ma=<n>           Macro-area filter, e.g. 3 for MA3.\n  --limit=<n>        Build at most n matching records.
-  --since=<date>     Sync past matches from this date onward (YYYY-MM-DD).
+  --since=<date>     Sync past matches from this date onward. Accepts YYYY-MM-DD or relative values like "last week", "last month", "last 2 weeks".
   --include-future   Also inspect future matches. Default: skip them.
   --max-pages=<n>    Stop archive discovery after n pages. Default: 100.
   --request-delay-ms=<n>
@@ -106,7 +106,7 @@ async function syncMatches(options) {
 
 	if (options.match || options.url) {
 		const details = await inspectMatch(options);
-		printStderr(`[mare2] build ${details.matchId}\n`);
+		printStderr(`[mare2] build ${formatMatchProgressLabel(details)}\n`);
 		const builtMatch = await buildMatch(options, details);
 		const catalogMatches = await listBuiltCatalogMatches(outRoot);
 		await writeCatalog(outRoot, catalogMatches);
@@ -119,6 +119,7 @@ async function syncMatches(options) {
 			skipped: 0,
 			failed: [],
 			matchId: builtMatch.matchId,
+			matchName: builtMatch.matchName,
 		};
 	}
 
@@ -191,7 +192,7 @@ async function syncMatches(options) {
 				continue;
 			}
 
-			printStderr(`[mare2] build ${discoveredMatch.matchId}\n`);
+			printStderr(`[mare2] build ${formatMatchProgressLabel(details)}\n`);
 			built.push(
 				await buildMatch(
 					{ ...options, match: discoveredMatch.matchId, force: true },
@@ -305,6 +306,7 @@ async function buildMatch(options, knownDetails) {
 		name: details.title,
 		dateFrom: details.dateFrom,
 		dateTo: details.dateTo,
+		location: details.location,
 		verifyPrintedAt,
 		verifyPdfUrl: details.verifyPdfUrl,
 		snapshotUrl: "./snapshot.json",
@@ -318,6 +320,7 @@ async function buildMatch(options, knownDetails) {
 
 	return {
 		matchId: details.matchId,
+		matchName: details.title,
 		outDir: matchOutDir,
 		competitors: snapshot.competitors.length,
 		stages: snapshot.stages.length,
@@ -605,11 +608,17 @@ function isRecentOrUpcoming(dateValue, refreshRecentDays) {
 	return date.getTime() >= threshold;
 }
 
+function formatMatchProgressLabel(match) {
+	return [match.matchId, match.title].filter(Boolean).join(" — ");
+}
+
 function isBeforeSinceDate(match, sinceValue) {
 	if (!sinceValue) return false;
-	const sinceDate = parseIsoDate(String(sinceValue));
+	const sinceDate = parseSinceDate(String(sinceValue));
 	if (!sinceDate) {
-		throw new Error(`Invalid --since date: ${sinceValue}. Use YYYY-MM-DD.`);
+		throw new Error(
+			`Invalid --since date: ${sinceValue}. Use YYYY-MM-DD or a relative value like "last week", "last month", "last 2 weeks".`,
+		);
 	}
 	const matchDate = parseIsoDate(match.dateTo ?? match.dateFrom ?? "");
 	if (!matchDate) return false;
@@ -627,6 +636,32 @@ function isFutureMatch(match) {
 		today.getUTCDate(),
 	);
 	return startDate.getTime() > todayUtc;
+}
+
+export function parseSinceDate(value) {
+	const trimmed = value.trim();
+	return parseIsoDate(trimmed) ?? parseRelativeSinceDate(trimmed);
+}
+
+function parseRelativeSinceDate(value) {
+	const match =
+		/^last(?:\s+(\d+))?\s+(day|days|week|weeks|month|months)$/i.exec(value);
+	if (!match) return undefined;
+
+	const amount = match[1] ? Number.parseInt(match[1], 10) : 1;
+	if (!Number.isFinite(amount) || amount < 1) return undefined;
+
+	const unit = match[2].toLowerCase();
+	const today = new Date();
+	const date = new Date(
+		Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
+	);
+
+	if (unit.startsWith("day")) date.setUTCDate(date.getUTCDate() - amount);
+	if (unit.startsWith("week")) date.setUTCDate(date.getUTCDate() - amount * 7);
+	if (unit.startsWith("month")) date.setUTCMonth(date.getUTCMonth() - amount);
+
+	return date;
 }
 
 function parseIsoDate(value) {
@@ -668,6 +703,7 @@ async function listBuiltCatalogMatches(outRoot) {
 			title: match.name ?? `Mare2 match ${entry.name}`,
 			dateFrom: match.dateFrom,
 			dateTo: match.dateTo,
+			location: match.location,
 			badges: match.badges ?? [],
 		});
 	}
@@ -695,6 +731,7 @@ async function writeCatalog(outRoot, selectedMatches) {
 			name: match.name ?? selectedMatch.title,
 			dateFrom: match.dateFrom ?? selectedMatch.dateFrom,
 			dateTo: match.dateTo ?? selectedMatch.dateTo,
+			location: match.location ?? selectedMatch.location,
 			level: selectedMatch.level,
 			macroArea: selectedMatch.macroArea,
 			badges: selectedMatch.badges ?? [],
@@ -797,6 +834,7 @@ function parseMatchDetails(html, matchUrl) {
 		.trim()
 		.replace(/\s+/g, " ");
 	const [dateFrom, dateTo] = findMatchDates(html);
+	const location = findMatchLocation(html);
 
 	const links = extractLinks(html, matchUrl);
 	const sourceLinks = {};
@@ -821,12 +859,25 @@ function parseMatchDetails(html, matchUrl) {
 		title,
 		dateFrom,
 		dateTo,
+		location,
 		rankingUrl,
 		verifyPdfUrl,
 		imageUrls: [...new Set(imageUrls)],
 		sourceLinks,
 		fetchedAt: new Date().toISOString(),
 	};
+}
+
+function findMatchLocation(html) {
+	const locationHtml = matchFirst(
+		html,
+		/<li[^>]*>\s*<i[^>]*data-name=["']location["'][\s\S]*?<\/i>\s*\|\s*([\s\S]*?)<\/li>/i,
+	);
+	return optionalText(
+		decodeHtml(stripTags(locationHtml ?? ""))
+			.trim()
+			.replace(/\s+/g, " "),
+	);
 }
 
 function findMatchDates(html) {
@@ -1009,6 +1060,7 @@ function parseMare2TextSnapshot(text, details, verifyPdfSha256) {
 			internalMatchId: practiscoreMatchId,
 			name: matchName,
 			date: matchDate,
+			location: details.location,
 		},
 		stages,
 		competitors,

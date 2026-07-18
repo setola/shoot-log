@@ -18,6 +18,8 @@ import type { MaintenanceEvent } from "../domain/maintenance/types";
 import type { PaperworkAttachment } from "../domain/paperwork/attachmentTypes";
 import type { PaperworkCredential } from "../domain/paperwork/types";
 import type { AppSettings } from "../domain/settings/types";
+import type { RegularCompetitor } from "../domain/settings/regularCompetitors";
+import type { MatchAnalysisSelection } from "../domain/matches/analysisSelection";
 
 export class LogbookDatabase extends Dexie {
 	firearms!: Table<Firearm, string>;
@@ -37,6 +39,8 @@ export class LogbookDatabase extends Dexie {
 	paperworkCredentials!: Table<PaperworkCredential, string>;
 	paperworkAttachments!: Table<PaperworkAttachment, string>;
 	appSettings!: Table<AppSettings, string>;
+	regularCompetitors!: Table<RegularCompetitor, string>;
+	matchAnalysisSelections!: Table<MatchAnalysisSelection, string>;
 
 	constructor() {
 		super("shooting-logbook");
@@ -194,6 +198,33 @@ export class LogbookDatabase extends Dexie {
 				"id, title, type, validUntil, reminderDate, updatedAt",
 			paperworkAttachments: "id, credentialId, fileName, mimeType, updatedAt",
 			appSettings: "id, updatedAt",
+		});
+
+		this.version(10).stores({
+			firearms: "id, nickname, caliber, archived, updatedAt",
+			trainingSessions: "id, date, firearmId, discipline, updatedAt",
+			matchEvents: "id, date, firearmId, discipline, updatedAt",
+			practiscoreMatchImports:
+				"id, matchEventId, practiscoreMatchId, importedAt, updatedAt",
+			matchStageAssets:
+				"id, matchEventId, internalStageId, sourceFileName, updatedAt",
+			ammunitionBatches: "id, caliber, updatedAt",
+			ammoTransactions:
+				"id, batchId, caliber, type, date, linkedEntityType, linkedEntityId, updatedAt",
+			reloadingBullets: "id, name, weightGrains, updatedAt",
+			reloadingPowders: "id, name, updatedAt",
+			reloadingPrimers: "id, name, type, updatedAt",
+			reloadingBrass: "id, name, caliber, updatedAt",
+			reloadingRecipes:
+				"id, caliber, bulletId, powderId, primerId, brassId, updatedAt",
+			chronographSessions: "id, recipeId, firearmId, date, updatedAt",
+			maintenanceEvents: "id, firearmId, date, type, updatedAt",
+			paperworkCredentials:
+				"id, title, type, validUntil, reminderDate, updatedAt",
+			paperworkAttachments: "id, credentialId, fileName, mimeType, updatedAt",
+			appSettings: "id, updatedAt",
+			regularCompetitors: "id, displayName, updatedAt",
+			matchAnalysisSelections: "matchEventId, updatedAt",
 		});
 	}
 }
