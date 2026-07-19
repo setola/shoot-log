@@ -1,4 +1,5 @@
 import { db } from "../../db/schema";
+import { createId } from "../../utils/id";
 import { nowIso } from "../../utils/time";
 import type { MatchEvent } from "./types";
 import type {
@@ -17,7 +18,7 @@ export async function importPractiscoreSnapshot(
 	ownerIdentifiers: string[] = [],
 ): Promise<string> {
 	const now = nowIso();
-	const matchEventId = existingMatchEventId ?? crypto.randomUUID();
+	const matchEventId = existingMatchEventId ?? createId();
 	const matchEvent = createMatchEventFromSnapshot(
 		snapshot,
 		matchEventId,

@@ -114,7 +114,8 @@ Current implementation notes:
 - Theme support: light/dark theme selector with `localStorage` persistence.
 - Deployment: GitHub Actions to GitHub Pages via `.github/workflows/deploy.yml` using Node 24 actions.
 - Production/custom domain: `https://shootlog.emanueletessore.com/` with `public/CNAME`.
-- Vite `base` is relative (`./`) so the app works on localhost, GitHub Pages project URLs, and the custom root domain.
+- Development workstation domain: `https://pi-workstation.villa.emanueletessore.com`, allowed in Vite dev/preview host checks.
+- Vite `base` is relative (`./`) so the app works on localhost, GitHub Pages project URLs, the development workstation domain, and the custom root domain.
 - Local development: Docker Compose using the official `node:22-alpine` image and bind-mounted `./node_modules`.
 - Build-time env:
   - `VITE_GOOGLE_CLIENT_ID` is injected from the GitHub `github-pages` environment secret.
@@ -185,8 +186,9 @@ Implemented local-first modules:
 16. Match Analysis lives as a Matches tab for imported score snapshots, including match selector, multi-competitor autocomplete comparison with device-owner auto-suggestion, comparative hit distribution pie charts, stage placement trend, comparative stage metric charts, and compact multi-competitor stage details.
 17. Mare2 public catalog CLI and Cloudflare Pages publishing flow for public match snapshots and stage-page images, with archive pagination, future-match skipping, request throttling, location extraction, and `--since` incremental sync support using either ISO dates or relative windows such as `last week`.
 18. App-side import from the Mare2 public catalog with free-text match/location search; imported catalog data is stored locally in IndexedDB and included only in user-controlled exports/backups.
-19. Query-string routing for shareable pages and tabs, e.g. `?section=matches&tab=analysis` and `?section=ammunition&tab=chrono`, with legacy `?section=analysis` support.
+19. Query-string routing for shareable pages and tabs, e.g. `?section=matches&tab=analysis` and `?section=logbook&tab=reloading&reloadingTab=chrono`, with legacy `?section=analysis` and old logbook-area section links supported.
 20. Match analysis comparison state is stored per match in IndexedDB. Regular competitors configured in Settings are auto-seeded invisibly only when a match analysis has no saved selection yet; user edits then persist for that match.
+21. Matches includes a Scorecards tab for local in-match score drafts created from the public Mare2 catalog. Scorecards store match metadata, PF, per-stage time/C/D/M/NS/procedure counters, calculated Alpha/points/HF, and stage-page mapping for override download; backups include scorecard data but not image blobs.
 
 Important limitations / follow-up work:
 
@@ -253,21 +255,20 @@ Visual style:
 Prefer practical labels in the main navigation:
 
 - Dashboard
-- Firearms
-- Training
 - Matches
-- Reloading
-- Maintenance
-- Paperwork
+- Training
+- Logbook
 - Settings
 
 Navigation notes:
 
 - Keep the main menu limited to macro-areas; detailed workflows belong in page-level tabs.
+- The main menu intentionally emphasizes Matches/Analysis as the primary value and groups administrative material management under Logbook.
 - Matches contains tabs for Registry and Analysis. Opening Matches from navigation should default to Registry.
-- Reloading contains tabs for Recipes, Chrono, Components, and Stock. Opening Reloading from navigation should default to Recipes.
+- Logbook contains tabs for Firearms, Reloading, Maintenance, and Paperwork. Opening Logbook from navigation should default to Firearms.
+- Reloading contains nested tabs for Recipes, Chrono, Components, and Stock. Opening Reloading should default to Recipes.
 - Page-level tabs use horizontally scrollable pills directly under the top header for desktop, tablet, and mobile.
-- Use query-string routes for shareable app state (`section`, `tab`, and analysis match/competitor params); do not use hash anchors for app routing.
+- Use query-string routes for shareable app state (`section`, `tab`, `reloadingTab`, and analysis match/competitor params); do not use hash anchors for app routing.
 - Settings can store regular competitors. Analysis should use them only as an invisible first-open default for matches without saved analysis selection; never override a user's per-match comparison choices.
 - Google Drive sync belongs inside Settings, not as a standalone navigation item.
 

@@ -1,17 +1,14 @@
 import {
+	BookOpen,
 	Code2,
-	FileText,
-	FlaskConical,
 	Grid2X2,
 	Menu,
 	Moon,
 	Settings,
 	Shield,
 	Sun,
-	Target,
 	Timer,
 	Trophy,
-	Wrench,
 	X,
 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -35,14 +32,11 @@ interface HeaderProps {
 
 const navItems = [
 	{ id: "dashboard", icon: Grid2X2 },
-	{ id: "firearms", icon: Target },
-	{ id: "training", icon: Timer },
 	{ id: "matches", icon: Trophy },
-	{ id: "ammunition", icon: FlaskConical },
-	{ id: "maintenance", icon: Wrench },
-	{ id: "paperwork", icon: FileText },
+	{ id: "training", icon: Timer },
+	{ id: "logbook", icon: BookOpen },
 	{ id: "settings", icon: Settings },
-] as const satisfies ReadonlyArray<{ id: Section; icon: typeof Target }>;
+] as const satisfies ReadonlyArray<{ id: Section; icon: typeof Grid2X2 }>;
 
 const bottomItems = navItems.slice(0, 5);
 const repositoryUrl = "https://github.com/setola/shoot-log";
@@ -73,7 +67,7 @@ export function Sidebar({
 			<aside className={mobileOpen ? "sidebar sidebar-open" : "sidebar"}>
 				<div className="sidebar-brand">
 					<div className="brand-mark">
-						<Target size={17} />
+						<Trophy size={17} />
 					</div>
 					<div>
 						<p>{t("app.shortTitle")}</p>

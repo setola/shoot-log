@@ -1,4 +1,5 @@
 import { db } from "../../db/schema";
+import { createId } from "../../utils/id";
 import { nowIso } from "../../utils/time";
 import type {
 	AmmoTransaction,
@@ -249,7 +250,7 @@ export async function createAmmunitionBatch(
 	values: AmmunitionFormValues,
 ): Promise<string> {
 	const now = nowIso();
-	const id = crypto.randomUUID();
+	const id = createId();
 	await db.transaction(
 		"rw",
 		[db.ammunitionBatches, db.ammoTransactions],
@@ -267,7 +268,7 @@ export async function createAmmunitionBatch(
 			const quantity = Number(values.quantity) || 0;
 			if (quantity) {
 				await db.ammoTransactions.add({
-					id: crypto.randomUUID(),
+					id: createId(),
 					batchId: id,
 					caliber: values.caliber.trim(),
 					type: "added",
@@ -314,7 +315,7 @@ export async function createAmmoTransaction(
 	values: AmmoTransactionFormValues,
 ): Promise<string> {
 	const now = nowIso();
-	const id = crypto.randomUUID();
+	const id = createId();
 	await db.ammoTransactions.add({
 		id,
 		batchId: optional(values.batchId),
@@ -353,7 +354,7 @@ export async function saveBullet(
 	id?: string,
 ): Promise<string> {
 	const now = nowIso();
-	const bulletId = id ?? crypto.randomUUID();
+	const bulletId = id ?? createId();
 	const bullet = {
 		id: bulletId,
 		brand: optional(values.brand),
@@ -388,7 +389,7 @@ export async function savePowder(
 	id?: string,
 ): Promise<string> {
 	const now = nowIso();
-	const powderId = id ?? crypto.randomUUID();
+	const powderId = id ?? createId();
 	const powder = {
 		id: powderId,
 		brand: optional(values.brand),
@@ -417,7 +418,7 @@ export async function savePrimer(
 	id?: string,
 ): Promise<string> {
 	const now = nowIso();
-	const primerId = id ?? crypto.randomUUID();
+	const primerId = id ?? createId();
 	const primer = {
 		id: primerId,
 		brand: optional(values.brand),
@@ -448,7 +449,7 @@ export async function saveBrass(
 	id?: string,
 ): Promise<string> {
 	const now = nowIso();
-	const brassId = id ?? crypto.randomUUID();
+	const brassId = id ?? createId();
 	const brass = {
 		id: brassId,
 		brand: optional(values.brand),
@@ -481,7 +482,7 @@ export async function saveRecipe(
 	id?: string,
 ): Promise<string> {
 	const now = nowIso();
-	const recipeId = id ?? crypto.randomUUID();
+	const recipeId = id ?? createId();
 	const recipe = {
 		id: recipeId,
 		name: values.name.trim(),
@@ -560,7 +561,7 @@ export async function saveChronographSession(
 
 	const stats = calculateChronographStats(readings, bullet.weightGrains);
 	const now = nowIso();
-	const sessionId = id ?? crypto.randomUUID();
+	const sessionId = id ?? createId();
 	const session = {
 		id: sessionId,
 		recipeId: values.recipeId,

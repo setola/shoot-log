@@ -1,6 +1,7 @@
 import { db } from '../../db/schema';
 import { nowIso } from '../../utils/time';
 import type { PaperworkCredential } from './types';
+import { createId } from '../../utils/id';
 
 export type PaperworkCredentialType = PaperworkCredential['type'];
 
@@ -44,7 +45,7 @@ export function paperworkToFormValues(record: PaperworkCredential): PaperworkFor
 export async function createPaperworkCredential(values: PaperworkFormValues): Promise<string> {
   const now = nowIso();
   const record: PaperworkCredential = {
-    id: crypto.randomUUID(),
+    id: createId(),
     ...normalizePaperworkValues(values),
     createdAt: now,
     updatedAt: now
@@ -70,7 +71,7 @@ export async function deletePaperworkCredential(id: string): Promise<void> {
 
 export async function addPaperworkAttachment(credentialId: string, file: File): Promise<string> {
   const now = nowIso();
-  const id = crypto.randomUUID();
+  const id = createId();
 
   await db.paperworkAttachments.add({
     id,

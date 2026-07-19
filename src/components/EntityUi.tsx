@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Edit3, Plus, Trash2 } from "lucide-react";
+import { Edit3, Plus, Trash2, X } from "lucide-react";
 
 export function EntityPage({
 	title,
@@ -55,6 +55,56 @@ export function EntityAddButton({
 			<Plus size={16} />
 			{children}
 		</button>
+	);
+}
+
+export function AppModal({
+	title,
+	description,
+	onClose,
+	children,
+	footer,
+	className = "entity-form-dialog",
+	bodyClassName,
+}: {
+	title: ReactNode;
+	description?: ReactNode;
+	onClose: () => void;
+	children: ReactNode;
+	footer?: ReactNode;
+	className?: string;
+	bodyClassName?: string;
+}) {
+	return (
+		<div className="dialog-backdrop" role="presentation" onMouseDown={onClose}>
+			<div
+				className={`panel form-grid app-modal ${className}`}
+				role="dialog"
+				aria-modal="true"
+				onMouseDown={(event) => event.stopPropagation()}
+			>
+				<div className="form-title-row import-dialog-heading app-modal-header">
+					<div>
+						<h3>{title}</h3>
+						{description ? (
+							<p className="muted import-dialog-intro">{description}</p>
+						) : null}
+					</div>
+					<button
+						className="icon-button"
+						type="button"
+						aria-label="Close"
+						onClick={onClose}
+					>
+						<X size={16} />
+					</button>
+				</div>
+				<div className={bodyClassName ?? "app-modal-body"}>{children}</div>
+				{footer ? (
+					<div className="dialog-actions app-modal-footer">{footer}</div>
+				) : null}
+			</div>
+		</div>
 	);
 }
 

@@ -14,6 +14,7 @@ import { FirearmsCrud } from "../domain/firearms/FirearmsCrud";
 import { MaintenanceCrud } from "../domain/maintenance/MaintenanceCrud";
 import { MatchAnalysis } from "../domain/matches/MatchAnalysis";
 import { MatchesCrud } from "../domain/matches/MatchesCrud";
+import { MatchScorecards } from "../domain/matches/MatchScorecards";
 import type { MatchEvent } from "../domain/matches/types";
 import { PaperworkCrud } from "../domain/paperwork/PaperworkCrud";
 import { TrainingCrud } from "../domain/training/TrainingCrud";
@@ -42,22 +43,21 @@ function getInitialTheme(): Theme {
 		: "light";
 }
 
-type MatchesTab = "registry" | "analysis";
+type MatchesTab = "registry" | "analysis" | "scorecards";
+type LogbookTab = "firearms" | "reloading" | "maintenance" | "paperwork";
 
 interface AppRoute {
 	section: Section;
 	matchesTab: MatchesTab;
+	logbookTab: LogbookTab;
 	ammunitionTab: AmmunitionTab;
 }
 
 const SECTIONS: Section[] = [
 	"dashboard",
-	"firearms",
-	"training",
 	"matches",
-	"ammunition",
-	"maintenance",
-	"paperwork",
+	"training",
+	"logbook",
 	"settings",
 ];
 
@@ -66,23 +66,51 @@ function readRouteFromLocation(): AppRoute {
 	const sectionParam = params.get("section");
 	const tabParam = params.get("tab");
 	const storedSection = window.localStorage.getItem(SECTION_STORAGE_KEY);
+	const legacyLogbookTab = getLegacyLogbookTab(sectionParam);
+	const storedLegacyLogbookTab = getLegacyLogbookTab(storedSection);
 	const section =
 		sectionParam === "analysis"
 			? "matches"
-			: SECTIONS.includes(sectionParam as Section)
-				? (sectionParam as Section)
-				: SECTIONS.includes(storedSection as Section)
-					? (storedSection as Section)
-					: "dashboard";
+			: legacyLogbookTab
+				? "logbook"
+				: SECTIONS.includes(sectionParam as Section)
+					? (sectionParam as Section)
+					: storedLegacyLogbookTab
+						? "logbook"
+						: SECTIONS.includes(storedSection as Section)
+							? (storedSection as Section)
+							: "dashboard";
 
 	return {
 		section,
 		matchesTab:
 			sectionParam === "analysis" || tabParam === "analysis"
 				? "analysis"
-				: "registry",
-		ammunitionTab: isAmmunitionTab(tabParam) ? tabParam : "recipes",
+				: tabParam === "scorecards"
+					? "scorecards"
+					: "registry",
+		logbookTab:
+			legacyLogbookTab ??
+			storedLegacyLogbookTab ??
+			(isLogbookTab(tabParam) ? tabParam : "firearms"),
+		ammunitionTab: isAmmunitionTab(params.get("reloadingTab") ?? tabParam)
+			? ((params.get("reloadingTab") ?? tabParam) as AmmunitionTab)
+			: "recipes",
 	};
+}
+
+function isLogbookTab(value: string | null): value is LogbookTab {
+	return ["firearms", "reloading", "maintenance", "paperwork"].includes(
+		value ?? "",
+	);
+}
+
+function getLegacyLogbookTab(value: string | null): LogbookTab | undefined {
+	if (value === "firearms") return "firearms";
+	if (value === "ammunition") return "reloading";
+	if (value === "maintenance") return "maintenance";
+	if (value === "paperwork") return "paperwork";
+	return undefined;
 }
 
 function isAmmunitionTab(value: string | null): value is AmmunitionTab {
@@ -91,14 +119,22 @@ function isAmmunitionTab(value: string | null): value is AmmunitionTab {
 
 function writeRouteToLocation(
 	section: Section,
-	options: { matchesTab?: MatchesTab; ammunitionTab?: AmmunitionTab } = {},
+	options: {
+		matchesTab?: MatchesTab;
+		logbookTab?: LogbookTab;
+		ammunitionTab?: AmmunitionTab;
+	} = {},
 	mode: "push" | "replace" = "push",
 ) {
 	const url = new URL(window.location.href);
 	url.searchParams.set("section", section);
 	url.searchParams.delete("tab");
-	if (section === "matches" && options.matchesTab === "analysis") {
-		url.searchParams.set("tab", "analysis");
+	if (
+		section === "matches" &&
+		options.matchesTab &&
+		options.matchesTab !== "registry"
+	) {
+		url.searchParams.set("tab", options.matchesTab);
 	} else {
 		url.searchParams.delete("match");
 		url.searchParams.delete("mare2");
@@ -107,8 +143,13 @@ function writeRouteToLocation(
 		url.searchParams.delete("compare");
 		url.searchParams.delete("shooters");
 	}
-	if (section === "ammunition") {
-		url.searchParams.set("tab", options.ammunitionTab ?? "recipes");
+	url.searchParams.delete("reloadingTab");
+	if (section === "logbook") {
+		const logbookTab = options.logbookTab ?? "firearms";
+		url.searchParams.set("tab", logbookTab);
+		if (logbookTab === "reloading") {
+			url.searchParams.set("reloadingTab", options.ammunitionTab ?? "recipes");
+		}
 	}
 	if (mode === "replace") window.history.replaceState(null, "", url.toString());
 	else window.history.pushState(null, "", url.toString());
@@ -235,6 +276,7 @@ export function App() {
 	const [route, setRoute] = useState<AppRoute>(readRouteFromLocation);
 	const activeSection = route.section;
 	const matchesTab = route.matchesTab;
+	const logbookTab = route.logbookTab;
 	const ammunitionTab = route.ammunitionTab;
 	const [lastDriveSyncedAt, setLastDriveSyncedAt] = useState<string | null>(
 		() => window.localStorage.getItem(LAST_DRIVE_SYNC_STORAGE_KEY),
@@ -335,6 +377,7 @@ export function App() {
 			appSettings,
 			regularCompetitors,
 			matchAnalysisSelections,
+			matchScorecards,
 		] = await Promise.all([
 			db.firearms.toArray(),
 			db.trainingSessions.toArray(),
@@ -355,6 +398,7 @@ export function App() {
 			db.appSettings.toArray(),
 			db.regularCompetitors.toArray(),
 			db.matchAnalysisSelections.toArray(),
+			db.matchScorecards.toArray(),
 		]);
 
 		const serializedMatchStageAssets = await Promise.all(
@@ -391,6 +435,7 @@ export function App() {
 			appSettings,
 			regularCompetitors,
 			matchAnalysisSelections,
+			matchScorecards,
 		};
 	}
 
@@ -450,6 +495,7 @@ export function App() {
 				db.appSettings,
 				db.regularCompetitors,
 				db.matchAnalysisSelections,
+				db.matchScorecards,
 			],
 			async () => {
 				if (Array.isArray(payload.firearms))
@@ -499,6 +545,8 @@ export function App() {
 					await db.matchAnalysisSelections.bulkPut(
 						payload.matchAnalysisSelections,
 					);
+				if (Array.isArray(payload.matchScorecards))
+					await db.matchScorecards.bulkPut(payload.matchScorecards);
 			},
 		);
 	}
@@ -536,6 +584,7 @@ export function App() {
 				db.appSettings,
 				db.regularCompetitors,
 				db.matchAnalysisSelections,
+				db.matchScorecards,
 			],
 			async () => {
 				await Promise.all([
@@ -558,6 +607,7 @@ export function App() {
 					db.appSettings.clear(),
 					db.regularCompetitors.clear(),
 					db.matchAnalysisSelections.clear(),
+					db.matchScorecards.clear(),
 				]);
 			},
 		);
@@ -567,9 +617,20 @@ export function App() {
 		const nextRoute: AppRoute = {
 			section,
 			matchesTab: "registry",
+			logbookTab: "firearms",
 			ammunitionTab: "recipes",
 		};
 		writeRouteToLocation(section, nextRoute);
+		setRoute(nextRoute);
+	}
+
+	function navigateToLogbookTab(nextTab: LogbookTab) {
+		const nextRoute = {
+			...route,
+			section: "logbook" as const,
+			logbookTab: nextTab,
+		};
+		writeRouteToLocation("logbook", nextRoute);
 		setRoute(nextRoute);
 	}
 
@@ -586,10 +647,11 @@ export function App() {
 	function navigateToAmmunitionTab(nextTab: AmmunitionTab) {
 		const nextRoute = {
 			...route,
-			section: "ammunition" as const,
+			section: "logbook" as const,
+			logbookTab: "reloading" as const,
 			ammunitionTab: nextTab,
 		};
-		writeRouteToLocation("ammunition", { ammunitionTab: nextTab });
+		writeRouteToLocation("logbook", nextRoute);
 		setRoute(nextRoute);
 	}
 
@@ -611,34 +673,66 @@ export function App() {
 		return (
 			<div className="screen-stack">
 				<div className="tab-row">
-					<button
-						type="button"
-						className={
-							matchesTab === "registry"
-								? "tab-button tab-button-active"
-								: "tab-button"
-						}
-						onClick={() => navigateToMatchesTab("registry")}
-					>
-						{t("matches.tabs.registry")}
-					</button>
-					<button
-						type="button"
-						className={
-							matchesTab === "analysis"
-								? "tab-button tab-button-active"
-								: "tab-button"
-						}
-						onClick={() => navigateToMatchesTab("analysis")}
-					>
-						{t("matches.tabs.analysis")}
-					</button>
+					{(["registry", "analysis", "scorecards"] as MatchesTab[]).map(
+						(tab) => (
+							<button
+								key={tab}
+								type="button"
+								className={
+									matchesTab === tab
+										? "tab-button tab-button-active"
+										: "tab-button"
+								}
+								onClick={() => navigateToMatchesTab(tab)}
+							>
+								{t(`matches.tabs.${tab}`)}
+							</button>
+						),
+					)}
 				</div>
 				{matchesTab === "registry" ? (
 					<MatchesCrud onAnalyzeMatch={openMatchAnalysis} />
-				) : (
-					<MatchAnalysis />
-				)}
+				) : null}
+				{matchesTab === "analysis" ? <MatchAnalysis /> : null}
+				{matchesTab === "scorecards" ? <MatchScorecards /> : null}
+			</div>
+		);
+	}
+
+	function renderLogbookSection() {
+		const tabs: Array<{ id: LogbookTab; label: string }> = [
+			{ id: "firearms", label: t("logbook.tabs.firearms") },
+			{ id: "reloading", label: t("logbook.tabs.reloading") },
+			{ id: "maintenance", label: t("logbook.tabs.maintenance") },
+			{ id: "paperwork", label: t("logbook.tabs.paperwork") },
+		];
+		return (
+			<div className="screen-stack">
+				<div className="tab-row">
+					{tabs.map((tab) => (
+						<button
+							key={tab.id}
+							type="button"
+							className={
+								logbookTab === tab.id
+									? "tab-button tab-button-active"
+									: "tab-button"
+							}
+							onClick={() => navigateToLogbookTab(tab.id)}
+						>
+							{tab.label}
+						</button>
+					))}
+				</div>
+				{logbookTab === "firearms" ? <FirearmsCrud /> : null}
+				{logbookTab === "reloading" ? (
+					<AmmunitionCrud
+						tab={ammunitionTab}
+						onTabChange={navigateToAmmunitionTab}
+					/>
+				) : null}
+				{logbookTab === "maintenance" ? <MaintenanceCrud /> : null}
+				{logbookTab === "paperwork" ? <PaperworkCrud /> : null}
 			</div>
 		);
 	}
@@ -646,24 +740,18 @@ export function App() {
 	function renderSection() {
 		switch (activeSection) {
 			case "dashboard":
-				return <Dashboard onNavigate={navigateToSection} />;
-			case "firearms":
-				return <FirearmsCrud />;
+				return (
+					<Dashboard
+						onNavigate={navigateToSection}
+						onNavigateLogbook={navigateToLogbookTab}
+					/>
+				);
 			case "training":
 				return <TrainingCrud />;
 			case "matches":
 				return renderMatchesSection();
-			case "ammunition":
-				return (
-					<AmmunitionCrud
-						tab={ammunitionTab}
-						onTabChange={navigateToAmmunitionTab}
-					/>
-				);
-			case "maintenance":
-				return <MaintenanceCrud />;
-			case "paperwork":
-				return <PaperworkCrud />;
+			case "logbook":
+				return renderLogbookSection();
 			case "settings":
 				return (
 					<SettingsPanel

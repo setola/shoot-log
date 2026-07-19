@@ -1,3 +1,4 @@
+import { createId } from '../utils/id';
 export const GOOGLE_DRIVE_APPDATA_SCOPE =
 	"https://www.googleapis.com/auth/drive.appdata";
 export const DRIVE_BACKUP_FILENAME = "shooting-logbook-backup.json";
@@ -217,7 +218,7 @@ export async function uploadDriveBackup(
 		mimeType: "application/json",
 		parents: existingFile ? undefined : ["appDataFolder"],
 	};
-	const boundary = `shooting-logbook-${crypto.randomUUID()}`;
+	const boundary = `shooting-logbook-${createId()}`;
 	const multipartBody = createMultipartBody(boundary, metadata, content);
 	const endpoint = existingFile
 		? `${DRIVE_UPLOAD_ENDPOINT}/${existingFile.id}?uploadType=multipart&fields=id,name,modifiedTime,size`

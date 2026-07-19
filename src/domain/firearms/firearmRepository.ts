@@ -1,6 +1,7 @@
 import type { Firearm, FirearmType } from './types';
 import { db } from '../../db/schema';
 import { nowIso } from '../../utils/time';
+import { createId } from '../../utils/id';
 
 export interface FirearmFormValues {
   nickname: string;
@@ -51,7 +52,7 @@ export function firearmToFormValues(firearm: Firearm): FirearmFormValues {
 export async function createFirearm(values: FirearmFormValues): Promise<string> {
   const now = nowIso();
   const firearm: Firearm = {
-    id: crypto.randomUUID(),
+    id: createId(),
     ...normalizeFirearmValues(values),
     createdAt: now,
     updatedAt: now

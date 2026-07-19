@@ -1,6 +1,7 @@
 import { db } from '../../db/schema';
 import { nowIso } from '../../utils/time';
 import type { MatchEvent } from './types';
+import { createId } from '../../utils/id';
 
 export type MatchFormValues = Omit<MatchEvent, 'id' | 'createdAt' | 'updatedAt' | 'roundsFired'> & { roundsFired: string };
 
@@ -14,7 +15,7 @@ export function matchToFormValues(match: MatchEvent): MatchFormValues {
 
 export async function createMatchEvent(values: MatchFormValues): Promise<string> {
   const now = nowIso();
-  const record: MatchEvent = { id: crypto.randomUUID(), ...normalize(values), createdAt: now, updatedAt: now };
+  const record: MatchEvent = { id: createId(), ...normalize(values), createdAt: now, updatedAt: now };
   await db.matchEvents.add(record);
   return record.id;
 }

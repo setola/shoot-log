@@ -1,4 +1,5 @@
 import { db } from "../../db/schema";
+import { createId } from "../../utils/id";
 import { nowIso } from "../../utils/time";
 import {
 	normalizeIdentifiers,
@@ -41,7 +42,7 @@ export async function saveRegularCompetitor(
 	const now = nowIso();
 	const existing = id ? await db.regularCompetitors.get(id) : undefined;
 	const record: RegularCompetitor = {
-		id: id ?? crypto.randomUUID(),
+		id: id ?? createId(),
 		displayName: values.displayName.trim(),
 		identifiers: normalizeIdentifiers(
 			parseIdentifierText(values.identifiersText),

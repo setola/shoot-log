@@ -1,6 +1,7 @@
 import { db } from '../../db/schema';
 import { nowIso } from '../../utils/time';
 import type { TrainingSession } from './types';
+import { createId } from '../../utils/id';
 
 export type TrainingFormValues = Omit<TrainingSession, 'id' | 'createdAt' | 'updatedAt' | 'roundsFired' | 'drills'> & {
   roundsFired: string;
@@ -17,7 +18,7 @@ export function trainingToFormValues(session: TrainingSession): TrainingFormValu
 
 export async function createTrainingSession(values: TrainingFormValues): Promise<string> {
   const now = nowIso();
-  const record: TrainingSession = { id: crypto.randomUUID(), ...normalize(values), createdAt: now, updatedAt: now };
+  const record: TrainingSession = { id: createId(), ...normalize(values), createdAt: now, updatedAt: now };
   await db.trainingSessions.add(record);
   return record.id;
 }

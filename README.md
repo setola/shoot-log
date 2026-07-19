@@ -39,10 +39,10 @@ npm run build
 
 ## App navigation and shareable routes
 
-The main menu is intentionally limited to macro areas: Dashboard, Firearms,
-Training, Matches, Reloading, Maintenance, Paperwork and Settings. Detailed
-workflows live in page-level tabs so the sidebar and mobile navigation stay
-usable on desktop, tablet and phone.
+The main menu is intentionally limited to macro areas: Dashboard, Matches,
+Training, Logbook and Settings. Match analysis is the primary workflow, while
+administrative material management lives under Logbook so the sidebar and mobile
+navigation stay focused on desktop, tablet and phone.
 
 Routes are encoded in the query string and can be copied directly from the
 browser address bar:
@@ -50,15 +50,24 @@ browser address bar:
 ```text
 ?section=matches
 ?section=matches&tab=analysis
-?section=ammunition&tab=recipes
-?section=ammunition&tab=chrono
-?section=ammunition&tab=components
-?section=ammunition&tab=stock
+?section=logbook&tab=firearms
+?section=logbook&tab=reloading&reloadingTab=recipes
+?section=logbook&tab=reloading&reloadingTab=chrono
+?section=logbook&tab=reloading&reloadingTab=components
+?section=logbook&tab=reloading&reloadingTab=stock
+?section=logbook&tab=maintenance
+?section=logbook&tab=paperwork
 ```
 
 Settings also include optional regular competitors. When an imported match is
 opened in Analysis for the first time, the app silently preselects matching
 regular competitors for comparison; later manual changes are saved per match.
+
+The Matches area also has a Scorecards tab for in-match notes. A scorecard is a
+local draft created from the public Mare2 catalog: it stores match metadata,
+power factor, per-stage time and C/D/M/no-shoot/procedure counters, calculated
+Alpha/points/hit factor, plus any stage-page mapping for later override export.
+Backups include scorecard data and mapping, but not downloaded stage images.
 
 Shared analysis links may also include match and competitor parameters, for
 example:
@@ -67,8 +76,9 @@ example:
 ?section=matches&tab=analysis&mare2=1616&competitors=102,117
 ```
 
-Legacy `?section=analysis` links are still accepted and opened as
-`?section=matches&tab=analysis`.
+Legacy `?section=analysis`, `?section=firearms`, `?section=ammunition`,
+`?section=maintenance` and `?section=paperwork` links are still accepted and
+opened in their new tab locations.
 
 ## Import sample data by URL
 
@@ -126,6 +136,7 @@ user's own Drive `appDataFolder`.
 2. Use application type **Web application**.
 3. Add authorized JavaScript origins, for example:
    - `http://localhost:5173`
+   - `https://pi-workstation.villa.emanueletessore.com`
    - `https://shootlog.emanueletessore.com`
    - your GitHub Pages origin
 4. Copy `.env.example` to `.env.local` and set:

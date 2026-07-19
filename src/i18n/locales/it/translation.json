@@ -12,13 +12,9 @@
     "openMenu": "Apri menu",
     "closeMenu": "Chiudi menu",
     "dashboard": "Cruscotto",
-    "firearms": "Armi",
-    "training": "Allenamenti",
     "matches": "Gare",
-    "ammunition": "Ricarica",
-    "maintenance": "Manutenzione",
-    "paperwork": "Documenti",
-    "sync": "Drive Sync",
+    "training": "Allenamenti",
+    "logbook": "Registro",
     "settings": "Impostazioni",
     "sourceCode": "Codice sorgente",
     "sourceCommit": "Sorgente {{commit}}"
@@ -32,7 +28,8 @@
     "maintenance": "Manutenzione",
     "paperwork": "Documenti",
     "sync": "Sincronizzazione Google Drive",
-    "settings": "Impostazioni"
+    "settings": "Impostazioni",
+    "logbook": "Registro"
   },
   "privacy": {
     "localDevice": "I tuoi dati restano su questo dispositivo."
@@ -109,7 +106,8 @@
     "cancel": "Annulla",
     "edit": "Modifica",
     "delete": "Elimina",
-    "close": "Chiudi"
+    "close": "Chiudi",
+    "back": "Indietro"
   },
   "common": {
     "loading": "Caricamento...",
@@ -471,7 +469,57 @@
     },
     "tabs": {
       "registry": "Registro",
-      "analysis": "Analisi"
+      "analysis": "Analisi",
+      "scorecards": "Statino"
+    },
+    "scorecards": {
+      "title": "Statini gara",
+      "description": "Crea uno statino locale per una gara Mare2 in corso e annota tempi e penalità degli stage dal telefono.",
+      "actionsLabel": "Azioni statino",
+      "new": "Nuovo statino",
+      "emptyTitle": "Nessuno statino",
+      "empty": "Crea uno statino dalle gare Mare2 di oggi o prossime per annotare i risultati stage durante la gara.",
+      "catalogTitle": "Scegli gara Mare2",
+      "catalogDescription": "Seleziona una gara Mare2 pubblica per preparare uno statino locale. Le gare di oggi sono mostrate per prime, poi le prossime.",
+      "todayGroup": "In corso oggi",
+      "upcomingGroup": "Prossime",
+      "otherGroup": "Altre gare",
+      "create": "Crea statino",
+      "creating": "Creazione...",
+      "powerFactor": "Power factor",
+      "alpha": "{{count}} Alpha",
+      "points": "Punti",
+      "time": "Tempo",
+      "downloadOverride": "Scarica override immagini stage",
+      "fields": {
+        "charlie": "Charlie",
+        "delta": "Delta",
+        "miss": "Miss",
+        "noShoot": "No-shoot",
+        "procedures": "Procedura",
+        "alpha": "Alpha"
+      },
+      "mapImages": "Mappa immagini stage",
+      "mappingTitle": "Mappa immagini stage",
+      "mappingDescription": "Importa il PDF del briefing Mare2 per {{match}} e associa ogni immagine esercizio allo stage corretto. La mappatura viene salvata nello statino e può essere scaricata come override JSON.",
+      "saveMapping": "Salva mappatura",
+      "catalogImagesAvailable": "{{count}} immagini del catalogo disponibili per la mappatura manuale degli stage.",
+      "pageOption": "Pagina {{page}}",
+      "stageMeta": "{{rounds}} colpi minimi · {{points}} punti",
+      "completed": "Compilato",
+      "todo": "Da fare",
+      "enterScore": "Inserisci punteggio",
+      "editScore": "Modifica punteggio",
+      "selectImage": "Immagine",
+      "selectImageTitle": "Seleziona immagine stage",
+      "selectImageDescription": "Scegli l’immagine corretta del book per {{stage}}. Le immagini già usate da altri stage restano selezionabili per correggere mappature errate.",
+      "noCatalogImages": "Nessuna immagine del catalogo disponibile per questo statino.",
+      "saveImage": "Salva immagine",
+      "savingImage": "Salvataggio...",
+      "completedCount": "{{completed}}/{{total}} stage compilati",
+      "compile": "Compila statino",
+      "tooManyHits": "Troppi colpi a punteggio: {{count}} inseriti, massimo {{max}}.",
+      "hits": "Colpi"
     }
   },
   "ammunition": {
@@ -644,5 +692,13 @@
     "importing": "Importazione backup da URL…",
     "success": "Backup importato da URL.",
     "error": "Impossibile importare il backup da URL: {{error}}"
+  },
+  "logbook": {
+    "tabs": {
+      "firearms": "Armi",
+      "reloading": "Ricarica",
+      "maintenance": "Manutenzione",
+      "paperwork": "Documenti"
+    }
   }
 }

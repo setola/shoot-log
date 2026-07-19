@@ -12,13 +12,9 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "dashboard": "Dashboard",
-    "firearms": "Firearms",
-    "training": "Training",
     "matches": "Matches",
-    "ammunition": "Reloading",
-    "maintenance": "Maintenance",
-    "paperwork": "Paperwork",
-    "sync": "Drive Sync",
+    "training": "Training",
+    "logbook": "Logbook",
     "settings": "Settings",
     "sourceCode": "Source code",
     "sourceCommit": "Source {{commit}}"
@@ -32,7 +28,8 @@
     "maintenance": "Maintenance",
     "paperwork": "Paperwork",
     "sync": "Google Drive Sync",
-    "settings": "Settings"
+    "settings": "Settings",
+    "logbook": "Logbook"
   },
   "privacy": {
     "localDevice": "Your data stays on this device."
@@ -109,7 +106,8 @@
     "cancel": "Cancel",
     "edit": "Edit",
     "delete": "Delete",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back"
   },
   "common": {
     "loading": "Loading...",
@@ -471,7 +469,57 @@
     },
     "tabs": {
       "registry": "Registry",
-      "analysis": "Analysis"
+      "analysis": "Analysis",
+      "scorecards": "Scorecards"
+    },
+    "scorecards": {
+      "title": "Match scorecards",
+      "description": "Create a local scorecard for a Mare2 match in progress and record stage time and penalties from your phone.",
+      "actionsLabel": "Scorecard actions",
+      "new": "New scorecard",
+      "emptyTitle": "No scorecards yet",
+      "empty": "Create a scorecard from today’s or upcoming Mare2 matches to annotate your stage results during the match.",
+      "catalogTitle": "Choose Mare2 match",
+      "catalogDescription": "Pick a public Mare2 match to prepare a local scorecard. Today’s matches are shown first, then upcoming matches.",
+      "todayGroup": "In progress today",
+      "upcomingGroup": "Upcoming",
+      "otherGroup": "Other matches",
+      "create": "Create scorecard",
+      "creating": "Creating...",
+      "powerFactor": "Power factor",
+      "alpha": "{{count}} Alpha",
+      "points": "Points",
+      "time": "Time",
+      "downloadOverride": "Download stage image override",
+      "fields": {
+        "charlie": "Charlie",
+        "delta": "Delta",
+        "miss": "Miss",
+        "noShoot": "No-shoot",
+        "procedures": "Procedure",
+        "alpha": "Alpha"
+      },
+      "mapImages": "Map stage images",
+      "mappingTitle": "Map stage images",
+      "mappingDescription": "Import the Mare2 briefing PDF for {{match}} and associate each exercise image with the right stage. The mapping is saved in the scorecard and can be downloaded as an override JSON.",
+      "saveMapping": "Save mapping",
+      "catalogImagesAvailable": "{{count}} catalog images available for manual stage mapping.",
+      "pageOption": "Page {{page}}",
+      "stageMeta": "{{rounds}} min rounds · {{points}} points",
+      "completed": "Done",
+      "todo": "To do",
+      "enterScore": "Enter score",
+      "editScore": "Edit score",
+      "selectImage": "Image",
+      "selectImageTitle": "Select stage image",
+      "selectImageDescription": "Choose the correct book image for {{stage}}. Images already used by other stages remain selectable so you can fix wrong mappings.",
+      "noCatalogImages": "No catalog images are available for this scorecard.",
+      "saveImage": "Save image",
+      "savingImage": "Saving...",
+      "completedCount": "{{completed}}/{{total}} stages completed",
+      "compile": "Compile scorecard",
+      "tooManyHits": "Too many scoring hits: {{count}} entered, maximum {{max}}.",
+      "hits": "Hits"
     }
   },
   "ammunition": {
@@ -644,5 +692,13 @@
     "importing": "Importing backup from URL…",
     "success": "Backup imported from URL.",
     "error": "Could not import backup from URL: {{error}}"
+  },
+  "logbook": {
+    "tabs": {
+      "firearms": "Firearms",
+      "reloading": "Reloading",
+      "maintenance": "Maintenance",
+      "paperwork": "Paperwork"
+    }
   }
 }

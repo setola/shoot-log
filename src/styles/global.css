@@ -11,6 +11,8 @@
 	--accent: #eff6ff;
 	--accent-foreground: #1d4ed8;
 	--destructive: #dc2626;
+	--success: #16a34a;
+	--warning: #d97706;
 	--border: #e2e8f0;
 	--input-background: #f1f5f9;
 	--ring: #93c5fd;
@@ -44,6 +46,8 @@
 	--accent: #1e3a5f;
 	--accent-foreground: #93c5fd;
 	--destructive: #f87171;
+	--success: #4ade80;
+	--warning: #facc15;
 	--border: #334155;
 	--input-background: #334155;
 	--ring: #3b82f6;
@@ -1172,10 +1176,33 @@ button:disabled {
 	overscroll-behavior: contain;
 }
 
+.match-form-dialog > .form-title-row,
+.entity-form-dialog > .form-title-row,
+.import-dialog > .form-title-row,
+.dialog > .dialog-title-row {
+	position: sticky;
+	top: -1.25rem;
+	z-index: 2;
+	align-items: start;
+	margin: -1.25rem -1.25rem 0.75rem;
+	padding: 1rem 3.25rem 0.85rem 1.25rem;
+	background: var(--card);
+}
+
+.match-form-dialog > .form-title-row .icon-button,
+.entity-form-dialog > .form-title-row .icon-button,
+.import-dialog > .form-title-row .icon-button,
+.dialog > .dialog-title-row .icon-button {
+	position: absolute;
+	top: 0.85rem;
+	right: 0.85rem;
+}
+
 .match-form-dialog .dialog-actions,
 .entity-form-dialog .dialog-actions,
 .import-dialog .dialog-actions,
-.briefing-dialog .dialog-actions {
+.briefing-dialog .dialog-actions,
+.dialog .dialog-actions {
 	position: sticky;
 	bottom: -1.25rem;
 	z-index: 2;
@@ -1337,6 +1364,17 @@ button:disabled {
 	.settings-action {
 		flex-direction: column;
 		align-items: stretch;
+	}
+
+	.match-form-dialog > .form-title-row,
+	.entity-form-dialog > .form-title-row,
+	.import-dialog > .form-title-row,
+	.briefing-dialog .import-dialog-heading,
+	.scorecard-score-dialog .import-dialog-heading,
+	.scorecard-image-dialog .import-dialog-heading,
+	.dialog > .dialog-title-row {
+		flex-direction: row;
+		align-items: flex-start;
 	}
 
 	.two-columns,
@@ -2291,17 +2329,57 @@ button:disabled {
 	top: 50%;
 	left: 50%;
 	z-index: 60;
+	display: flex;
+	flex-direction: column;
 	width: min(72rem, calc(100vw - 2rem));
 	max-height: min(54rem, calc(100dvh - 1rem));
 	padding: 1.25rem;
-	overflow: auto;
+	overflow: hidden;
 	overscroll-behavior: contain;
 	transform: translate(-50%, -50%);
+}
+
+.briefing-dialog .import-dialog-heading {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	align-items: start;
+	margin: -1.25rem -1.25rem 0.75rem;
+	padding: 1rem 3.25rem 0.85rem 1rem;
+	background: var(--card);
+}
+
+.briefing-dialog .import-dialog-heading > div {
+	min-width: 0;
+	padding-right: 0.5rem;
+}
+
+.briefing-dialog .import-dialog-heading .icon-button {
+	position: absolute;
+	top: 0.85rem;
+	right: 0.85rem;
+	flex: 0 0 auto;
+	align-self: start;
+}
+
+.briefing-dialog .dialog-actions {
+	position: sticky;
+	bottom: 0;
+	z-index: 2;
+	justify-content: flex-end;
+	margin: 0.75rem -1.25rem -1.25rem;
+	padding: 0.85rem 1rem 1rem;
+	border-top: 1px solid var(--border);
+	background: var(--card);
 }
 
 .briefing-mapping-list {
 	display: grid;
 	gap: 0.75rem;
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: auto;
+	padding-right: 0.25rem;
 }
 
 .briefing-mapping-row {
@@ -2377,7 +2455,41 @@ button:disabled {
 	justify-self: end;
 }
 
+.import-drop-zone-compact {
+	padding: 0.85rem;
+}
+
+.import-drop-zone-compact svg {
+	width: 1.2rem;
+	height: 1.2rem;
+}
+
 @media (max-width: 720px) {
+	.briefing-dialog {
+		inset: 0.5rem;
+		top: 0.5rem;
+		left: 0.5rem;
+		width: auto;
+		max-height: none;
+		padding: 1rem;
+		transform: none;
+	}
+
+	.briefing-dialog .import-dialog-heading {
+		margin: -1rem -1rem 0.65rem;
+		padding: 0.85rem 3rem 0.75rem 0.85rem;
+	}
+
+	.briefing-dialog .import-dialog-heading .icon-button {
+		top: 0.65rem;
+		right: 0.65rem;
+	}
+
+	.briefing-dialog .dialog-actions {
+		margin: 0.65rem -1rem -1rem;
+		padding: 0.75rem 0.85rem calc(0.85rem + env(safe-area-inset-bottom));
+	}
+
 	.briefing-mapping-row,
 	.stage-detail-with-image-layout {
 		grid-template-columns: 1fr;
@@ -2552,6 +2664,314 @@ button:disabled {
 	gap: 0.65rem;
 }
 
+.scorecard-card {
+	grid-template-columns: 1fr auto;
+}
+
+.scorecard-list-card {
+	align-items: center;
+}
+
+.scorecard-list-actions {
+	align-items: center;
+}
+
+.scorecard-progress-text {
+	margin: 0.4rem 0 0;
+	color: var(--muted-foreground);
+	font-size: 0.9rem;
+	font-weight: 800;
+}
+
+.scorecard-detail-card {
+	grid-template-columns: 1fr auto;
+}
+
+.scorecard-detail-heading {
+	align-items: center;
+	justify-content: start;
+}
+
+.scorecard-detail-heading h4 {
+	margin: 0;
+	line-height: 1;
+}
+
+.scorecard-detail-heading .button {
+	margin-right: 0.35rem;
+}
+
+.scorecard-power-factor {
+	max-width: 14rem;
+	margin: 0.75rem 0;
+}
+
+.scorecard-stage-list {
+	display: grid;
+	gap: 0.85rem;
+	margin-top: 1rem;
+}
+
+.scorecard-stage-summary {
+	display: grid;
+	grid-template-columns: minmax(7rem, 10rem) 1fr minmax(9rem, auto);
+	gap: 0.85rem;
+	align-items: stretch;
+	padding: 0.75rem;
+	border: 1px solid var(--border);
+	border-radius: 1rem;
+}
+
+.scorecard-stage-summary-no-image {
+	grid-template-columns: 1fr minmax(9rem, auto);
+}
+
+.scorecard-stage-summary-complete {
+	border-color: color-mix(in srgb, var(--success) 42%, var(--border));
+	background: color-mix(in srgb, var(--success) 10%, var(--card));
+}
+
+.scorecard-stage-summary-todo {
+	border-color: color-mix(in srgb, var(--warning) 42%, var(--border));
+	background: color-mix(in srgb, var(--warning) 10%, var(--card));
+}
+
+.scorecard-stage-summary-image,
+.scorecard-score-dialog-image {
+	min-width: 0;
+}
+
+.scorecard-stage-summary-image .stage-asset-thumbnail-button,
+.scorecard-score-dialog-image .stage-asset-thumbnail-button,
+.scorecard-stage-image-button {
+	width: 100%;
+	max-height: 10rem;
+	background: var(--muted);
+}
+
+.scorecard-stage-summary-image .stage-asset-thumbnail,
+.scorecard-score-dialog-image .stage-asset-thumbnail,
+.scorecard-stage-image-button .stage-asset-thumbnail {
+	width: 100%;
+	height: 100%;
+	max-height: 9rem;
+	object-fit: contain;
+}
+
+.scorecard-stage-summary-content {
+	display: grid;
+	gap: 0.55rem;
+	align-content: start;
+}
+
+.scorecard-stage-summary-actions {
+	display: grid;
+	gap: 0.5rem;
+	align-content: center;
+	justify-items: stretch;
+}
+
+.scorecard-stage-summary-actions .button {
+	justify-content: center;
+	white-space: nowrap;
+}
+
+.scorecard-stage-result-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.scorecard-stage-result-pills span {
+	padding: 0.25rem 0.45rem;
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	background: var(--card);
+	font-size: 0.76rem;
+	font-weight: 750;
+}
+
+.scorecard-image-picker-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+	gap: 0.75rem;
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: auto;
+	padding-right: 0.25rem;
+}
+
+.scorecard-image-picker-grid .briefing-thumbnail-option {
+	font-size: 0.85rem;
+}
+
+.scorecard-image-picker-grid .briefing-thumbnail-option .briefing-thumbnail {
+	max-height: 15rem;
+}
+
+.scorecard-score-dialog,
+.scorecard-image-dialog {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	z-index: 60;
+	display: flex;
+	flex-direction: column;
+	width: min(38rem, calc(100vw - 1rem));
+	max-height: min(48rem, calc(100dvh - 1rem));
+	padding: 1.25rem;
+	overflow: hidden;
+	overscroll-behavior: contain;
+	transform: translate(-50%, -50%);
+}
+
+.app-modal-body {
+	display: grid;
+	gap: 0.75rem;
+	flex: 1 1 auto;
+	min-height: 0;
+	overflow: auto;
+}
+
+.scorecard-image-picker-body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	min-height: 0;
+	overflow: hidden;
+}
+
+.scorecard-score-dialog .import-dialog-heading,
+.scorecard-image-dialog .import-dialog-heading {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	align-items: start;
+	margin: -1.25rem -1.25rem 0.75rem;
+	padding: 1rem 3.25rem 0.85rem 1rem;
+	background: var(--card);
+}
+
+.scorecard-score-dialog .import-dialog-heading > div,
+.scorecard-image-dialog .import-dialog-heading > div {
+	min-width: 0;
+	padding-right: 0.5rem;
+}
+
+.scorecard-score-dialog .import-dialog-heading .icon-button,
+.scorecard-image-dialog .import-dialog-heading .icon-button {
+	position: absolute;
+	top: 0.85rem;
+	right: 0.85rem;
+	flex: 0 0 auto;
+	align-self: start;
+}
+
+.scorecard-score-dialog-subtitle {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem 0.6rem;
+	align-items: center;
+}
+
+.scorecard-score-dialog-subtitle strong {
+	color: var(--foreground);
+	font-size: 1rem;
+}
+
+.scorecard-score-dialog .dialog-actions,
+.scorecard-image-dialog .dialog-actions {
+	position: sticky;
+	bottom: 0;
+	z-index: 2;
+	justify-content: flex-end;
+	margin: 0.75rem -1.25rem -1.25rem;
+	padding: 0.85rem 1rem 1rem;
+	border-top: 1px solid var(--border);
+	background: var(--card);
+}
+
+.app-modal-footer {
+	flex: 0 0 auto;
+}
+
+.scorecard-score-footer {
+	justify-content: flex-start;
+	align-items: center;
+}
+
+.scorecard-score-footer-metrics {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+.scorecard-score-footer-metrics span {
+	display: inline-flex;
+	gap: 0.25rem;
+	align-items: baseline;
+	padding: 0.25rem 0.45rem;
+	border: 1px solid var(--border);
+	border-radius: 999px;
+	background: var(--muted);
+	color: var(--muted-foreground);
+	font-size: 0.72rem;
+	font-weight: 800;
+}
+
+.scorecard-score-footer-metrics strong {
+	color: var(--foreground);
+	font-size: 0.82rem;
+}
+
+.scorecard-score-footer-actions {
+	display: flex;
+	gap: 0.65rem;
+	align-items: center;
+	justify-content: flex-end;
+	margin-left: auto;
+}
+
+.scorecard-metrics-row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+	gap: 0.65rem;
+}
+
+.scorecard-time-row input {
+	width: 10rem;
+	max-width: 45vw;
+	text-align: right;
+}
+
+.scorecard-counter-row {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.scorecard-counter-row > div {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.scorecard-counter-row strong {
+	min-width: 2ch;
+	text-align: center;
+}
+
+.scorecard-catalog-groups {
+	display: grid;
+	gap: 1rem;
+	max-height: min(54vh, 36rem);
+	overflow: auto;
+	padding-right: 0.25rem;
+}
+
 .metric-card {
 	display: grid;
 	gap: 0.2rem;
@@ -2572,8 +2992,142 @@ button:disabled {
 }
 
 @media (max-width: 720px) {
-	.metric-grid {
+	.metric-grid,
+	.scorecard-metrics-row {
 		grid-template-columns: 1fr;
+	}
+
+	.scorecard-stage-summary {
+		grid-template-columns: minmax(5.5rem, 7.5rem) minmax(0, 1fr);
+		gap: 0.65rem;
+		padding: 0.65rem;
+	}
+
+	.scorecard-stage-summary-no-image {
+		grid-template-columns: 1fr;
+	}
+
+	.scorecard-stage-summary-content {
+		min-width: 0;
+	}
+
+	.scorecard-stage-summary-content .record-title-row {
+		align-items: flex-start;
+		gap: 0.35rem;
+	}
+
+	.scorecard-stage-summary-content .record-title-row h4 {
+		min-width: 0;
+		font-size: 0.98rem;
+		line-height: 1.2;
+	}
+
+	.scorecard-stage-summary-content p {
+		margin: 0;
+		font-size: 0.82rem;
+	}
+
+	.scorecard-stage-summary-image .stage-asset-thumbnail-button {
+		max-height: 7.5rem;
+	}
+
+	.scorecard-stage-summary-image .stage-asset-thumbnail {
+		max-height: 7.5rem;
+	}
+
+	.scorecard-score-dialog-image .stage-asset-thumbnail {
+		max-height: 12rem;
+	}
+
+	.scorecard-stage-result-pills {
+		gap: 0.25rem;
+	}
+
+	.scorecard-stage-result-pills span {
+		font-size: 0.68rem;
+	}
+
+	.scorecard-stage-summary-actions {
+		grid-column: 1 / -1;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.scorecard-list-card,
+	.scorecard-detail-card {
+		grid-template-columns: 1fr;
+	}
+
+	.scorecard-list-actions {
+		grid-template-columns: 1fr auto auto;
+		justify-items: stretch;
+	}
+
+	.scorecard-stage-summary-actions .button {
+		white-space: normal;
+	}
+
+	.scorecard-score-dialog,
+	.scorecard-image-dialog {
+		inset: 0.5rem;
+		top: 0.5rem;
+		left: 0.5rem;
+		width: auto;
+		max-height: none;
+		padding: 1rem;
+		transform: none;
+	}
+
+	.scorecard-score-dialog .import-dialog-heading,
+	.scorecard-image-dialog .import-dialog-heading {
+		margin: -1rem -1rem 0.65rem;
+		padding: 0.85rem 3rem 0.75rem 0.85rem;
+	}
+
+	.scorecard-score-dialog .import-dialog-heading .icon-button,
+	.scorecard-image-dialog .import-dialog-heading .icon-button {
+		top: 0.65rem;
+		right: 0.65rem;
+	}
+
+	.scorecard-score-dialog .import-dialog-heading h3,
+	.scorecard-image-dialog .import-dialog-heading h3 {
+		font-size: 1rem;
+		line-height: 1.2;
+	}
+
+	.scorecard-image-picker-grid {
+		grid-template-columns: 1fr;
+		gap: 0.85rem;
+	}
+
+	.scorecard-image-picker-grid .briefing-thumbnail-option .briefing-thumbnail {
+		max-height: 22rem;
+	}
+
+	.scorecard-score-dialog .dialog-actions,
+	.scorecard-image-dialog .dialog-actions {
+		margin: 0.65rem -1rem -1rem;
+		padding: 0.75rem 0.85rem calc(0.85rem + env(safe-area-inset-bottom));
+	}
+
+	.scorecard-score-footer {
+		align-items: stretch;
+		gap: 0.65rem;
+	}
+
+	.scorecard-score-footer-metrics {
+		flex: 1 1 auto;
+		gap: 0.3rem;
+	}
+
+	.scorecard-score-footer-actions {
+		flex: 0 0 auto;
+		gap: 0.45rem;
+	}
+
+	.scorecard-image-dialog .dialog-actions .button {
+		flex: 1;
+		justify-content: center;
 	}
 
 	.owner-add-row {
