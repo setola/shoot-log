@@ -15,11 +15,14 @@ backend dependency.
   pagination;
 - skips future matches before opening their details page unless `--include-future`
   is passed;
-- supports date-window cron sync with `--since=YYYY-MM-DD` or relative values like `--since="last week"`;
+- supports date-window cron sync with `--since=YYYY-MM-DD` or relative values
+  like `--since="last week"`;
 - rate-limits Mare2 HTTP requests during `sync` via `--request-delay-ms`;
 - merges optional manual stage-to-page overrides from
   `tools/mare2-importer/overrides`;
-- writes Cloudflare Pages `_headers` with CORS enabled for app-side `fetch()`.
+- writes Cloudflare Pages `_headers` with CORS enabled for app-side `fetch()`;
+- merges each sync run with the existing local catalog, so filtered/incremental
+  runs add or refresh matches without removing matches built by previous runs.
 
 The original Mare2 PDF is not published. Its public URL, hash and byte size are
 recorded in `source.json`. Original carousel JPGs and PDFs are cache-only.
@@ -42,7 +45,9 @@ Useful options:
 --year=<year>             Discover archive matches by year.
 --championship=<name>     Archive match type filter, e.g. federale, winter.
 --ma=<n>                  Macro-area/category filter, e.g. 3 for MA3.
---since=<date>            Sync past matches whose end date is on/after this date. Accepts YYYY-MM-DD or relative values like "last week", "last month", "last 2 weeks".
+--since=<date>            Sync past matches whose end date is on/after this
+                          date. Accepts YYYY-MM-DD or relative values like
+                          "last week", "last month", "last 2 weeks".
 --include-future          Also inspect future matches. Default: skip them.
 --request-delay-ms=<n>    Delay between Mare2 HTTP requests. Default: 300.
 --max-pages=<n>           Stop archive discovery after n pages. Default: 100.
@@ -101,7 +106,10 @@ mare2/
           page-02.webp
 ```
 
-`sync` writes `manifest.json` and `years/<year>.json`. Existing matches older than
+`sync` writes `manifest.json` and `years/<year>.json`. The catalog is merged
+with existing `manifest.json` entries and all locally built `matches/*/match.json`
+files, so a filtered run such as `--since="last week"` refreshes or adds matches
+without dropping older matches from previous runs. Existing matches older than
 `--refresh-recent-days` are skipped when source URLs are unchanged. Recent matches
 are rebuilt so partial VERIFY PDFs can refresh while score entry is still in
 progress.

@@ -711,6 +711,41 @@ async function listBuiltCatalogMatches(outRoot) {
 	return matches;
 }
 
+async function readExistingCatalogMatches(outRoot) {
+	const manifest = await readJsonIfExists(path.join(outRoot, "manifest.json"));
+	if (!Array.isArray(manifest?.matches)) return [];
+	return manifest.matches.flatMap((match) => {
+		const matchId = match.mare2MatchId ?? match.matchId;
+		if (!matchId) return [];
+		return [
+			{
+				matchId: String(matchId),
+				title: match.name ?? match.title ?? `Mare2 match ${matchId}`,
+				dateFrom: match.dateFrom,
+				dateTo: match.dateTo,
+				location: match.location,
+				level: match.level,
+				macroArea: match.macroArea,
+				badges: match.badges ?? [],
+			},
+		];
+	});
+}
+
+async function mergeCatalogMatches(outRoot, selectedMatches) {
+	const merged = new Map();
+	for (const match of await readExistingCatalogMatches(outRoot)) {
+		merged.set(match.matchId, match);
+	}
+	for (const match of await listBuiltCatalogMatches(outRoot)) {
+		merged.set(match.matchId, { ...merged.get(match.matchId), ...match });
+	}
+	for (const match of selectedMatches) {
+		merged.set(match.matchId, { ...merged.get(match.matchId), ...match });
+	}
+	return [...merged.values()];
+}
+
 async function writeCloudflarePagesHeaders(outRoot) {
 	await writeFile(
 		path.join(outRoot, "_headers"),
@@ -720,8 +755,9 @@ async function writeCloudflarePagesHeaders(outRoot) {
 
 async function writeCatalog(outRoot, selectedMatches) {
 	const generatedAt = new Date().toISOString();
+	const catalogMatches = await mergeCatalogMatches(outRoot, selectedMatches);
 	const records = [];
-	for (const selectedMatch of selectedMatches) {
+	for (const selectedMatch of catalogMatches) {
 		const match = await readJsonIfExists(
 			path.join(outRoot, "matches", selectedMatch.matchId, "match.json"),
 		);
