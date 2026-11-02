@@ -8,8 +8,9 @@ import {
 } from "react";
 import { useLiveQuery } from "dexie-react-hooks";
 import { useTranslation } from "react-i18next";
-import { BarChart2 } from "lucide-react";
+import { BarChart2, Share2 } from "lucide-react";
 import { EntityPage } from "../../components/EntityUi";
+import { shareUrl } from "../../utils/share";
 import { db } from "../../db/schema";
 import { DEFAULT_SETTINGS_ID } from "../settings/settingsRepository";
 import type { RegularCompetitor } from "../settings/regularCompetitors";
@@ -87,6 +88,7 @@ export function MatchAnalysis() {
 		useState<string[]>([]);
 	const [loadedSelectionMatchId, setLoadedSelectionMatchId] = useState("");
 	const [shareCopied, setShareCopied] = useState(false);
+	const [manualShareUrl, setManualShareUrl] = useState("");
 	const [sharedAnalysisImportStatus, setSharedAnalysisImportStatus] = useState<
 		"idle" | "importing" | "error"
 	>("idle");
@@ -372,15 +374,21 @@ export function MatchAnalysis() {
 		selectedAnalysisImport,
 	]);
 
-	async function copyAnalysisShareLink() {
+	async function shareAnalysis() {
 		if (!selectedAnalysisImport || analysisCompetitors.length === 0) return;
 		const url = createAnalysisShareUrl(
 			selectedAnalysisImport,
 			analysisCompetitors,
 		);
-		await navigator.clipboard.writeText(url);
-		setShareCopied(true);
-		window.setTimeout(() => setShareCopied(false), 1800);
+		setShareCopied(false);
+		setManualShareUrl("");
+		const result = await shareUrl(url, selectedAnalysisImport.snapshot.match.name);
+		if (result === "manual") {
+			setManualShareUrl(url);
+		} else if (result === "copied") {
+			setShareCopied(true);
+			window.setTimeout(() => setShareCopied(false), 1800);
+		}
 	}
 
 	function addComparisonCompetitor(query: string) {
@@ -465,14 +473,28 @@ export function MatchAnalysis() {
 					className="button button-secondary"
 					type="button"
 					disabled={!selectedAnalysisImport || analysisCompetitors.length === 0}
-					onClick={() => void copyAnalysisShareLink()}
+					onClick={() => void shareAnalysis()}
 				>
+					<Share2 size={18} aria-hidden="true" />
 					{shareCopied
 						? t("matches.analysis.shareCopied")
 						: t("matches.analysis.shareLink")}
 				</button>
 			}
 		>
+			{manualShareUrl && (
+				<div className="panel form-grid">
+					<label>
+						<span role="status">{t("matches.analysis.shareManualCopy")}</span>
+						<input
+							readOnly
+							value={manualShareUrl}
+							onFocus={(event) => event.currentTarget.select()}
+							onClick={(event) => event.currentTarget.select()}
+						/>
+					</label>
+				</div>
+			)}
 			<div className="panel form-grid match-analysis-panel">
 				<div className="analysis-controls-grid analysis-controls-grid-compact">
 					<label>

@@ -401,8 +401,9 @@
       "chartGaps": "Gap",
       "totalTimeLabel": "Tempo",
       "totalPointsLabel": "Punti",
-      "shareLink": "Copia link analisi",
+      "shareLink": "Condividi analisi",
       "shareCopied": "Link copiato",
+      "shareManualCopy": "Copia automatica non disponibile. Seleziona e copia il link per condividere l’analisi.",
       "removeCompetitor": "Rimuovi {{competitor}}",
       "openMatch": "Apri analisi per {{match}}"
     },

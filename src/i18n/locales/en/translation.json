@@ -401,8 +401,9 @@
       "chartGaps": "Gaps",
       "totalTimeLabel": "Time",
       "totalPointsLabel": "Points",
-      "shareLink": "Copy analysis link",
+      "shareLink": "Share analysis",
       "shareCopied": "Link copied",
+      "shareManualCopy": "Automatic copying is unavailable. Select and copy the link to share the analysis.",
       "removeCompetitor": "Remove {{competitor}}",
       "openMatch": "Open analysis for {{match}}"
     },
