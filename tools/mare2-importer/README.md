@@ -109,10 +109,16 @@ mare2/
 `sync` writes `manifest.json` and `years/<year>.json`. The catalog is merged
 with existing `manifest.json` entries and all locally built `matches/*/match.json`
 files, so a filtered run such as `--since="last week"` refreshes or adds matches
-without dropping older matches from previous runs. Existing matches older than
-`--refresh-recent-days` are skipped when source URLs are unchanged. Recent matches
-are rebuilt so partial VERIFY PDFs can refresh while score entry is still in
-progress.
+without dropping older matches from previous runs.
+
+A match with existing `match.json` and `snapshot.json` is considered closed when
+its **end date precedes Monday of the current week (Europe/Rome)**. Closed
+matches are skipped before requesting their details or PDF: no downloading or
+parsing is repeated. Matches from the current week are refreshed; historical
+matches not yet imported are still built once. Missing dates are not frozen.
+Use `--force` to explicitly refresh closed matches (for example after a score
+correction or a new stage-page override). The old `--refresh-recent-days` policy
+is replaced by this weekly rule. `build-match` remains an explicit rebuild.
 
 For a daily cron-style update after a known date:
 
@@ -127,6 +133,32 @@ npm run mare2:publish:cf -- --year=2026 --since="last week" --request-delay-ms=1
 npm run mare2:publish:cf -- --year=2026 --since="last 2 weeks" --request-delay-ms=1000
 npm run mare2:publish:cf -- --year=2026 --since="last month" --request-delay-ms=1000
 ```
+
+## Automatic GitHub Actions sync
+
+`.github/workflows/mare2-catalog.yml` runs daily at **04:17 UTC** (06:17 Italian
+summer time / 05:17 winter time), and can be launched with **Run workflow**.
+It scans the current year, skipping future matches, with
+`--request-delay-ms=1000`. It installs ImageMagick and uses the local Wrangler.
+
+Configure these repository **Actions secrets** (Settings → Secrets and variables
+→ Actions):
+
+- `CLOUDFLARE_API_TOKEN`: token with Cloudflare Pages Edit permission.
+- `CLOUDFLARE_ACCOUNT_ID`: target Cloudflare account.
+
+The full generated catalog is kept as the `mare2-catalog` artifact for 90 days.
+Each run restores it from the last successful run, preserving older years and
+avoiding repeated parsing of closed matches. The first run bootstraps the
+current year; local `public/mare2` and `.env` are not present on GitHub runners.
+If the last successful run's artifact is missing or expired, restoration fails
+rather than silently publishing a reduced catalog; recover the catalog artifact
+before restarting the workflow. Keep the workflow running at least once within
+90 days. GitHub may disable scheduled workflows in inactive public repositories.
+
+Per-match failures are reported as warnings in Actions, while successfully
+imported matches are published and existing data is kept. Fatal command failures
+stop publication. The workflow never commits generated files or credentials.
 
 ## Manual stage-page overrides
 

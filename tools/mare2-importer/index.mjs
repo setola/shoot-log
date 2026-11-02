@@ -105,6 +105,20 @@ async function syncMatches(options) {
 	if (!Number.isFinite(requestDelayMs)) requestDelayMs = 300;
 
 	if (options.match || options.url) {
+		const matchUrl = resolveMatchUrl(options);
+		const matchId = matchUrl.match(/\/front\/match\/details\/(\d+)/)?.[1];
+		const matchDir = path.join(outRoot, "matches", matchId ?? "unknown");
+		const existingMatch = await readJsonIfExists(path.join(matchDir, "match.json"));
+		if (
+			!options.force && existingMatch && existsSync(path.join(matchDir, "snapshot.json")) &&
+			isMatchClosedBeforeCurrentWeek(existingMatch.dateTo ?? existingMatch.dateFrom)
+		) {
+			printStderr(`[mare2] skip ${matchId}: closed match\n`);
+			await writeCatalog(outRoot, []);
+			await writeCloudflarePagesHeaders(outRoot);
+			return { listUrl: matchUrl, discovered: 1, selected: 1, built: 0,
+				skipped: 1, failed: [], matchId, matchName: existingMatch.name };
+		}
 		const details = await inspectMatch(options);
 		printStderr(`[mare2] build ${formatMatchProgressLabel(details)}\n`);
 		const builtMatch = await buildMatch(options, details);
@@ -157,6 +171,20 @@ async function syncMatches(options) {
 				});
 				continue;
 			}
+			const matchOutDir = path.join(outRoot, "matches", discoveredMatch.matchId);
+			const existingMatch = await readJsonIfExists(path.join(matchOutDir, "match.json"));
+			const existingSnapshot = existsSync(path.join(matchOutDir, "snapshot.json"));
+			if (
+				!options.force && existingMatch && existingSnapshot &&
+				isMatchClosedBeforeCurrentWeek(
+					discoveredMatch.dateTo ?? existingMatch.dateTo ??
+					discoveredMatch.dateFrom ?? existingMatch.dateFrom,
+				)
+			) {
+				printStderr(`[mare2] skip ${discoveredMatch.matchId}: closed match\n`);
+				skipped.push({ matchId: discoveredMatch.matchId, reason: "closed-match" });
+				continue;
+			}
 			const details = await inspectMatch({ url: discoveredMatch.matchUrl });
 			if (!details.verifyPdfUrl?.toLowerCase().endsWith(".pdf")) {
 				printStderr(
@@ -168,30 +196,6 @@ async function syncMatches(options) {
 				});
 				continue;
 			}
-			const existingSource = await readJsonIfExists(
-				path.join(outRoot, "matches", discoveredMatch.matchId, "source.json"),
-			);
-			const existingMatch = await readJsonIfExists(
-				path.join(outRoot, "matches", discoveredMatch.matchId, "match.json"),
-			);
-			const recentEnough = isRecentOrUpcoming(
-				discoveredMatch.dateTo ?? discoveredMatch.dateFrom,
-				Number(options["refresh-recent-days"] ?? 14),
-			);
-			const canSkip =
-				!options.force &&
-				existingSource &&
-				existingMatch &&
-				!recentEnough &&
-				existingSource.verifyPdfUrl === details.verifyPdfUrl &&
-				arraysEqual(existingSource.originalImageUrls ?? [], details.imageUrls);
-
-			if (canSkip) {
-				printStderr(`[mare2] skip ${discoveredMatch.matchId}: unchanged\n`);
-				skipped.push({ matchId: discoveredMatch.matchId, reason: "unchanged" });
-				continue;
-			}
-
 			printStderr(`[mare2] build ${formatMatchProgressLabel(details)}\n`);
 			built.push(
 				await buildMatch(
@@ -600,12 +604,17 @@ function parseOptionalInteger(value) {
 	return Number.isFinite(parsed) ? parsed : Number.NaN;
 }
 
-function isRecentOrUpcoming(dateValue, refreshRecentDays) {
-	if (!dateValue) return true;
-	const date = new Date(`${dateValue}T23:59:59Z`);
-	if (Number.isNaN(date.getTime())) return true;
-	const threshold = Date.now() - refreshRecentDays * 24 * 60 * 60 * 1000;
-	return date.getTime() >= threshold;
+export function isMatchClosedBeforeCurrentWeek(dateValue, now = new Date()) {
+	if (!dateValue || !parseIsoDate(dateValue)) return false;
+	// Italian match dates are calendar dates, not UTC timestamps.
+	const parts = new Intl.DateTimeFormat("en-CA", {
+		timeZone: "Europe/Rome", year: "numeric", month: "2-digit", day: "2-digit",
+	}).formatToParts(now);
+	const part = (type) => parts.find((item) => item.type === type).value;
+	const monday = new Date(`${part("year")}-${part("month")}-${part("day")}T00:00:00Z`);
+	const daysSinceMonday = (monday.getUTCDay() + 6) % 7;
+	monday.setUTCDate(monday.getUTCDate() - daysSinceMonday);
+	return dateValue < monday.toISOString().slice(0, 10);
 }
 
 function formatMatchProgressLabel(match) {
@@ -668,13 +677,6 @@ function parseIsoDate(value) {
 	if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return undefined;
 	const date = new Date(`${value}T00:00:00Z`);
 	return Number.isNaN(date.getTime()) ? undefined : date;
-}
-
-function arraysEqual(first, second) {
-	return (
-		first.length === second.length &&
-		first.every((value, index) => value === second[index])
-	);
 }
 
 async function readJsonIfExists(filePath) {
