@@ -37,6 +37,11 @@ jobs:
           npm ci
           sudo apt-get update
           sudo apt-get install -y imagemagick
+          if command -v magick >/dev/null 2>&1; then
+            magick -version
+          else
+            convert -version
+          fi
 
       - name: Restore catalog from previous successful run
         shell: bash
@@ -61,6 +66,27 @@ jobs:
           for (const failure of report.failed) {
             console.error(`::warning::Mare2 ${failure.matchId}: ${failure.error}`);
           }
+          JS
+
+      - name: Validate catalog before preserving or publishing
+        run: |
+          node --input-type=module <<'JS'
+          import { readFileSync, existsSync } from 'node:fs';
+          import { resolve, dirname } from 'node:path';
+          const root = resolve('public/mare2');
+          const manifest = JSON.parse(readFileSync(resolve(root, 'manifest.json'), 'utf8'));
+          if (!manifest.matches?.length) throw new Error('Refusing to deploy an empty Mare2 catalog');
+          for (const entry of manifest.matches) {
+            for (const url of [entry.matchUrl, entry.snapshotUrl]) {
+              if (!url || !existsSync(resolve(root, url))) throw new Error(`Missing catalog file: ${url}`);
+            }
+            const matchPath = resolve(root, entry.matchUrl);
+            const match = JSON.parse(readFileSync(matchPath, 'utf8'));
+            for (const page of match.pages ?? []) {
+              if (!existsSync(resolve(dirname(matchPath), page.url))) throw new Error(`Missing image: ${page.url}`);
+            }
+          }
+          console.log(`Validated ${manifest.matches.length} catalog matches`);
           JS
 
       # Save BEFORE deployment: even if Cloudflare is temporarily unavailable,

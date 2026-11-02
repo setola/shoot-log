@@ -158,7 +158,12 @@ before restarting the workflow. Keep the workflow running at least once within
 
 Per-match failures are reported as warnings in Actions, while successfully
 imported matches are published and existing data is kept. Fatal command failures
-stop publication. The workflow never commits generated files or credentials.
+stop publication. An empty catalog is rejected before rewriting the manifest;
+the workflow also checks match, snapshot and image files before saving its
+artifact or deploying. Image conversion supports both ImageMagick 7 (`magick`)
+and ImageMagick 6 (`convert`, used by Ubuntu runners). Real conversion errors
+are included in the logs; failed builds are not published as JPG fallbacks.
+The workflow never commits generated files or credentials.
 
 ## Manual stage-page overrides
 

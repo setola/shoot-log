@@ -5,7 +5,6 @@ import {
 	mkdir,
 	readFile,
 	writeFile,
-	copyFile,
 	readdir,
 } from "node:fs/promises";
 import { existsSync } from "node:fs";
@@ -781,6 +780,12 @@ async function writeCatalog(outRoot, selectedMatches) {
 		});
 	}
 
+	if (records.length === 0) {
+		throw new Error(
+			"Refusing to publish an empty Mare2 catalog: no valid matches were built or restored. Check the sync errors and ImageMagick installation.",
+		);
+	}
+
 	records.sort(
 		(a, b) =>
 			String(a.dateFrom).localeCompare(String(b.dateFrom)) ||
@@ -1202,25 +1207,21 @@ function parseStageScoreLine(line, internalMemberId) {
 	};
 }
 
-async function convertToWebp(inputPath, outputPath, force) {
+export async function convertToWebp(inputPath, outputPath, force, execute = run) {
 	if (!force && existsSync(outputPath)) return;
 	await mkdir(path.dirname(outputPath), { recursive: true });
 
+	const args = [inputPath, "-auto-orient", "-quality", "82", outputPath];
 	try {
-		await run("magick", [
-			inputPath,
-			"-auto-orient",
-			"-quality",
-			"82",
-			outputPath,
-		]);
+		try {
+			await execute("magick", args);
+		} catch (error) {
+			if (error.code !== "ENOENT") throw error;
+			// Ubuntu runners ship ImageMagick 6, whose CLI is named convert.
+			await execute("convert", args);
+		}
 	} catch (error) {
-		const fallbackPath = outputPath.replace(/\.webp$/i, ".jpg");
-		await copyFile(inputPath, fallbackPath);
-		throw new Error(
-			`ImageMagick conversion failed. Copied fallback to ${fallbackPath}.`,
-			{ cause: error },
-		);
+		throw new Error(`ImageMagick conversion failed: ${error.message}`, { cause: error });
 	}
 }
 

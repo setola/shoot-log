@@ -10,6 +10,28 @@ import { isMatchClosedBeforeCurrentWeek } from './index.mjs';
 const run = promisify(execFile);
 
 describe('Mare2 closed match policy', () => {
+  it('fails instead of publishing an empty catalog from partial match directories', async () => {
+    const server = createServer((_request, response) => response.end('<html></html>'));
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    const address = server.address();
+    if (!address || typeof address === 'string') throw new Error('No test server port');
+    const directory = await mkdtemp(path.join(tmpdir(), 'mare2-empty-'));
+    try {
+      await mkdir(path.join(directory, 'matches', '1633', 'assets'), { recursive: true });
+      const originalManifest = '{"matches":[],"recoveryMarker":true}';
+      await writeFile(path.join(directory, 'manifest.json'), originalManifest);
+      await expect(run(process.execPath, [
+        'tools/mare2-importer/index.mjs', 'sync', `--out=${directory}`,
+        '--year=2026', '--max-pages=1', '--request-delay-ms=0',
+      ], { env: { ...process.env, MARE2_ORIGIN: `http://127.0.0.1:${address.port}` } }))
+        .rejects.toMatchObject({ code: 1, stderr: expect.stringContaining('Refusing to publish an empty') });
+      expect(await readFile(path.join(directory, 'manifest.json'), 'utf8')).toBe(originalManifest);
+    } finally {
+      server.close();
+      await rm(directory, { recursive: true, force: true });
+    }
+  });
+
   it('closes last Sunday but keeps this Monday refreshable', () => {
     const now = new Date('2026-07-22T12:00:00Z');
     expect(isMatchClosedBeforeCurrentWeek('2026-07-19', now)).toBe(true);
