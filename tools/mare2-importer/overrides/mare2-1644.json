@@ -1,0 +1,15 @@
+{
+  "format": "shooting-logbook-mare2-stage-page-override",
+  "schemaVersion": 1,
+  "mare2MatchId": "1644",
+  "matchName": "1^ PROVA WINTER CHAMPIONSHIP - MA3",
+  "generatedAt": "2026-11-02T05:23:46.094Z",
+  "stagePageMapping": {
+    "1": 6,
+    "2": 8,
+    "3": 10,
+    "4": 5,
+    "5": 9,
+    "6": 7
+  }
+}
