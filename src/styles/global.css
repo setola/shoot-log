@@ -7,7 +7,7 @@
 	--primary-foreground: #ffffff;
 	--secondary: #e2e8f0;
 	--muted: #f1f5f9;
-	--muted-foreground: #64748b;
+	--muted-foreground: #475569;
 	--accent: #eff6ff;
 	--accent-foreground: #1d4ed8;
 	--destructive: #dc2626;
@@ -42,7 +42,7 @@
 	--primary-foreground: #ffffff;
 	--secondary: #334155;
 	--muted: #1e293b;
-	--muted-foreground: #94a3b8;
+	--muted-foreground: #cbd5e1;
 	--accent: #1e3a5f;
 	--accent-foreground: #93c5fd;
 	--destructive: #f87171;
@@ -2187,6 +2187,47 @@ button:disabled {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) auto;
 	gap: 0.5rem;
+}
+
+.comparison-suggestion-list {
+	display: grid;
+	gap: 0.35rem;
+	max-height: 14rem;
+	overflow-y: auto;
+	padding: 0.35rem;
+	border: 1px solid var(--border);
+	border-radius: 0.8rem;
+	background: var(--card);
+	box-shadow: var(--shadow-card);
+}
+
+.comparison-suggestion-item {
+	display: grid;
+	gap: 0.12rem;
+	width: 100%;
+	padding: 0.55rem 0.65rem;
+	border: 0;
+	border-radius: 0.6rem;
+	color: var(--foreground);
+	background: transparent;
+	text-align: left;
+}
+
+.comparison-suggestion-item:hover,
+.comparison-suggestion-item:focus-visible {
+	background: var(--accent);
+}
+
+.comparison-suggestion-item strong {
+	font-size: 0.88rem;
+	font-weight: 800;
+}
+
+.comparison-suggestion-item span {
+	min-height: 1rem;
+	color: var(--muted-foreground);
+	font-size: 0.75rem;
+	font-weight: 700;
 }
 
 .comparison-pill-row {

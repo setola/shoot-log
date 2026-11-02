@@ -22,6 +22,7 @@ import {
 	parseMare2BriefingPdf,
 	type Mare2BriefingStageCandidate,
 } from "./mare2BriefingParser";
+import { getSavedBriefingMapping, reassignBriefingCandidates, type BriefingCandidate } from "./briefingMapping";
 import { parseMare2PdfSnapshot } from "./mare2PdfParser";
 import { parsePractiscoreCabSnapshot } from "./practiscoreParser";
 import { importPractiscoreSnapshot } from "./practiscoreRepository";
@@ -146,7 +147,7 @@ export function MatchesCrud({
 	} | null>(null);
 	const [briefingFile, setBriefingFile] = useState<File | null>(null);
 	const [briefingCandidates, setBriefingCandidates] = useState<
-		Mare2BriefingStageCandidate[]
+		BriefingCandidate[]
 	>([]);
 	const [briefingMapping, setBriefingMapping] = useState<
 		Record<string, number>
@@ -267,10 +268,7 @@ export function MatchesCrud({
 			setImporting(true);
 			const snapshot = await parseMare2PdfSnapshot(file);
 			const ownerIdentifiers = settings?.ownerPractiscoreIdentifiers ?? [];
-			const matchEventId = await saveImportedSnapshot(
-				snapshot,
-				ownerIdentifiers,
-			);
+			await saveImportedSnapshot(snapshot, ownerIdentifiers);
 			const summary = t("matches.mare2.importedSummary", {
 				stages: snapshot.stages.length,
 				competitors: snapshot.competitors.length,
@@ -279,7 +277,7 @@ export function MatchesCrud({
 			setImportMessage(summary);
 			setMare2File(null);
 			setImportOverlay(null);
-			showImportedMatchForm(snapshot, ownerIdentifiers, matchEventId);
+			reset();
 		} catch (error) {
 			setImportError(
 				error instanceof Error ? error.message : t("matches.mare2.importError"),
@@ -298,32 +296,6 @@ export function MatchesCrud({
 			editingId ?? undefined,
 			ownerIdentifiers,
 		);
-	}
-
-	function showImportedMatchForm(
-		snapshot: PractiscoreMatchSnapshot,
-		ownerIdentifiers: string[],
-		matchEventId: string,
-	) {
-		setEditingId(matchEventId);
-		setForm({
-			...createEmptyMatchForm(),
-			name: snapshot.match.name,
-			date: snapshot.match.date,
-			discipline: normalizeImportedDiscipline(snapshot),
-			roundsFired: String(
-				snapshot.stages.reduce(
-					(total, stage) => total + (stage.minRounds ?? 0),
-					0,
-				),
-			),
-			divisionOrCategory:
-				summarizeOwnerDivisionAndCategoryValue(snapshot, ownerIdentifiers) ??
-				summarizeSnapshotDivisionsAndCategoriesValue(snapshot) ??
-				"",
-			notes: `Imported from Mare2 ${snapshot.sourceFileName}`,
-		});
-		setShowForm(true);
 	}
 
 	async function openPublicCatalog() {
@@ -394,12 +366,8 @@ export function MatchesCrud({
 		setPublicCatalogImporting(true);
 		try {
 			const ownerIdentifiers = settings?.ownerPractiscoreIdentifiers ?? [];
-			let lastImported:
-				| { snapshot: PractiscoreMatchSnapshot; matchEventId: string }
-				| undefined;
-
 			for (const catalogMatch of catalogMatches) {
-				lastImported = await importPublicCatalogMatch(
+				await importPublicCatalogMatch(
 					catalogMatch,
 					ownerIdentifiers,
 				);
@@ -411,13 +379,7 @@ export function MatchesCrud({
 				}),
 			);
 			closePublicCatalog();
-			if (catalogMatches.length === 1 && lastImported) {
-				showImportedMatchForm(
-					lastImported.snapshot,
-					ownerIdentifiers,
-					lastImported.matchEventId,
-				);
-			}
+			reset();
 		} catch (error) {
 			setPublicCatalogError(
 				error instanceof Error
@@ -532,10 +494,13 @@ export function MatchesCrud({
 		match: MatchEvent,
 		importRecord: PractiscoreImportRecord,
 	) {
+		const saved = getSavedBriefingMapping(
+			(stageAssets ?? []).filter((asset) => asset.matchEventId === match.id),
+		);
 		setBriefingTarget({ match, importRecord });
 		setBriefingFile(null);
-		setBriefingCandidates([]);
-		setBriefingMapping({});
+		setBriefingCandidates(saved.candidates);
+		setBriefingMapping(saved.mapping);
 		setBriefingConfirmedPages({});
 		setBriefingError(null);
 	}
@@ -575,7 +540,7 @@ export function MatchesCrud({
 	}
 
 	async function saveBriefingMapping() {
-		if (!briefingTarget || !briefingFile || !briefingCandidates.length) return;
+		if (!briefingTarget || !briefingCandidates.length) return;
 		setBriefingError(null);
 		setBriefingImporting(true);
 		try {
@@ -592,7 +557,8 @@ export function MatchesCrud({
 							id: `${briefingTarget.match.id}:${stage.internalStageId}`,
 							matchEventId: briefingTarget.match.id,
 							internalStageId: stage.internalStageId,
-							sourceFileName: briefingFile.name,
+							sourceFileName:
+								briefingFile?.name ?? candidate.sourceFileName ?? "mare2-page.webp",
 							sourcePageNumber: candidate.pageNumber,
 							courseType: candidate.courseType,
 							minRounds: candidate.minRounds,
@@ -654,11 +620,12 @@ export function MatchesCrud({
 				[stage.internalStageId]: confirmedPage,
 			};
 			setBriefingMapping((currentMapping) =>
-				autoSelectOnlyRemainingBriefingCandidates(
+				reassignBriefingCandidates(
 					briefingTarget.importRecord.snapshot.stages,
 					briefingCandidates,
 					currentMapping,
 					nextConfirmed,
+					briefingFile !== null,
 				),
 			);
 			return nextConfirmed;
@@ -1196,17 +1163,13 @@ export function MatchesCrud({
 						{briefingCandidates.length > 0 ? (
 							<div className="briefing-mapping-list">
 								{briefingTarget.importRecord.snapshot.stages.map((stage) => {
-									const compatibleCandidates = getCompatibleBriefingCandidates(
-										stage,
-										briefingCandidates,
+									const compatibleCandidates = briefingFile
+										? getCompatibleBriefingCandidates(stage, briefingCandidates)
+										: briefingCandidates;
+									const selectedPage = briefingMapping[stage.internalStageId];
+									const selectedCandidate = briefingCandidates.find(
+										(candidate) => candidate.pageNumber === selectedPage,
 									);
-									const selectedPage =
-										briefingMapping[stage.internalStageId] ??
-										compatibleCandidates[0]?.pageNumber;
-									const selectedCandidate =
-										compatibleCandidates.find(
-											(candidate) => candidate.pageNumber === selectedPage,
-										) ?? compatibleCandidates[0];
 									const confirmedPageByOtherStage = new Set(
 										Object.entries(briefingConfirmedPages)
 											.filter(([stageId]) => stageId !== stage.internalStageId)
@@ -1594,9 +1557,9 @@ function filterPublicCatalogMatches(
 		.split(/\s+/)
 		.map((token) => token.trim())
 		.filter(Boolean);
-	if (tokens.length === 0) return matches;
+	if (tokens.length === 0) return sortPublicCatalogMatchesByDateDesc(matches);
 
-	return matches.filter((match) => {
+	return sortPublicCatalogMatchesByDateDesc(matches.filter((match) => {
 		const searchable = [
 			match.name,
 			match.mare2MatchId,
@@ -1610,7 +1573,23 @@ function filterPublicCatalogMatches(
 			.join(" ")
 			.toLowerCase();
 		return tokens.every((token) => searchable.includes(token));
+	}));
+}
+
+function sortPublicCatalogMatchesByDateDesc(
+	matches: Mare2PublicCatalogMatch[],
+): Mare2PublicCatalogMatch[] {
+	return [...matches].sort((a, b) => {
+		const dateComparison =
+			getPublicCatalogMatchSortTime(b) - getPublicCatalogMatchSortTime(a);
+		if (dateComparison !== 0) return dateComparison;
+		return a.name.localeCompare(b.name);
 	});
+}
+
+function getPublicCatalogMatchSortTime(match: Mare2PublicCatalogMatch): number {
+	const timestamp = Date.parse(match.dateFrom ?? match.dateTo ?? "");
+	return Number.isNaN(timestamp) ? 0 : timestamp;
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
@@ -1658,31 +1637,6 @@ function getCompatibleBriefingCandidates(
 		(candidate) => candidate.minRounds === stage.minRounds,
 	);
 	return byMaxPointsAndRounds.length ? byMaxPointsAndRounds : byMaxPoints;
-}
-
-function autoSelectOnlyRemainingBriefingCandidates(
-	stages: PractiscoreStage[],
-	candidates: Mare2BriefingStageCandidate[],
-	currentMapping: Record<string, number>,
-	confirmedPages: Record<string, number>,
-): Record<string, number> {
-	const nextMapping = { ...currentMapping };
-
-	for (const stage of stages) {
-		if (confirmedPages[stage.internalStageId]) continue;
-		const usedConfirmedPages = new Set(
-			Object.entries(confirmedPages)
-				.filter(([stageId]) => stageId !== stage.internalStageId)
-				.map(([, page]) => page),
-		);
-		const remaining = getCompatibleBriefingCandidates(stage, candidates).filter(
-			(candidate) => !usedConfirmedPages.has(candidate.pageNumber),
-		);
-		if (remaining.length === 1)
-			nextMapping[stage.internalStageId] = remaining[0].pageNumber;
-	}
-
-	return nextMapping;
 }
 
 function StageBriefingThumbnail({

@@ -429,9 +429,9 @@
       "fromLabel": "Import from:"
     },
     "briefing": {
-      "action": "Import stage images",
-      "title": "Import stage images",
-      "description": "Attach stage images to {{match}} from a Mare2 match booklet/briefing PDF. After saving, an override file will also be downloaded for reuse in the public catalog.",
+      "action": "Map stage images",
+      "title": "Map stage images",
+      "description": "Map already imported images to the stages of {{match}}, or upload a new Mare2 match booklet/briefing PDF. After saving, an override file will also be downloaded for reuse in the public catalog.",
       "dropTitle": "Drop the Mare2 match booklet/briefing PDF here",
       "dropHint": "or click to choose the match booklet/briefing PDF",
       "importError": "Unable to import the stage briefing PDF.",

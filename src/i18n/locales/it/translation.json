@@ -429,9 +429,9 @@
       "fromLabel": "Importa da:"
     },
     "briefing": {
-      "action": "Importa immagini esercizi",
-      "title": "Importa immagini esercizi",
-      "description": "Associa a {{match}} le immagini degli esercizi da una locandina/briefing PDF Mare2. Dopo il salvataggio verrà scaricato anche un file override riutilizzabile per il catalogo pubblico.",
+      "action": "Associa immagini esercizi",
+      "title": "Associa immagini esercizi",
+      "description": "Associa agli stage di {{match}} le immagini già importate, oppure carica un nuovo PDF locandina/briefing Mare2. Dopo il salvataggio verrà scaricato anche un file override riutilizzabile per il catalogo pubblico.",
       "dropTitle": "Trascina qui il PDF locandina/briefing Mare2",
       "dropHint": "oppure clicca per scegliere il PDF della locandina/briefing",
       "importError": "Impossibile importare la locandina stage.",

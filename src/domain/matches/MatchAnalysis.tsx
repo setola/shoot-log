@@ -179,6 +179,24 @@ export function MatchAnalysis() {
 				: COMPARISON_COLORS[(index - 1) % COMPARISON_COLORS.length],
 		isOwner: ownerCompetitor?.internalMemberId === competitor.internalMemberId,
 	}));
+	const comparisonCompetitorSuggestions = useMemo(
+		() =>
+			findCompetitorSuggestions(
+				selectedAnalysisImport,
+				comparisonCompetitorDraft,
+			).filter(
+				(competitor) =>
+					!analysisCompetitors.some(
+						(selected) =>
+							selected.internalMemberId === competitor.internalMemberId,
+					),
+			),
+		[
+			analysisCompetitors,
+			comparisonCompetitorDraft,
+			selectedAnalysisImport,
+		],
+	);
 	const hitBreakdown = useMemo(
 		() => calculateHitBreakdown(selectedAnalysisImport, selectedCompetitor),
 		[selectedAnalysisImport, selectedCompetitor],
@@ -370,6 +388,10 @@ export function MatchAnalysis() {
 			findExactSelectedCompetitor(selectedAnalysisImport, query) ??
 			findSelectedCompetitor(selectedAnalysisImport, query);
 		if (!competitor) return;
+		selectComparisonCompetitor(competitor);
+	}
+
+	function selectComparisonCompetitor(competitor: PractiscoreCompetitor) {
 		const value = competitorOptionValue(competitor);
 		setComparisonCompetitorQueries((current) =>
 			current.includes(value) ? current : [...current, value],
@@ -492,6 +514,26 @@ export function MatchAnalysis() {
 								/>
 							))}
 						</datalist>
+						{comparisonCompetitorSuggestions.length > 0 ? (
+							<div className="comparison-suggestion-list">
+								{comparisonCompetitorSuggestions.map((competitor) => (
+									<button
+										className="comparison-suggestion-item"
+										key={competitor.internalMemberId}
+										type="button"
+										onMouseDown={(event) => event.preventDefault()}
+										onClick={() => selectComparisonCompetitor(competitor)}
+									>
+										<strong>{competitor.displayName}</strong>
+										<span>
+											{[competitor.alias, competitor.competitorNumber ? `#${competitor.competitorNumber}` : undefined]
+												.filter(Boolean)
+												.join(" · ")}
+										</span>
+									</button>
+								))}
+							</div>
+						) : null}
 						<div className="comparison-pill-row">
 							{comparisonPills.map(({ competitor, query, color, isOwner }) => (
 								<span
@@ -931,15 +973,24 @@ function findSelectedCompetitor(
 	record: PractiscoreImportRecord | undefined,
 	query: string,
 ): PractiscoreCompetitor | undefined {
-	const normalizedQuery = query.trim().toLowerCase();
-	if (!record || !normalizedQuery) return undefined;
-
 	return (
 		findExactSelectedCompetitor(record, query) ??
-		record.snapshot.competitors.find((competitor) =>
+		findCompetitorSuggestions(record, query)[0]
+	);
+}
+
+function findCompetitorSuggestions(
+	record: PractiscoreImportRecord | undefined,
+	query: string,
+): PractiscoreCompetitor[] {
+	const normalizedQuery = query.trim().toLowerCase();
+	if (!record || !normalizedQuery) return [];
+
+	return record.snapshot.competitors
+		.filter((competitor) =>
 			competitorOptionValue(competitor).toLowerCase().includes(normalizedQuery),
 		)
-	);
+		.slice(0, 8);
 }
 
 function findExactSelectedCompetitor(
