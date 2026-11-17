@@ -14,28 +14,176 @@ Privacy-first, local-first PWA for sport shooting records.
 - Shareable query-string routes for sections and subsections
 - No app-owned backend database
 
-## Local development
+## Docker-only development
 
-### With Docker Compose
+Only Docker with Compose v2 and standard shell/filesystem utilities are required
+on the host. Do not install Node, npm, ImageMagick or automated browsers locally.
+Run all commands below **from the repository root** (mounted at `/app`). The root
+`package.json` / `package-lock.json` define the application and Mare2 CLI; `design/`
+is an excluded design reference, not a second supported workspace. No submodules
+or downloaded assets are required to start the app.
 
-```bash
-docker compose up
-```
-
-Open <http://localhost:5173>.
-
-### With local Node.js
-
-```bash
-npm install
-npm run dev
-```
-
-## Build
+### Initial setup (POSIX / Linux, also applicable to Docker Desktop)
 
 ```bash
-npm run build
+# Preserve an existing .env; otherwise start from the safe template.
+[ -f .env ] || cp .env.example .env
+export LOCAL_UID="$(id -u)"
+export LOCAL_GID="$(id -g)"
+mkdir -p .docker/node_modules .docker/wrangler .docker/tls-data .docker/tls-config
+docker compose build npm
+docker compose run --rm npm ci
 ```
+
+Export UID/GID in each new shell, or put the numeric results of `id -u` / `id -g`
+in your ignored `.env`. Do not copy another developer's IDs. Create bind directories
+as your host user, not with sudo. Containers run with those IDs and writable homes;
+no privileged mode, Docker socket or recursive chown is needed. On Windows use a
+POSIX shell in WSL2 with Docker integration and a checkout owned by that WSL user.
+Old host/Alpine `node_modules` is not used: dependencies live exclusively in
+`.docker/node_modules` (Debian/glibc). Reinstall after architecture/ABI changes.
+
+The derived `docker/Dockerfile` uses official `node:24.11.1-bookworm-slim`, satisfying
+the resolved Vite 8, Vitest 5, ESLint 10 and PDF.js 6 engine requirements. It adds
+ImageMagick 6 (JPG → WebP) from the fixed Debian snapshot dated 2025-11-18.
+The optional TLS proxy uses `caddy:2.10.2-alpine`. Tags are patch-pinned, not
+immutable digests; update pins/snapshot deliberately for security fixes and rerun
+checks. `npm ci` uses the committed lockfile even where manifest ranges say latest.
+
+### Lifecycle and independent commands
+
+```bash
+docker compose up -d               # only web; dependencies must be installed first
+docker compose logs -f web
+docker compose down
+
+# All work while web is stopped; nonzero failures propagate to the shell.
+docker compose run --rm npm run build   # TypeScript + Vite → dist/
+docker compose run --rm npm run lint
+docker compose run --rm npm test
+docker compose run --rm npm run mare2 -- inspect --match=1616
+
+# After a build: serve dist/ at http://<VM-host>:4173
+docker compose --profile preview up -d preview
+docker compose --profile preview down
+```
+
+`npm` and `publish` are optional `cli`-profile execution configurations, not daemons.
+Explicit `run` enables the selected service's profile automatically. Equivalent:
+`docker compose --profile cli run --rm npm test` (`--profile` precedes `run`).
+`run` replaces the npm arguments; it does not publish ports. `exec` instead requires
+an already-running service, e.g. `docker compose exec web npm --version`.
+
+**Serialize writable workflows:** stop web/preview/TLS before `npm ci`, builds,
+validation or catalog generation; run CLI tasks one at a time in this checkout.
+They share dependencies, Vite caches, TypeScript build info and `dist/`; catalog
+sync/publish also shares `public/mare2` and `.mare2-cache`. Do not rebuild while
+preview serves `dist/`. For actual concurrency use separate checkouts with separate
+`.docker` directories and output/catalog paths. Changing only the Compose project
+name does not isolate these bind mounts. Vitest uses Node, without a separate test
+server or browser; one-off containers are removed by `--rm`, with no dependency
+services to clean up and no teardown of another development environment.
+
+### LAN / remote VM, live reload and HTTPS
+
+Open `http://<VM-LAN-IP>:5173` from another trusted LAN machine; `localhost` refers
+to the browsing PC, not the VM. Ports are published on **all host interfaces**.
+Set `APP_PORT` (default 5173) or `PREVIEW_PORT` (4173) in `.env` to avoid collisions;
+internal ports are fixed with Vite `strictPort`. Numeric IPs and localhost are
+accepted; add explicit DNS names in comma-separated `DEV_ALLOWED_HOSTS`, without
+scheme or port. The workstation domain remains allowed. Never use `allowedHosts: true`.
+Vite HMR uses the page's hostname and public port, including through the WebSocket
+proxy below; no SSH tunnel or per-run bind address is needed.
+
+Choose one canonical browser origin: for example
+`https://dev.example.test:8443` with DNS (or a browser PC hosts entry) pointing to
+the VM. Put `DEV_TLS_HOST=dev.example.test` and
+`DEV_ALLOWED_HOSTS=dev.example.test` in `.env`, then:
+
+```bash
+docker compose --profile tls up -d
+# Caddy generates its local CA and certificate inside the container.
+docker compose logs tls
+```
+
+Install **only** `.docker/tls-data/caddy/pki/authorities/local/root.crt` in the
+browsing PC/device trusted root store (Firefox may use its own certificate store).
+Never distribute the CA private keys. Open `https://dev.example.test:8443` after
+trusting it; `HTTPS_PORT` can change the public port without changing certificates
+or HMR configuration. Other HTTP host IPs remain usable, but TLS certificates cover
+only `DEV_TLS_HOST`. No host TLS tools are required. Startup may briefly return
+502 until Vite is listening; the proxy does not need application readiness to start.
+
+For production-like PWA testing, first stop the environment, build, then proxy the
+preview server instead of the development server:
+
+```bash
+docker compose --profile tls --profile preview down
+docker compose run --rm npm run build
+TLS_UPSTREAM=preview:4173 docker compose --profile tls --profile preview up -d
+# Stop all optional services too after testing:
+docker compose --profile tls --profile preview down
+```
+
+The same trusted HTTPS browser origin now serves `dist/` with its service worker.
+Development mode does not enable the production service worker. Plain HTTP on a
+remote LAN IP is not a secure context; full PWA/secure-context APIs require trusted
+HTTPS (localhost is a browser exception). Verify HMR by editing a component, and
+PWA offline behavior by loading preview online once then switching the browser
+offline. Reset stale workers/caches via DevTools → Application → Service Workers /
+Storage. Export user data first: clearing site storage also deletes IndexedDB.
+Different schemes/hosts/ports are distinct origins and do not share browser data.
+
+Expose ports only to trusted networks: use Docker-aware filtering such as Linux
+`DOCKER-USER` rules or the VM/network firewall; ordinary UFW rules alone may be
+bypassed by Docker publishing. Do not add public router forwarding. Verify each VM
+address from the remote PC. IPv6 is deployment-dependent: enable Docker/host IPv6
+publication/routing and verify `http://[<VM-IPv6>]:5173` if needed; IPv6/LAN browser
+and device certificate trust cannot be certified by a local container smoke test.
+
+### Configuration, external dependencies and state
+
+`.env` is Compose interpolation input, **not** automatic container injection.
+Compose explicitly passes `VITE_GOOGLE_CLIENT_ID`, `VITE_GIT_COMMIT_SHA` and
+`DEV_ALLOWED_HOSTS` to the Node app/CLI services. Empty defaults are safe. Only
+`publish` receives `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID`; no credentials
+are baked into images, and the build context excludes source and secret files.
+Vite also reads framework `.env*` files from `/app`, but existing process values
+win: use the root Compose `.env`/shell for the documented variables, not conflicting
+`.env.local` values. Never put secrets under `VITE_*`: they are public bundle data.
+The source bind mount includes local files, so these development containers must
+still be trusted; environment separation is not a security sandbox.
+
+Image pulls, Debian snapshot downloads and npm installation require Internet access.
+Normal local CRUD works offline after loading the app. Optional browser integrations
+need Google Identity/Drive (`drive.appdata`), the public Mare2 Pages catalog, or a
+CORS-enabled import URL. Mare2 CLI needs public `mare2.fitds.it`; publishing needs
+Cloudflare's API and a restricted Pages-edit token. No private Mare2 credentials or
+local backend/database substitute is required. Set `MARE2_ORIGIN` for CLI testing
+with `docker compose run --rm -e MARE2_ORIGIN=https://example.test npm run mare2 -- ...`.
+
+| Path | Lifecycle / recovery |
+| --- | --- |
+| `.docker/node_modules` | Disposable container dependencies, including Vite/TS caches; recreate with `npm ci` while stopped. |
+| `/tmp` in CLI containers | Disposable npm cache/home, removed with the container. |
+| `dist/`, `tmp/`, `coverage/`, `.vite/`, `.wrangler/` | Regenerable output/cache; ignored by Git. |
+| `.mare2-cache/` | Disposable original public PDFs/JPGs; deleting forces downloads. |
+| `public/mare2/` | **Persistent incremental catalog**, ignored by Git. Back up the full directory before sync/deploy; restore it before incremental runs. Deleting it can drop older catalog years. |
+| `.docker/wrangler/` | Writable CLI home/login/config/log state. Token auth is recommended; delete to reset credentials/state. |
+| `.docker/tls-data/`, `.docker/tls-config/` | Persist local CA/config across container removal. Protect keys; deletion generates a new CA requiring device re-trust. |
+| Browser IndexedDB | User records, not Docker data. Back up via app JSON export or user-controlled Drive; import to restore. Drive backups are currently plaintext. |
+
+`docker compose down` preserves all bind data. No Docker volume backs up browser
+records. Never delete all of `.docker` as if every path were a disposable cache.
+
+### Applicability and CI
+
+No server database, migrations, backend sessions, service readiness chain,
+submodules, or browser automation runner applies to this static app. Existing
+Vitest tests need no test profile/server. TLS and preview are optional workflows,
+not dependencies of normal development. IPv6 requires site-specific verification.
+The existing GitHub Actions pipelines still install their own toolchains; migrating
+them to these same Compose commands is a recommended follow-up, not implemented here.
 
 ## App navigation and shareable routes
 
@@ -115,10 +263,10 @@ IndexedDB, and then optionally in the user's own Google Drive backup.
 The catalog is generated by the local CLI in `tools/mare2-importer`:
 
 ```bash
-npm run mare2:publish:cf -- --year=2026 --request-delay-ms=1000
-npm run mare2:publish:cf -- --year=2026 --since=2026-07-01
-npm run mare2:publish:cf -- --year=2026 --since="last week"
-npm run mare2:publish:cf -- --year=2026 --championship=federale --ma=3
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --request-delay-ms=1000
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --since=2026-07-01
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --since="last week"
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --championship=federale --ma=3
 ```
 
 The generated catalog includes match name, dates, location, public source links,
@@ -139,11 +287,19 @@ user's own Drive `appDataFolder`.
    - `https://pi-workstation.villa.emanueletessore.com`
    - `https://shootlog.emanueletessore.com`
    - your GitHub Pages origin
-4. Copy `.env.example` to `.env.local` and set:
+4. Set this public value in the root Compose `.env` and recreate web (or rebuild
+   the bundle for preview/deployment):
 
 ```bash
 VITE_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 ```
+
+Authorize the **exact browser origin**, including the chosen HTTPS port (e.g.
+`https://dev.example.test:8443`), in Google Console. Google may reject private IP or
+non-public development domains; use localhost for same-PC testing or an authorized
+HTTPS domain such as the workstation domain. Local CRUD requires no OAuth setup.
+No server callback/session is used. Provider restrictions must match the actual
+origin; trusting a local CA does not bypass Google's origin policy.
 
 The app requests only this scope:
 
@@ -160,8 +316,15 @@ The Mare2 public data catalog is deployed separately to Cloudflare Pages with
 Wrangler:
 
 ```bash
-npm run mare2:deploy:cf
+docker compose run --rm publish run mare2:deploy:cf
 ```
+
+`publish` passes the configured API token explicitly; prefer this to interactive
+login. If OAuth login is necessary, run
+`docker compose run --rm publish exec -- wrangler login --help` and follow Wrangler's
+remote-browser flow. Login state stays in `.docker/wrangler`, not the host home;
+logout with `docker compose run --rm publish exec -- wrangler logout`. Do not mount
+the host home or put tokens in URLs/frontend variables.
 
 If Wrangler has more than one Cloudflare account, set `CLOUDFLARE_ACCOUNT_ID` in
 your local `.env`; do not commit local account values or API tokens.

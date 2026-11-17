@@ -11,7 +11,7 @@
     "test": "vitest run",
     "mare2": "node tools/mare2-importer/index.mjs",
     "mare2:sync": "node tools/mare2-importer/index.mjs sync --out=public/mare2",
-    "mare2:deploy:cf": "sh -c 'set -a; [ -f .env ] && . ./.env; set +a; npx wrangler pages deploy public/mare2 --project-name shooting-logbook-mare2-data \"$@\"' --",
+    "mare2:deploy:cf": "wrangler pages deploy public/mare2 --project-name shooting-logbook-mare2-data",
     "mare2:publish:cf": "sh -c 'npm run mare2:sync -- \"$@\" && npm run mare2:deploy:cf' --"
   },
   "dependencies": {
@@ -19,7 +19,11 @@
     "dexie": "latest",
     "dexie-react-hooks": "^4.4.0",
     "i18next": "latest",
+<<<<<<< HEAD
     "lucide-react": "^1.73.0",
+=======
+    "lucide-react": "^1.74.0",
+>>>>>>> 85424e34 (chore: adopt Docker-only development workflow)
     "pdfjs-dist": "^6.5.438",
     "react": "latest",
     "react-dom": "latest",
@@ -36,9 +40,13 @@
     "eslint": "latest",
     "eslint-plugin-react-hooks": "latest",
     "eslint-plugin-react-refresh": "latest",
-    "typescript": "latest",
+    "typescript": "^6.0.3",
     "typescript-eslint": "latest",
     "vitest": "latest",
+<<<<<<< HEAD
     "wrangler": "^4.162.0"
+=======
+    "wrangler": "^4.164.0"
+>>>>>>> 85424e34 (chore: adopt Docker-only development workflow)
   }
 }

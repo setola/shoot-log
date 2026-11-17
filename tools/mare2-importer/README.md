@@ -27,13 +27,17 @@ backend dependency.
 The original Mare2 PDF is not published. Its public URL, hash and byte size are
 recorded in `source.json`. Original carousel JPGs and PDFs are cache-only.
 
-## Usage
+## Usage (Docker only)
+
+Run from the repository root after the [initial Compose setup](../../README.md#docker-only-development).
+Node and ImageMagick are supplied by the pinned tools image; no host installation
+is needed. Stop web/preview before catalog writes and serialize CLI commands.
 
 ```bash
-npm run mare2 -- inspect --match=1616
-npm run mare2 -- build-match --match=1616 --out=tmp/mare2
-npm run mare2:sync -- --year=2026 --min-level=3 --championship=federale --ma=3
-npm run mare2:deploy:cf
+docker compose run --rm npm run mare2 -- inspect --match=1616
+docker compose run --rm npm run mare2 -- build-match --match=1616 --out=tmp/mare2
+docker compose run --rm npm run mare2:sync -- --year=2026 --min-level=3 --championship=federale --ma=3
+docker compose run --rm publish run mare2:deploy:cf
 ```
 
 Useful options:
@@ -57,18 +61,27 @@ Useful options:
 
 ## Cloudflare Pages publishing
 
-`npm run mare2:sync` writes generated data to `public/mare2`, which is ignored by
-Git. Deploy with:
+`docker compose run --rm npm run mare2:sync` writes generated data to
+`public/mare2`, which is ignored by Git but is a persistent incremental catalog,
+not a disposable build cache. Back up the complete directory before updates and
+restore it before an incremental sync. `.mare2-cache` is disposable download data.
+Deploy with:
 
 ```bash
-npm run mare2:deploy:cf
+docker compose run --rm publish run mare2:deploy:cf
 ```
 
 or run both steps:
 
 ```bash
-npm run mare2:publish:cf -- --year=2026 --min-level=3 --championship=federale --ma=3
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --min-level=3 --championship=federale --ma=3
 ```
+
+Set a restricted `CLOUDFLARE_API_TOKEN` and the account ID in the ignored root
+Compose `.env` (or export them). Compose explicitly passes them only to `publish`.
+The deploy script no longer sources `.env` as a shell script. CLI home/config/login
+state persists in `.docker/wrangler`; do not mount your host home. See the root
+README for login/reset instructions. These are not browser `VITE_*` values.
 
 If Wrangler has access to more than one Cloudflare account, set
 `CLOUDFLARE_ACCOUNT_ID` in your local `.env` file first. This value is not a
@@ -123,15 +136,15 @@ is replaced by this weekly rule. `build-match` remains an explicit rebuild.
 For a daily cron-style update after a known date:
 
 ```bash
-npm run mare2:publish:cf -- --year=2026 --since=2026-07-01 --request-delay-ms=1000
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --since=2026-07-01 --request-delay-ms=1000
 ```
 
 Relative windows are also supported. Quote values containing spaces:
 
 ```bash
-npm run mare2:publish:cf -- --year=2026 --since="last week" --request-delay-ms=1000
-npm run mare2:publish:cf -- --year=2026 --since="last 2 weeks" --request-delay-ms=1000
-npm run mare2:publish:cf -- --year=2026 --since="last month" --request-delay-ms=1000
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --since="last week" --request-delay-ms=1000
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --since="last 2 weeks" --request-delay-ms=1000
+docker compose run --rm publish run mare2:publish:cf -- --year=2026 --since="last month" --request-delay-ms=1000
 ```
 
 ## Automatic GitHub Actions sync

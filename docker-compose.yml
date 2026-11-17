@@ -1,12 +1,69 @@
+name: shooting-logbook
+
+x-node: &node
+  image: shooting-logbook-tools:node24.11.1
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+  user: "${LOCAL_UID:?Set LOCAL_UID}:${LOCAL_GID:?Set LOCAL_GID}"
+  init: true
+  working_dir: /app
+  environment: &node-env
+    HOME: /tmp
+    VITE_GOOGLE_CLIENT_ID: "${VITE_GOOGLE_CLIENT_ID:-}"
+    VITE_GIT_COMMIT_SHA: "${VITE_GIT_COMMIT_SHA:-}"
+    DEV_ALLOWED_HOSTS: "${DEV_ALLOWED_HOSTS:-}"
+  volumes:
+    - .:/app
+    - ./.docker/node_modules:/app/node_modules
+
 services:
   web:
-    image: node:22-alpine
-    working_dir: /app
-    command: sh -c "npm install && npm run dev"
+    <<: *node
+    command: [npm, run, dev]
     ports:
-      - "5173:5173"
+      - "${APP_PORT:-5173}:5173"
+
+  npm:
+    <<: *node
+    profiles: [cli]
+    entrypoint: [npm]
+    command: [--help]
+
+  publish:
+    <<: *node
+    profiles: [cli]
+    entrypoint: [npm]
+    command: [run, mare2:deploy:cf]
     environment:
-      - NODE_ENV=development
+      HOME: /state
+      XDG_CONFIG_HOME: /state/config
+      WRANGLER_SEND_METRICS: "false"
+      CLOUDFLARE_ACCOUNT_ID: "${CLOUDFLARE_ACCOUNT_ID:-}"
+      CLOUDFLARE_API_TOKEN: "${CLOUDFLARE_API_TOKEN:-}"
     volumes:
       - .:/app
-      - ./node_modules:/app/node_modules
+      - ./.docker/node_modules:/app/node_modules
+      - ./.docker/wrangler:/state
+
+  preview:
+    <<: *node
+    profiles: [preview]
+    command: [npm, run, preview]
+    ports:
+      - "${PREVIEW_PORT:-4173}:4173"
+
+  tls:
+    image: caddy:2.10.2-alpine
+    profiles: [tls]
+    user: "${LOCAL_UID:?Set LOCAL_UID}:${LOCAL_GID:?Set LOCAL_GID}"
+    init: true
+    environment:
+      DEV_TLS_HOST: "${DEV_TLS_HOST:-localhost}"
+      TLS_UPSTREAM: "${TLS_UPSTREAM:-web:5173}"
+    ports:
+      - "${HTTPS_PORT:-8443}:8443"
+    volumes:
+      - ./docker/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./.docker/tls-data:/data
+      - ./.docker/tls-config:/config

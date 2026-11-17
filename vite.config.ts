@@ -2,13 +2,22 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
 
-const developmentHosts = ["pi-workstation.villa.emanueletessore.com"];
+const developmentHosts = [
+	"pi-workstation.villa.emanueletessore.com",
+	...(process.env.DEV_ALLOWED_HOSTS ?? "").split(",").map((host) => host.trim()).filter(Boolean),
+];
 
 export default defineConfig({
 	server: {
+		host: "0.0.0.0",
+		port: 5173,
+		strictPort: true,
 		allowedHosts: developmentHosts,
 	},
 	preview: {
+		host: "0.0.0.0",
+		port: 4173,
+		strictPort: true,
 		allowedHosts: developmentHosts,
 	},
 	plugins: [
