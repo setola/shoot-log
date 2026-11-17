@@ -3,7 +3,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { useTranslation } from "react-i18next";
 import { BarChart2, FileImage, FileUp, Save, Trophy, X } from "lucide-react";
 import {
-	EntityActionPanel,
+	AppModal,
 	EntityPage,
 	RecordActionButtons,
 } from "../../components/EntityUi";
@@ -123,6 +123,7 @@ export function MatchesCrud({
 	const [importOverlay, setImportOverlay] = useState<
 		"practiscore" | "mare2" | null
 	>(null);
+	const [fileImportOptionsOpen, setFileImportOptionsOpen] = useState(false);
 	const [practiscoreFile, setPractiscoreFile] = useState<File | null>(null);
 	const [mare2File, setMare2File] = useState<File | null>(null);
 	const [importing, setImporting] = useState(false);
@@ -632,39 +633,67 @@ export function MatchesCrud({
 		});
 	}
 
+	const importActions = (
+		<div className="match-import-actions">
+			<div className="panel import-card match-import-card">
+				<span>{t("matches.import.fromLabel")}</span>
+				<button
+					className="button"
+					type="button"
+					onClick={() => void openPublicCatalog()}
+				>
+					<FileImage size={16} />
+					{t("matches.publicCatalog.action")}
+				</button>
+			</div>
+			<button
+				className="match-import-file-link"
+				type="button"
+				onClick={() => setFileImportOptionsOpen(true)}
+			>
+				{t("matches.import.otherMethods")}
+			</button>
+		</div>
+	);
+
 	return (
 		<EntityPage
 			title={t("matches.title")}
 			description={t("matches.description")}
-			actions={
-				<EntityActionPanel label={t("matches.import.fromLabel")}>
-					<button
-						className="button button-secondary import-button-practiscore"
-						type="button"
-						onClick={() => openImportOverlay("practiscore")}
-					>
-						<FileUp size={16} />
-						PractiScore
-					</button>
-					<button
-						className="button button-secondary import-button-mare2"
-						type="button"
-						onClick={() => openImportOverlay("mare2")}
-					>
-						<FileUp size={16} />
-						Mare2 PDF
-					</button>
-					<button
-						className="button"
-						type="button"
-						onClick={() => void openPublicCatalog()}
-					>
-						<FileImage size={16} />
-						{t("matches.publicCatalog.action")}
-					</button>
-				</EntityActionPanel>
-			}
+			actions={importActions}
 		>
+			{fileImportOptionsOpen && (
+				<AppModal
+					title={t("matches.import.otherMethods")}
+					description={t("matches.import.fileMethodsHint")}
+					onClose={() => setFileImportOptionsOpen(false)}
+				>
+					<div className="import-action-row">
+						<button
+							className="button button-secondary import-button-practiscore"
+							type="button"
+							onClick={() => {
+								setFileImportOptionsOpen(false);
+								openImportOverlay("practiscore");
+							}}
+						>
+							<FileUp size={16} />
+							PractiScore
+						</button>
+						<button
+							className="button button-secondary import-button-mare2"
+							type="button"
+							onClick={() => {
+								setFileImportOptionsOpen(false);
+								openImportOverlay("mare2");
+							}}
+						>
+							<FileUp size={16} />
+							Mare2 PDF
+						</button>
+					</div>
+				</AppModal>
+			)}
 			{importMessage && (
 				<StatusMessage tone="success" onDismiss={() => setImportMessage(null)}>
 					{importMessage}
@@ -691,32 +720,7 @@ export function MatchesCrud({
 							<Trophy size={42} strokeWidth={1.4} />
 							<h3>{t("matches.emptyTitle")}</h3>
 							<p>{t("matches.empty")}</p>
-							<EntityActionPanel label={t("matches.import.fromLabel")}>
-								<button
-									className="button button-secondary import-button-practiscore"
-									type="button"
-									onClick={() => openImportOverlay("practiscore")}
-								>
-									<FileUp size={16} />
-									PractiScore
-								</button>
-								<button
-									className="button button-secondary import-button-mare2"
-									type="button"
-									onClick={() => openImportOverlay("mare2")}
-								>
-									<FileUp size={16} />
-									Mare2 PDF
-								</button>
-								<button
-									className="button"
-									type="button"
-									onClick={() => void openPublicCatalog()}
-								>
-									<FileImage size={16} />
-									{t("matches.publicCatalog.action")}
-								</button>
-							</EntityActionPanel>
+							{importActions}
 						</div>
 					)}
 					<div className="record-list">

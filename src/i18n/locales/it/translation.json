@@ -408,8 +408,8 @@
       "openMatch": "Apri analisi per {{match}}"
     },
     "mare2": {
-      "title": "Import PDF Mare2 FITDS",
-      "createHint": "Importa i PDF di verifica punteggi generati da Mare2. I dati restano locali e saranno disponibili in Analisi.",
+      "title": "Importa da un PDF Mare2",
+      "createHint": "Carica un PDF di verifica punteggi Mare2 salvato sul dispositivo. La gara e i risultati saranno disponibili nel Registro e in Analisi.",
       "replaceHint": "Importando un PDF Mare2 durante la modifica, questa gara e lo snapshot di analisi vengono sostituiti.",
       "pdfFile": "File PDF Mare2",
       "importAction": "Importa PDF Mare2",
@@ -417,7 +417,7 @@
       "validation": "Seleziona un file PDF Mare2 da importare.",
       "importError": "Impossibile importare questo PDF Mare2.",
       "importedSummary": "PDF Mare2 importato: {{stages}} stage · {{competitors}} tiratori · {{scores}} punteggi",
-      "downloadHelp": "Dai risultati Mare2/FITDS apri “Score Verification By Competitor” e usa esporta o stampa in PDF per quel report. Il parser si aspetta quel layout per tiratore."
+      "downloadHelp": "Nei risultati Mare2/FITDS apri il report “Score Verification By Competitor” ed esportalo o stampalo in PDF. È supportato solo questo formato, con i risultati raggruppati per tiratore."
     },
     "listTitle": "Gare registrate",
     "listCount": "{{count}} gare salvate",
@@ -427,7 +427,9 @@
       "dropTitle": "Trascina qui il file",
       "dropHint": "oppure clicca per sceglierlo da questo dispositivo",
       "selectedFile": "File selezionato: {{fileName}}",
-      "fromLabel": "Importa da:"
+      "fromLabel": "Importa da:",
+      "otherMethods": "Importa da file",
+      "fileMethodsHint": "Hai già un file? Carica un’esportazione PractiScore oppure un PDF di verifica punteggi Mare2."
     },
     "briefing": {
       "action": "Associa immagini esercizi",
@@ -450,7 +452,7 @@
     "publicCatalog": {
       "action": "Mare2",
       "title": "Importa da Mare2",
-      "description": "Cerca nel catalogo Mare2 pubblico, seleziona le gare e importale su questo dispositivo. I dati importati restano locali salvo tuo backup.",
+      "description": "Seleziona le gare dal catalogo pubblico Mare2, già elaborato dal sistema automatico: non serve scaricare o caricare file. Le gare importate vengono salvate solo su questo dispositivo e puoi includerle nei tuoi backup.",
       "loading": "Caricamento catalogo...",
       "empty": "Nessuna gara disponibile nel catalogo pubblico.",
       "match": "Gara",

@@ -1233,6 +1233,36 @@ button:disabled {
 	align-items: center;
 }
 
+.match-import-card {
+	display: grid;
+	grid-template-columns: auto auto;
+	justify-content: start;
+	align-items: center;
+}
+
+.match-import-actions {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+.match-import-file-link {
+	border: 0;
+	padding: 0;
+	background: transparent;
+	color: var(--muted-foreground);
+	font: inherit;
+	font-size: 0.84rem;
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+	cursor: pointer;
+}
+
+.match-import-file-link:hover {
+	color: var(--foreground);
+}
+
 .import-drop-zone {
 	display: grid;
 	justify-items: center;
