@@ -19,7 +19,7 @@
     "dexie": "latest",
     "dexie-react-hooks": "^4.4.0",
     "i18next": "latest",
-    "lucide-react": "^1.74.0",
+    "lucide-react": "^1.77.0",
     "pdfjs-dist": "^6.5.438",
     "react": "latest",
     "react-dom": "latest",
@@ -39,6 +39,6 @@
     "typescript": "^6.0.3",
     "typescript-eslint": "latest",
     "vitest": "latest",
-    "wrangler": "^4.164.0"
+    "wrangler": "^4.165.0"
   }
 }
